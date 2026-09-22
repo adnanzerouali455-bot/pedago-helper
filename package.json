@@ -1,0 +1,31 @@
+{
+  "name": "pedago-helper",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -H 0.0.0.0 -p 5000",
+    "build": "next build --webpack",
+    "start": "next start -H 0.0.0.0 -p 5000",
+    "typecheck": "tsc --noEmit",
+    "test": "node tests/catalogue.cjs"
+  },
+  "dependencies": {
+    "next": "^16.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "lucide-react": "^1.47.0",
+    "openai": "^6.0.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.9.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/node": "^22.0.0"
+  },
+  "engines": {
+    "node": "22.x"
+  }
+}

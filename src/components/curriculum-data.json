@@ -1,0 +1,271 @@
+{
+  "cycles": [
+    {
+      "id": "college",
+      "name_fr": "Enseignement Secondaire Collégial",
+      "name_ar": "التعليم الثانوي الإعدادي",
+      "levels": [
+        {
+          "id": "1ac",
+          "code": "1AC",
+          "name_fr": "1ère Année Collégiale",
+          "name_ar": "السنة الأولى إعدادي",
+          "subjects": [
+            {
+              "id": "svt_1ac",
+              "name_fr": "SVT (Parcours International BIOF)",
+              "name_ar": "علوم الحياة والأرض (مسار دولي)",
+              "semesters": [
+                {
+                  "semester": 1,
+                  "unit_title_fr": "Relations entre les êtres vivants et leurs interactions avec le milieu",
+                  "unit_title_ar": "العلاقات بين الكائنات الحية وتفاعلها مع الوسط البيئي",
+                  "lessons": [
+                    { "id": "1ac_svt_s1_l1", "title_fr": "Découverte d'un milieu naturel", "title_ar": "استكشاف وسط طبيعي" },
+                    { "id": "1ac_svt_s1_l2", "title_fr": "La respiration dans différents milieux", "title_ar": "التنفس في أوساط مختلفة" },
+                    { "id": "1ac_svt_s1_l3", "title_fr": "L'alimentation chez les êtres vivants", "title_ar": "التغذية عند الكائنات الحية" },
+                    { "id": "1ac_svt_s1_l4", "title_fr": "Les relations trophiques et flux de matière", "title_ar": "العلاقات الغذائية وتدفق المادة والطاقة" },
+                    { "id": "1ac_svt_s1_l5", "title_fr": "Classification des êtres vivants et équilibres naturels", "title_ar": "تصنيف الكائنات الحية والتوازنات الطبيعية" }
+                  ]
+                },
+                {
+                  "semester": 2,
+                  "unit_title_fr": "Les phénomènes géologiques externes",
+                  "unit_title_ar": "الظواهر الجيولوجية الخارجية",
+                  "lessons": [
+                    { "id": "1ac_svt_s2_l1", "title_fr": "Les étapes de formation des roches sédimentaires", "title_ar": "مراحل تشكل الصخور الرسوبية" },
+                    { "id": "1ac_svt_s2_l2", "title_fr": "L'érosion, le transport et la sédimentation", "title_ar": "الحت والنقل والترسب" },
+                    { "id": "1ac_svt_s2_l3", "title_fr": "Les fossiles et l'échelle des temps géologiques", "title_ar": "المستحاثات والسلم الجيولوجي" },
+                    { "id": "1ac_svt_s2_l4", "title_fr": "Importance et gestion des ressources en eau", "title_ar": "الموارد المائية وتدبيرها" }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "pc_1ac",
+              "name_fr": "Physique-Chimie",
+              "name_ar": "الفيزياء والكيمياء",
+              "semesters": [
+                {
+                  "semester": 1,
+                  "unit_title_fr": "La matière et l'environnement",
+                  "unit_title_ar": "المادة والبيئة",
+                  "lessons": [
+                    { "id": "1ac_pc_s1_l1", "title_fr": "L'eau dans notre environnement", "title_ar": "الماء في بيئتنا" },
+                    { "id": "1ac_pc_s1_l2", "title_fr": "Les trois états de la matière", "title_ar": "الحالات الثلاث للمادة" },
+                    { "id": "1ac_pc_s1_l3", "title_fr": "Le volume et la masse", "title_ar": "الحجم والكتلة" },
+                    { "id": "1ac_pc_s1_l4", "title_fr": "La masse volumique", "title_ar": "الكتلة الحجمية" },
+                    { "id": "1ac_pc_s1_l5", "title_fr": "La pression et la pression atmosphérique", "title_ar": "الضغط والضغط الجوي" }
+                  ]
+                },
+                {
+                  "semester": 2,
+                  "unit_title_fr": "L'électricité",
+                  "unit_title_ar": "الكهرباء",
+                  "lessons": [
+                    { "id": "1ac_pc_s2_l1", "title_fr": "Le circuit électrique simple", "title_ar": "الدارة الكهربائية البسيطة" },
+                    { "id": "1ac_pc_s2_l2", "title_fr": "Types de montages : en série et en dérivation", "title_ar": "أنواع التراكيب: على التوالي وعلى التوازي" },
+                    { "id": "1ac_pc_s2_l3", "title_fr": "Le courant électrique continu", "title_ar": "التيار الكهربائي المستمر" },
+                    { "id": "1ac_pc_s2_l4", "title_fr": "La résistance électrique et la loi d'Ohm", "title_ar": "المقاومة الكهربائية وقانون أوم" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2ac",
+          "code": "2AC",
+          "name_fr": "2ème Année Collégiale",
+          "name_ar": "السنة الثانية إعدادي",
+          "subjects": [
+            {
+              "id": "svt_2ac",
+              "name_fr": "SVT (BIOF)",
+              "name_ar": "علوم الحياة والأرض",
+              "semesters": [
+                {
+                  "semester": 1,
+                  "unit_title_fr": "Les phénomènes géologiques internes",
+                  "unit_title_ar": "الظواهر الجيولوجية الباطنية",
+                  "lessons": [
+                    { "id": "2ac_svt_s1_l1", "title_fr": "La théorie de la tectonique des plaques", "title_ar": "نظرية تكتونية الصفائح" },
+                    { "id": "2ac_svt_s1_l2", "title_fr": "Les séismes et leur relation avec la tectonique des plaques", "title_ar": "الزلازل وعلاقتها بتكتونية الصفائح" },
+                    { "id": "2ac_svt_s1_l3", "title_fr": "Le volcanisme et la formation des roches magmatiques", "title_ar": "البركانية وتشكل الصخور الصهارية" },
+                    { "id": "2ac_svt_s1_l4", "title_fr": "Les déformations tectoniques (plis et failles)", "title_ar": "التشوهات التكتونية (الطيات والفوالق)" },
+                    { "id": "2ac_svt_s1_l5", "title_fr": "La formation des chaînes de montagnes", "title_ar": "تشكل السلاسل الجبلية" }
+                  ]
+                },
+                {
+                  "semester": 2,
+                  "unit_title_fr": "La reproduction chez les êtres vivants et l'hérédité humaine",
+                  "unit_title_ar": "التوالد عند الكائنات الحية والوراثة عند الإنسان",
+                  "lessons": [
+                    { "id": "2ac_svt_s2_l1", "title_fr": "La reproduction chez les animaux", "title_ar": "التوالد الجنسي عند الحيوانات" },
+                    { "id": "2ac_svt_s2_l2", "title_fr": "La reproduction chez les végétaux", "title_ar": "التوالد عند النباتات" },
+                    { "id": "2ac_svt_s2_l3", "title_fr": "La reproduction chez l'Homme", "title_ar": "التوالد عند الإنسان" },
+                    { "id": "2ac_svt_s2_l4", "title_fr": "L'hérédité humaine", "title_ar": "علم الوراثة عند الإنسان" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "3ac",
+          "code": "3AC",
+          "name_fr": "3ème Année Collégiale",
+          "name_ar": "السنة الثالثة إعدادي",
+          "subjects": [
+            {
+              "id": "svt_3ac",
+              "name_fr": "SVT (BIOF)",
+              "name_ar": "علوم الحياة والأرض",
+              "semesters": [
+                {
+                  "semester": 1,
+                  "unit_title_fr": "Les fonctions de nutrition et l'éducation nutritionnelle",
+                  "unit_title_ar": "وظائف التغذية والتربية الغذائية",
+                  "lessons": [
+                    { "id": "3ac_svt_s1_l1", "title_fr": "La digestion des aliments et l'absorption intestinale", "title_ar": "الهضم والامتصاص المعوي" },
+                    { "id": "3ac_svt_s1_l2", "title_fr": "La respiration et les échanges gazeux", "title_ar": "التنفس والتبادلات الغازية" },
+                    { "id": "3ac_svt_s1_l3", "title_fr": "Le sang et la circulation sanguine", "title_ar": "الدم والدوران الدموي" },
+                    { "id": "3ac_svt_s1_l4", "title_fr": "L'excrétion urinaire", "title_ar": "الإبراز البولي" }
+                  ]
+                },
+                {
+                  "semester": 2,
+                  "unit_title_fr": "Les fonctions de communication et l'immunologie",
+                  "unit_title_ar": "وظائف الربط وعلم المناعة",
+                  "lessons": [
+                    { "id": "3ac_svt_s2_l1", "title_fr": "Le système nerveux (mouvements volontaires et involontaires)", "title_ar": "الجهاز العصبي" },
+                    { "id": "3ac_svt_s2_l2", "title_fr": "Le système musculaire", "title_ar": "الجهاز العضلي" },
+                    { "id": "3ac_svt_s2_l3", "title_fr": "Les micro-organismes pathogènes", "title_ar": "الجراثيم" },
+                    { "id": "3ac_svt_s2_l4", "title_fr": "L'immunité naturelle et l'immunité spécifique", "title_ar": "المناعة الطبيعية والنوعية" },
+                    { "id": "3ac_svt_s2_l5", "title_fr": "Dysfonctionnements immunitaires (allergies, SIDA)", "title_ar": "اضطرابات الجهاز المناعي" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lycee",
+      "name_fr": "Enseignement Secondaire Qualifiant",
+      "name_ar": "التعليم الثانوي التأهيلي",
+      "levels": [
+        {
+          "id": "tcs",
+          "code": "TCS",
+          "name_fr": "Tronc Commun Scientifique",
+          "name_ar": "الجذع المشترك العلمي",
+          "subjects": [
+            {
+              "id": "svt_tcs",
+              "name_fr": "SVT",
+              "name_ar": "علوم الحياة والأرض",
+              "semesters": [
+                {
+                  "semester": 1,
+                  "unit_title_fr": "L'Écologie",
+                  "unit_title_ar": "علم البيئة",
+                  "lessons": [
+                    { "id": "tcs_svt_s1_l1", "title_fr": "La sortie écologique et techniques d'étude de terrain", "title_ar": "الخرجة البيئية وتقنيات الدراسة الميدانية" },
+                    { "id": "tcs_svt_s1_l2", "title_fr": "Les facteurs édaphiques (le sol) et leur influence", "title_ar": "العوامل التربوية وتأثيرها على الكائنات الحية" },
+                    { "id": "tcs_svt_s1_l3", "title_fr": "Les facteurs climatiques et répartition des êtres vivants", "title_ar": "العوامل المناخية وتوزيع الكائنات الحية" },
+                    { "id": "tcs_svt_s1_l4", "title_fr": "Flux de matière et d'énergie dans l'écosystème", "title_ar": "تدفق المادة والطاقة في الحميلة البيئية" }
+                  ]
+                },
+                {
+                  "semester": 2,
+                  "unit_title_fr": "La reproduction chez les végétaux",
+                  "unit_title_ar": "التوالد عند النباتات",
+                  "lessons": [
+                    { "id": "tcs_svt_s2_l1", "title_fr": "La reproduction sexuée chez les angiospermes (plantes à fleurs)", "title_ar": "التوالد الجنسي عند كاسيات البذور" },
+                    { "id": "tcs_svt_s2_l2", "title_fr": "La reproduction sexuée chez les gymnospermes", "title_ar": "التوالد الجنسي عند عاريات البذور" },
+                    { "id": "tcs_svt_s2_l3", "title_fr": "La reproduction asexuée et multiplication végétative", "title_ar": "التوالد اللاجنسي والتكاثر النباتي" },
+                    { "id": "tcs_svt_s2_l4", "title_fr": "Modification génétique chez les plantes", "title_ar": "التعديل الوراثي عند النباتات" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "1bac_sc_exp",
+          "code": "1BAC-SE",
+          "name_fr": "1ère Année Baccalauréat Sciences Expérimentales",
+          "name_ar": "الأولى باكالوريا علوم تجريبية",
+          "subjects": [
+            {
+              "id": "svt_1bac",
+              "name_fr": "SVT",
+              "name_ar": "علوم الحياة والأرض",
+              "semesters": [
+                {
+                  "semester": 1,
+                  "unit_title_fr": "Les phénomènes géologiques externes et reconstitution paléogéographique",
+                  "unit_title_ar": "الظواهر الجيولوجية الخارجية واسترداد الأوساط القديمة",
+                  "lessons": [
+                    { "id": "1bac_svt_s1_l1", "title_fr": "Étude sédimentologique d'un milieu actuel et ancien", "title_ar": "الدراسة الرسوبية لوسط ترسب قديم وحديث" },
+                    { "id": "1bac_svt_s1_l2", "title_fr": "Conditions de sédimentation dans les principaux milieux", "title_ar": "ظروف الترسب في الأوساط الرئيسية" },
+                    { "id": "1bac_svt_s1_l3", "title_fr": "Reconstitution de la carte paléogéographique d'un bassin sédimentaire", "title_ar": "استرداد الخريطة الجغرافية القديمة لحوض رسوبي" }
+                  ]
+                },
+                {
+                  "semester": 2,
+                  "unit_title_fr": "Production de la matière organique et flux d'énergie",
+                  "unit_title_ar": "إنتاج المادة العضوية وتدفق الطاقة",
+                  "lessons": [
+                    { "id": "1bac_svt_s2_l1", "title_fr": "Mécanismes de captage de l'énergie lumineuse et photosynthèse", "title_ar": "آليات امتصاص الطاقة الضوئية والتركيب الضوئي" },
+                    { "id": "1bac_svt_s2_l2", "title_fr": "Rôle des pigments chlorophylliens", "title_ar": "دور الصبغات اليخضورية" },
+                    { "id": "1bac_svt_s2_l3", "title_fr": "La régulation de la glycémie (communication hormonale)", "title_ar": "تنظيم تحلون الدم (التواصل الهرموني)" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "2bac_svt",
+          "code": "2BAC-SVT",
+          "name_fr": "2ème Année Baccalauréat SVT",
+          "name_ar": "الثانية باكالوريا مسلك علوم الحياة والأرض",
+          "subjects": [
+            {
+              "id": "svt_2bac",
+              "name_fr": "SVT",
+              "name_ar": "علوم الحياة والأرض",
+              "semesters": [
+                {
+                  "semester": 1,
+                  "unit_title_fr": "Consommation de matière organique et flux d'énergie (ATP)",
+                  "unit_title_ar": "استهلاك المادة العضوية وتدفق الطاقة",
+                  "lessons": [
+                    { "id": "2bac_svt_s1_l1", "title_fr": "Libération d'énergie : Respiration cellulaire et fermentation", "title_ar": "التنفس الخلوي والتخمر" },
+                    { "id": "2bac_svt_s1_l2", "title_fr": "Le muscle squelettique strié et renouvellement de l'ATP", "title_ar": "العضلة الهيكلية وتجديد ATP" },
+                    { "id": "2bac_svt_s1_l3", "title_fr": "L'information génétique : Réplication, transcription et traduction", "title_ar": "الخبر الوراثي والتعبير عنه" },
+                    { "id": "2bac_svt_s1_l4", "title_fr": "Transmission de l'information génétique par reproduction sexuée", "title_ar": "انتقال الخبر الوراثي عبر التوالد الجنسي" }
+                  ]
+                },
+                {
+                  "semester": 2,
+                  "unit_title_fr": "Immunologie et phénomènes géologiques récents",
+                  "unit_title_ar": "علم المناعة والظواهر الجيولوجية الحديثة",
+                  "lessons": [
+                    { "id": "2bac_svt_s2_l1", "title_fr": "Le système immunitaire : Soi et non-soi", "title_ar": "الجهاز المناعي: الذاتي وغير الذاتي" },
+                    { "id": "2bac_svt_s2_l2", "title_fr": "Les réponses immunitaires humorale et cellulaire", "title_ar": "الاستجابة المناعية الخلطية والخلوية" },
+                    { "id": "2bac_svt_s2_l3", "title_fr": "Chaînes de collision, subduction et obduction", "title_ar": "سلاسل الاصطدام والطفو والطمر" },
+                    { "id": "2bac_svt_s2_l4", "title_fr": "Le métamorphisme et la granitisation", "title_ar": "التحول والغرانطية" }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

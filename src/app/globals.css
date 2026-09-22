@@ -1,0 +1,20 @@
+@import "tailwindcss";
+@source "../components/LessonPlanStudio.tsx";
+@source "../components/TeacherScheduleCalendar.tsx";
+@source "../components/PedagoWorkspace.tsx";
+
+@theme inline {
+  --color-terracotta: #CE5E37;
+  --color-terracotta-soft: #F7ECE7;
+  --color-cypress: #163E26;
+  --color-cypress-soft: #EAF2ED;
+  --color-parchment: #FBF9F5;
+  --color-sand: #E8E2D8;
+  --color-ink: #222623;
+  --color-amber-alert: #C87820;
+  --font-sans: "Plus Jakarta Sans", Arial, sans-serif;
+  --font-arabic: "Cairo", Tahoma, Arial, sans-serif;
+  --radius-lg: 8px;
+}
+
+html, body { margin: 0; min-height: 100%; background: #FBF9F5; }
