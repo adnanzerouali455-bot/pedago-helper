@@ -1,6 +1,6 @@
 "use client";
 import { ProfilePicker, TeacherDashboard, StudentDashboard, type DemoProfile } from "./EntryDashboard";
-import { localizeText } from "./localization";
+import { localizeText, languageName } from "./localization";
 import React, { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, CalendarDays, FilePenLine, Link2 } from "lucide-react";
 import TeacherScheduleCalendar, { type LessonPlanLaunchContext } from "./TeacherScheduleCalendar";
@@ -17,7 +17,7 @@ export interface PedagoWorkspaceProps {
 
 export default function PedagoWorkspace({ logoSrc = "/pedago-helper-logo.jpeg", scheduleStorageKey = "pedago-helper:schedule:v1", lessonStoragePrefix = "pedago-helper:session-lesson", generalLessonStorageKey = "pedago-helper:lesson-studio:v1" }: PedagoWorkspaceProps) {
   const [view, setView] = useState<View>("home");
-  const [language, setLanguage] = useState<Language>(() => { try { return localStorage.getItem("pedago-helper:language") === "ar" ? "ar" : "fr"; } catch { return "fr"; } });
+  const [language, setLanguage] = useState<Language>(() => { try { return (["fr", "ar", "en"] as Language[]).includes(localStorage.getItem("pedago-helper:language") as Language) ? localStorage.getItem("pedago-helper:language") as Language : "fr"; } catch { return "fr"; } });
   const [profile, setProfile] = useState<DemoProfile | null>(null);
   useEffect(() => {
     document.documentElement.lang = language;
@@ -27,9 +27,11 @@ export default function PedagoWorkspace({ logoSrc = "/pedago-helper-logo.jpeg", 
   }, [language]);
   const [editors, setEditors] = useState<Editor[]>([{ id: "general" }]);
   const [editorId, setEditorId] = useState("general");
-  const ar = language === "ar";
+  const ar = language === "ar"; const en = language === "en";
   const selected = editors.find(editor => editor.id === editorId)!;
-  const t = ar ? {
+  const t = en ? {
+    brand: "Pedago Helper", tagline: "One workspace to organize and prepare your lessons", calendar: "Timetable", planner: "Lesson planning", navigation: "Main navigation", free: "Independent planning", editor: "Planning workspace", linked: "Session linked to your timetable", back: "View timetable", notes: "Session notes and resources", language: "Language", draft: "Your changes stay in memory while you navigate. Save your lesson before closing the site.",
+  } : ar ? {
     brand: "المساعد البيداغوجي", tagline: "فضاء واحد لتنظيم حصصك وإعداد دروسك", calendar: "جدول الحصص", planner: "تحضير الدروس", navigation: "التنقل الرئيسي", free: "تحضير مستقل", editor: "مساحة التحضير", linked: "حصة مرتبطة بجدولك", back: "عرض جدول الحصص", notes: "ملاحظات الحصة ومواردها", language: "اللغة", draft: "تبقى تعديلاتك محفوظة في الذاكرة أثناء التنقل. احفظ الدرس قبل إغلاق الموقع.",
   } : {
     brand: "Pedago Helper", tagline: "Un seul espace pour organiser et préparer vos cours", calendar: "Emploi du temps", planner: "Préparation des leçons", navigation: "Navigation principale", free: "Préparation libre", editor: "Espace de préparation", linked: "Séance liée à votre calendrier", back: "Voir l’emploi du temps", notes: "Notes et ressources de la séance", language: "Langue", draft: "Vos modifications restent en mémoire pendant la navigation. Enregistrez votre leçon avant de fermer le site.",
@@ -83,9 +85,9 @@ export default function PedagoWorkspace({ logoSrc = "/pedago-helper-logo.jpeg", 
           {ar && <strong className="text-lg">{t.brand}</strong>}
           <span className="hidden max-w-[240px] text-[11px] text-[var(--color-ink-muted)] md:block">{t.tagline}</span>
         </a>
-        <div role="group" aria-label={t.language} className="flex rounded-lg border border-[var(--color-sand-border)] bg-[var(--color-cypress-light)] p-1">{(["fr", "ar"] as Language[]).map(lang => <button key={lang} type="button" lang={lang} aria-pressed={language === lang} onClick={() => setLanguage(lang)} className={`min-h-9 rounded-lg px-3 text-xs focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-amber-alert)] ${language === lang ? "bg-[var(--color-terracotta-light)] font-bold shadow-none" : "text-[var(--color-ink-muted)]"}`}>{lang === "fr" ? (ar ? "الفرنسية" : "Français") : "العربية"}</button>)}</div>
+        <div role="group" aria-label={t.language} className="flex rounded-lg border border-[var(--color-sand-border)] bg-[var(--color-cypress-light)] p-1">{(["fr", "ar", "en"] as Language[]).map(lang => <button key={lang} type="button" lang={lang} aria-pressed={language === lang} onClick={() => setLanguage(lang)} className={`min-h-9 rounded-lg px-3 text-xs focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-amber-alert)] ${language === lang ? "bg-[var(--color-terracotta-light)] font-bold shadow-none" : "text-[var(--color-ink-muted)]"}`}>{languageName(lang, language)}</button>)}</div>
       </div>
-      <nav aria-label={t.navigation} className="mx-auto flex max-w-[1550px] gap-2 px-4 md:px-9">{(["home", ...(profile === "teacher" ? ["calendar", "planner"] : [])] as View[]).map(tab => <a key={tab} href={`#${tab}`} aria-current={view === tab ? "page" : undefined} onClick={event => { event.preventDefault(); navigate(tab); }} className={`flex min-h-12 flex-1 items-center justify-center gap-2 border-b-[3px] px-2 text-center text-xs font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-amber-alert)] sm:flex-none sm:px-5 sm:text-sm ${view === tab ? "border-[var(--color-terracotta)] bg-[var(--color-terracotta-light)] text-[var(--color-cypress)]" : "border-transparent text-[var(--color-ink-muted)] hover:bg-[var(--color-surface-white)]"}`}>{tab === "calendar" ? <CalendarDays size={18} /> : <FilePenLine size={18} />}{tab === "home" ? (ar ? "الرئيسية" : "Tableau de bord") : t[tab]}</a>)}{profile && <button type="button" className="ms-auto px-3 py-2 text-xs font-bold" onClick={() => selectProfile(null)}>{ar ? "تغيير الحساب التجريبي" : "Changer de compte démo"}</button>}</nav>
+      <nav aria-label={t.navigation} className="mx-auto flex max-w-[1550px] gap-2 px-4 md:px-9">{(["home", ...(profile === "teacher" ? ["calendar", "planner"] : [])] as View[]).map(tab => <a key={tab} href={`#${tab}`} aria-current={view === tab ? "page" : undefined} onClick={event => { event.preventDefault(); navigate(tab); }} className={`flex min-h-12 flex-1 items-center justify-center gap-2 border-b-[3px] px-2 text-center text-xs font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-amber-alert)] sm:flex-none sm:px-5 sm:text-sm ${view === tab ? "border-[var(--color-terracotta)] bg-[var(--color-terracotta-light)] text-[var(--color-cypress)]" : "border-transparent text-[var(--color-ink-muted)] hover:bg-[var(--color-surface-white)]"}`}>{tab === "calendar" ? <CalendarDays size={18} /> : <FilePenLine size={18} />}{tab === "home" ? (ar ? "الرئيسية" : en ? "Dashboard" : "Tableau de bord") : t[tab]}</a>)}{profile && <button type="button" className="ms-auto px-3 py-2 text-xs font-bold" onClick={() => selectProfile(null)}>{ar ? "تغيير الحساب التجريبي" : en ? "Change demo account" : "Changer de compte démo"}</button>}</nav>
     </header>
     {view === "home" && (profile === "teacher" ? <TeacherDashboard language={language} storageKey={scheduleStorageKey} onNavigate={navigate} /> : profile === "student" ? <StudentDashboard language={language} /> : <ProfilePicker language={language} onSelect={selectProfile} />)}
     <div hidden={view !== "calendar"}>

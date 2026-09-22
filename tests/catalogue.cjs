@@ -16,7 +16,7 @@ assert.equal(curriculumLessons.length, 58);
 assert.equal(new Set(curriculumLessons.map(l => l.id)).size, 58);
 assert.equal(curriculumLessons.filter(l => l.subject === 'pc').length, 9);
 let total = 0;
-for (const entry of curriculumLessons) for (const language of ['fr','ar']) {
+for (const entry of curriculumLessons) for (const language of ['fr','ar','en']) {
   assert.equal(findCurriculumLesson(entry.id), entry);
   const input = { language, subject:entry.subject, schoolLevel:entry.schoolLevel, title:entry['title_'+language], competency:curriculumCompetency(entry, language), duration:55, sourceText:'', curriculumLessonId:entry.id };
   const lesson = createLocalLesson(input);
@@ -44,7 +44,7 @@ assert(createLocalLesson(legacyInput).readings[1].text.includes('photosynthèse'
 const schedule=createDemoSchedule('2026-09-21','fr');
 schedule.classes[0].subject='pc';
 assert(isScheduleData(schedule));
-console.log(`PASS: ${total} fiches bilingues, conservation des titres, persistance, 9 cours de physique-chimie, compatibilité des anciennes fiches.`);
+console.log(`PASS: ${total} fiches trilingues, conservation des titres, persistance, 9 cours de physique-chimie, compatibilité des anciennes fiches.`);
 const { localizeLesson, initialInput, localizeLessonInput } = require('../src/components/LessonPlanStudio.tsx');
 const { localizeSchedule } = require('../src/components/TeacherScheduleCalendar.tsx');
 for (const subject of ['svt','pc','math','arabic','french']) for (const schoolLevel of ['primary','middle','high']) {
@@ -80,3 +80,42 @@ assert(arabic.sessions.every(s=>!/[A-Za-z]/.test(s.title+s.competency+s.notes)))
 assert.deepEqual(localizeSchedule(arabic,'fr'),demo);
 assert(isScheduleData(arabic));
 console.log('PASS: traduction immédiate des 5 matières, 3 niveaux scolaires, 58 cours, calendrier et conservation des modifications.');
+
+const { englishLessonTitles } = require('../src/components/curriculum-english.ts');
+const { localizeText, languageName } = require('../src/components/localization.ts');
+assert.equal(Object.keys(englishLessonTitles).length, 58);
+assert.equal(languageName('en','en'), 'English');
+assert.equal(languageName('en','ar'), 'الإنجليزية');
+for (const subject of ['svt','pc','math','arabic','french']) for (const schoolLevel of ['primary','middle','high']) {
+  const french=createLocalLesson({...initialInput('fr',subject),schoolLevel});
+  const english=localizeLesson(french,'en');
+  const generated=createLocalLesson(localizeLessonInput(french.input,'en'));
+  assert.deepEqual(english.phases, generated.phases);
+  assert.deepEqual(english.readings, generated.readings);
+  assert.deepEqual(english.obstacles, generated.obstacles);
+  assert.equal(english.input.language,'en');
+  assert(isLessonDocument(english));
+  assert.deepEqual(JSON.parse(JSON.stringify(localizeLesson(english,'fr'))),french);
+  const edited=structuredClone(french);
+  edited.phases[0].situation='Teacher-authored instruction';
+  edited.readings[1].text='Teacher-authored passage';
+  const result=localizeLesson(edited,'en');
+  assert.equal(result.phases[0].situation,edited.phases[0].situation);
+  assert.equal(result.readings[1].text,edited.readings[1].text);
+}
+for (const entry of curriculumLessons) {
+  assert(entry.title_en && entry.level_en && entry.unit_en,entry.id);
+  const fr=createLocalLesson({...initialInput('fr',entry.subject),schoolLevel:entry.schoolLevel,curriculumLessonId:entry.id,title:entry.title_fr,competency:curriculumCompetency(entry,'fr')});
+  const en=localizeLesson(fr,'en');
+  assert.equal(en.input.title,entry.title_en);
+  assert(en.phases[0].situation.includes(entry.title_en));
+  assert.deepEqual(JSON.parse(JSON.stringify(localizeLesson(en,'fr'))),fr);
+  assert(isLessonDocument(en));
+  assert.equal(localizeText(entry.title_ar,'en'),entry.title_en);
+}
+const englishSchedule=localizeSchedule(demo,'en');
+assert(englishSchedule.classes.every(c => !/[\u0600-\u06ff]/u.test(c.name+c.room)));
+assert(englishSchedule.sessions.every(s => !/[\u0600-\u06ff]/u.test(s.title+s.competency+s.notes)));
+assert.deepEqual(localizeSchedule(englishSchedule,'fr'),demo);
+assert(isScheduleData(englishSchedule));
+console.log('PASS: English plans, curriculum, calendar, reading tiers, edits, and round trips.');

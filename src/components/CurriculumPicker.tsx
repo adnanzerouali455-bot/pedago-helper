@@ -2,6 +2,7 @@
 
 import React, { useEffect, useId, useState } from "react";
 import { curriculum, curriculumLessons, findCurriculumLesson, type CurriculumLanguage, type CurriculumLesson } from "./curriculum";
+import { localizeText } from "./localization";
 
 export default function CurriculumPicker({ language, selectedId, onSelect }: {
   language: CurriculumLanguage;
@@ -15,9 +16,7 @@ export default function CurriculumPicker({ language, selectedId, onSelect }: {
   const [semester, setSemester] = useState(initial?.semester ?? 1);
   const [lessonId, setLessonId] = useState(initial?.id ?? "");
   const id = useId();
-  const ar = language === "ar";
-  const name = ar ? "name_ar" : "name_fr";
-  const title = ar ? "title_ar" : "title_fr";
+  const label = (fr: string, arText: string, en: string) => language === "ar" ? arText : language === "en" ? en : fr;
   const cycle = curriculum.cycles.find(item => item.id === cycleId)!;
   const level = cycle.levels.find(item => item.id === levelId)!;
   const subject = level.subjects.find(item => item.id === subjectId)!;
@@ -33,44 +32,44 @@ export default function CurriculumPicker({ language, selectedId, onSelect }: {
 
   return <details open className="rounded-lg border border-[var(--color-sand-border)] bg-[var(--color-parchment)] p-3">
     <summary className="cursor-pointer text-sm font-bold text-[var(--color-cypress)]">
-      {ar ? "اختيار من دليل الدروس" : "Choisir dans le catalogue"} · {curriculumLessons.length}
+      {label("Choisir dans le catalogue", "اختيار من دليل الدروس", "Choose from the curriculum")} · {curriculumLessons.length}
     </summary>
     <div className="mt-4 space-y-3">
-      <div><label className="ph-label" htmlFor={`${id}-cycle`}>{ar ? "السلك" : "Cycle"}</label>
+      <div><label className="ph-label" htmlFor={`${id}-cycle`}>{label("Cycle", "السلك", "School stage")}</label>
         <select className="ph-input" id={`${id}-cycle`} value={cycleId} onChange={event => {
           const next = curriculum.cycles.find(item => item.id === event.target.value)!;
           const nextLevel = next.levels[0]; const nextSubject = nextLevel.subjects[0];
           setCycleId(next.id); setLevelId(nextLevel.id); setSubjectId(nextSubject.id);
           setSemester(nextSubject.semesters[0].semester); setLessonId("");
-        }}>{curriculum.cycles.map(item => <option key={item.id} value={item.id}>{item[name]}</option>)}</select>
+        }}>{curriculum.cycles.map(item => <option key={item.id} value={item.id}>{localizeText(item.name_fr, language)}</option>)}</select>
       </div>
-      <div><label className="ph-label" htmlFor={`${id}-level`}>{ar ? "المستوى والمسلك" : "Niveau et filière"}</label>
+      <div><label className="ph-label" htmlFor={`${id}-level`}>{label("Niveau et filière", "المستوى والمسلك", "Grade and track")}</label>
         <select className="ph-input" id={`${id}-level`} value={levelId} onChange={event => {
           const next = cycle.levels.find(item => item.id === event.target.value)!;
           setLevelId(next.id); setSubjectId(next.subjects[0].id);
           setSemester(next.subjects[0].semesters[0].semester); setLessonId("");
-        }}>{cycle.levels.map(item => <option key={item.id} value={item.id}>{item[name]}</option>)}</select>
+        }}>{cycle.levels.map(item => <option key={item.id} value={item.id}>{localizeText(item.name_fr, language)}</option>)}</select>
       </div>
-      <div><label className="ph-label" htmlFor={`${id}-subject`}>{ar ? "مادة الدليل" : "Matière du catalogue"}</label>
+      <div><label className="ph-label" htmlFor={`${id}-subject`}>{label("Matière du catalogue", "مادة الدليل", "Curriculum subject")}</label>
         <select className="ph-input" id={`${id}-subject`} value={subjectId} onChange={event => {
           const next = level.subjects.find(item => item.id === event.target.value)!;
           setSubjectId(next.id); setSemester(next.semesters[0].semester); setLessonId("");
-        }}>{level.subjects.map(item => <option key={item.id} value={item.id}>{item[name]}</option>)}</select>
+        }}>{level.subjects.map(item => <option key={item.id} value={item.id}>{localizeText(item.name_fr, language)}</option>)}</select>
       </div>
-      <div><label className="ph-label" htmlFor={`${id}-semester`}>{ar ? "الدورة" : "Semestre"}</label>
+      <div><label className="ph-label" htmlFor={`${id}-semester`}>{label("Semestre", "الدورة", "Semester")}</label>
         <select className="ph-input" id={`${id}-semester`} value={semester} onChange={event => { setSemester(Number(event.target.value)); setLessonId(""); }}>
-          {subject.semesters.map(item => <option key={item.semester} value={item.semester}>{ar ? "الدورة" : "Semestre"} {item.semester}</option>)}
+          {subject.semesters.map(item => <option key={item.semester} value={item.semester}>{label("Semestre", "الدورة", "Semester")} {item.semester}</option>)}
         </select>
       </div>
-      <p className="text-xs font-semibold leading-relaxed">{ar ? "الوحدة" : "Unité"} : {ar ? term.unit_title_ar : term.unit_title_fr}</p>
-      <div><label className="ph-label" htmlFor={`${id}-lesson`}>{ar ? "الدرس" : "Leçon du catalogue"}</label>
+      <p className="text-xs font-semibold leading-relaxed">{label("Unité", "الوحدة", "Unit")} : {localizeText(term.unit_title_fr, language)}</p>
+      <div><label className="ph-label" htmlFor={`${id}-lesson`}>{label("Leçon du catalogue", "الدرس", "Curriculum lesson")}</label>
         <select className="ph-input" id={`${id}-lesson`} value={lessonId} onChange={event => setLessonId(event.target.value)}>
-          <option value="">{ar ? "اختر درسا" : "Sélectionner une leçon"}</option>
-          {term.lessons.map(item => <option key={item.id} value={item.id}>{item[title]}</option>)}
+          <option value="">{label("Sélectionner une leçon", "اختر درسا", "Select a lesson")}</option>
+          {term.lessons.map(item => <option key={item.id} value={item.id}>{localizeText(item.title_fr, language)}</option>)}
         </select>
       </div>
-      <button type="button" className="ph-btn w-full !text-sm" disabled={!chosen} onClick={() => { if (chosen) onSelect(chosen); }}>{ar ? "استعمال هذا الدرس" : "Utiliser ce cours"}</button>
-      <p className="ph-muted text-[11px] leading-relaxed">{ar ? "دليل مبني على المعطيات المقدمة. لا تتوفر إلا المواد والدروس الواردة في الملف." : "Catalogue issu des données fournies. Seules les matières et les leçons présentes dans le fichier sont proposées."}</p>
+      <button type="button" className="ph-btn w-full !text-sm" disabled={!chosen} onClick={() => { if (chosen) onSelect(chosen); }}>{label("Utiliser ce cours", "استعمال هذا الدرس", "Use this lesson")}</button>
+      <p className="ph-muted text-[11px] leading-relaxed">{label("Catalogue issu des données fournies. Seules les matières et les leçons présentes dans le fichier sont proposées.", "دليل مبني على المعطيات المقدمة. لا تتوفر إلا المواد والدروس الواردة في الملف.", "This curriculum uses the supplied data. Only subjects and lessons in that data are listed.")}</p>
     </div>
   </details>;
 }
