@@ -59,3 +59,9 @@ Les classes et les leçons sont enregistrées dans le navigateur, séparément p
 Les fichiers `.env*`, `.vercel`, `node_modules` et `.next` sont exclus du paquet téléchargeable. `.env.example` est fourni sans secret.
 
 Documentation : [déploiement Vercel CLI](https://vercel.com/docs/projects/deploy-from-cli).
+
+## Accueil et comptes de démonstration
+
+La page d’entrée propose Amine (enseignant) et Salma (étudiante), deux profils fictifs sans mot de passe ni authentification. Les routes `#teacher` et `#student` ouvrent leurs tableaux de bord. L’enseignant retrouve le calendrier et le studio ; l’étudiante dispose des quatre lectures modèles, de trois niveaux de lecture, du lexique et de trois questions. Les réponses sont enregistrées uniquement dans le navigateur, sans correction automatique ni transmission à un enseignant.
+
+Le choix français/arabe est conservé sur cet appareil. Les exemples, le catalogue, le calendrier, les fiches et l’impression suivent ce choix. Les textes personnels sont préservés ; le changement de langue ne fournit pas une traduction automatique du contenu saisi librement.

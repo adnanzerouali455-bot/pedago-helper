@@ -45,3 +45,38 @@ const schedule=createDemoSchedule('2026-09-21','fr');
 schedule.classes[0].subject='pc';
 assert(isScheduleData(schedule));
 console.log(`PASS: ${total} fiches bilingues, conservation des titres, persistance, 9 cours de physique-chimie, compatibilité des anciennes fiches.`);
+const { localizeLesson, initialInput, localizeLessonInput } = require('../src/components/LessonPlanStudio.tsx');
+const { localizeSchedule } = require('../src/components/TeacherScheduleCalendar.tsx');
+for (const subject of ['svt','pc','math','arabic','french']) for (const schoolLevel of ['primary','middle','high']) {
+  const fr = createLocalLesson({...initialInput('fr', subject),schoolLevel});
+  const ar = localizeLesson(fr,'ar');
+  const expected = createLocalLesson(localizeLessonInput(fr.input,'ar'));
+  assert.deepEqual(ar.phases,expected.phases);
+  assert.deepEqual(ar.readings,expected.readings);
+  assert.deepEqual(ar.obstacles,expected.obstacles);
+  assert.equal(ar.id,fr.id);
+  assert.deepEqual(JSON.parse(JSON.stringify(localizeLesson(ar,'fr'))),fr);
+  const edited=structuredClone(fr);
+  edited.phases[0].minutes=21;
+  edited.phases[0].situation='Ma consigne personnelle';
+  edited.readings[2].text='Texte personnel à conserver.';
+  const result=localizeLesson(edited,'ar');
+  assert.equal(result.phases[0].minutes,21);
+  assert.equal(result.phases[0].situation,edited.phases[0].situation);
+  assert.equal(result.readings[2].text,edited.readings[2].text);
+  assert.equal(result.phases[1].teacher,expected.phases[1].teacher);
+}
+for (const entry of curriculumLessons) {
+  const fr=createLocalLesson({...initialInput('fr',entry.subject),schoolLevel:entry.schoolLevel,curriculumLessonId:entry.id,title:entry.title_fr,competency:curriculumCompetency(entry,'fr')});
+  const ar=localizeLesson(fr,'ar');
+  assert.equal(ar.input.title,entry.title_ar);
+  assert(ar.phases[0].situation.includes(entry.title_ar));
+  assert(isLessonDocument(ar));
+}
+const demo=createDemoSchedule('2026-09-21','fr');
+const arabic=localizeSchedule(demo,'ar');
+assert(arabic.classes.every(c=>!/[A-Za-z]/.test(c.name+c.room)));
+assert(arabic.sessions.every(s=>!/[A-Za-z]/.test(s.title+s.competency+s.notes)));
+assert.deepEqual(localizeSchedule(arabic,'fr'),demo);
+assert(isScheduleData(arabic));
+console.log('PASS: traduction immédiate des 5 matières, 3 niveaux scolaires, 58 cours, calendrier et conservation des modifications.');
