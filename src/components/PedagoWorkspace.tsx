@@ -35,6 +35,10 @@ export default function PedagoWorkspace({ logoSrc = "/pedago-helper-logo.jpeg", 
     brand: "Pedago Helper", tagline: "Un seul espace pour organiser et préparer vos cours", calendar: "Emploi du temps", planner: "Préparation des leçons", navigation: "Navigation principale", free: "Préparation libre", editor: "Espace de préparation", linked: "Séance liée à votre calendrier", back: "Voir l’emploi du temps", notes: "Notes et ressources de la séance", language: "Langue", draft: "Vos modifications restent en mémoire pendant la navigation. Enregistrez votre leçon avant de fermer le site.",
   };
   useEffect(() => {
+    // Every visit starts with the role choice, including old links to a dashboard.
+    if (window.location.hash && window.location.hash !== "#home") {
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}#home`);
+    }
     const readRoute = () => {
       const hash = window.location.hash;
       if (hash === "#planner" || hash === "#calendar") { setProfile("teacher"); setView(hash === "#planner" ? "planner" : "calendar"); }
