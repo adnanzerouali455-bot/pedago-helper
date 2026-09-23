@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Pedago Helper · Calendrier et préparation",
-  description: "Un seul espace pour organiser les classes, préparer les leçons et adapter les textes en français et en arabe.",
+  description: "Un seul espace pour organiser les classes, préparer les leçons et adapter les textes en français, en arabe et en anglais.",
 };
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };

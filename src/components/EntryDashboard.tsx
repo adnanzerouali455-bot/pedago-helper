@@ -1,26 +1,36 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, CheckCircle2, FilePenLine, GraduationCap, Users } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, CheckCircle2, GraduationCap, ShieldCheck, Sparkles, Users } from "lucide-react";
 import { createLocalLesson, initialInput, type Language, type Subject } from "./LessonPlanStudio";
 import { createDemoSchedule, isScheduleData, localizeSchedule } from "./TeacherScheduleCalendar";
 
 export type DemoProfile = "teacher" | "student";
 export function ProfilePicker({ language, onSelect }: { language: Language; onSelect: (profile: DemoProfile) => void }) {
   const ar = language === "ar"; const en = language === "en";
-  return <main className="mx-auto max-w-5xl px-5 py-12 md:py-20">
-    <p className="mb-4 text-sm font-bold text-terracotta">{ar ? "مرحبا بك في المساعد البيداغوجي" : en ? "WELCOME TO PEDAGO HELPER" : "BIENVENUE DANS PEDAGO HELPER"}</p>
-    <h1 className="max-w-3xl text-3xl font-bold leading-relaxed md:text-5xl">{ar ? "فضاؤك للتعليم والتعلم." : en ? "One place to teach. One place to learn." : "Un espace pour enseigner. Un espace pour apprendre."}</h1>
-    <p className="mt-5 text-sm leading-7 text-ink">{ar ? "اختر حسابا تجريبيا لاكتشاف التطبيق، دون كلمة مرور." : en ? "Choose a demo account to explore the app. No password needed." : "Choisissez un compte de démonstration pour découvrir l’application, sans mot de passe."}</p>
-    <div className="mt-10 grid gap-5 md:grid-cols-2">{(["teacher", "student"] as DemoProfile[]).map(profile => <button key={profile} onClick={() => onSelect(profile)} className="group rounded-lg border border-sand bg-white p-7 text-start transition-colors hover:border-terracotta focus-visible:outline-2 focus-visible:outline-terracotta">
-      <span className="mb-6 inline-flex rounded-lg bg-cypress-soft p-4">{profile === "teacher" ? <FilePenLine size={28} /> : <GraduationCap size={28} />}</span>
-      <p className="text-xs font-bold text-terracotta">{ar ? "حساب تجريبي" : en ? "DEMO ACCOUNT" : "COMPTE DÉMO"}</p>
-      <h2 className="mt-2 text-2xl font-bold">{profile === "teacher" ? (ar ? "فضاء الأستاذ" : en ? "Teacher space" : "Espace enseignant") : (ar ? "فضاء الطالب" : en ? "Student space" : "Espace étudiant")}</h2>
-      <p className="mt-3 text-sm text-ink">{profile === "teacher" ? (ar ? "الأستاذ أمين · علوم الحياة والأرض" : en ? "Amine · Life and Earth Sciences teacher" : "Amine · Professeur de SVT") : (ar ? "سلمى · الثالثة إعدادي" : en ? "Salma · 3rd year of middle school" : "Salma · 3ème année collégiale")}</p>
-      <p className="mt-4 min-h-12 text-sm leading-6 text-ink">{profile === "teacher" ? (ar ? "نظم جدولك، جهز جذاذاتك وتابع حصصك." : en ? "Organize classes, prepare lesson plans and follow your sessions." : "Organisez vos classes, préparez vos fiches et suivez vos séances.") : (ar ? "اقرأ بإيقاعك، اكتشف المفردات وتدرب على الفهم." : en ? "Read at your own pace, learn vocabulary and practice comprehension." : "Lisez à votre rythme, découvrez le vocabulaire et entraînez votre compréhension.")}</p>
-      <span className="mt-6 flex items-center gap-2 font-bold">{ar ? "الدخول إلى الفضاء" : en ? "Enter this space" : "Entrer dans cet espace"}{ar ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}</span>
-    </button>)}</div>
-    <p className="mt-7 text-center text-xs text-ink">{ar ? "شخصيات وبيانات تجريبية. لا توجد مصادقة أو حسابات مدرسية حقيقية." : en ? "Fictional profiles and sample data. No real school accounts or authentication." : "Profils fictifs et données de démonstration. Aucun compte scolaire réel ni authentification."}</p>
-  </main>;
+  const t = ar ? {
+    badge: "منصة بيداغوجية وديداكتيكية", title: "فضاء واحد لتحضير الدروس والتعلم.", subtitle: "اختر حسابا تجريبيا لاكتشاف المنصة دون تسجيل أو كلمة مرور.", demo: "حساب تجريبي", teacher: "فضاء الأستاذ", teacherName: "أمين · أستاذ علوم الحياة والأرض", teacherDescription: "نظم أقسامك وجدولك، وأعد جذاذاتك وفق مراحل غي بروسو الأربع مع توزيع زمن الحصة.", student: "فضاء التلميذ", studentName: "سلمى · السنة الثالثة إعدادي", studentDescription: "اقرأ نصوصا بمستويات مختلفة، واكتشف المفردات العلمية وتدرب على الفهم.", enterTeacher: "الدخول إلى فضاء الأستاذ", enterStudent: "الدخول إلى فضاء التلميذ", disclaimer: "شخصيات وبيانات تجريبية. لا توجد حسابات مدرسية حقيقية أو مصادقة.",
+  } : en ? {
+    badge: "Teaching and learning platform", title: "One place to plan lessons and learn.", subtitle: "Choose a demo account to explore the app without signing up or entering a password.", demo: "DEMO ACCOUNT", teacher: "Teacher space", teacherName: "Amine · Life and Earth Sciences teacher", teacherDescription: "Organize classes and your timetable, then prepare lesson plans with Brousseau’s four phases and a clear time budget.", student: "Student space", studentName: "Salma · 3rd year of middle school", studentDescription: "Read texts at different levels, explore scientific vocabulary and practice comprehension.", enterTeacher: "Enter teacher space", enterStudent: "Enter student space", disclaimer: "Fictional profiles and sample data. No real school accounts or authentication.",
+  } : {
+    badge: "Plateforme pédagogique et didactique", title: "Un seul espace pour préparer vos cours et apprendre.", subtitle: "Choisissez un compte de démonstration pour explorer l’application sans inscription ni mot de passe.", demo: "COMPTE DÉMO", teacher: "Espace enseignant", teacherName: "Amine · Professeur de SVT", teacherDescription: "Organisez vos classes et votre emploi du temps, puis préparez vos fiches selon les quatre phases de Brousseau avec un temps maîtrisé.", student: "Espace étudiant", studentName: "Salma · 3ème année collégiale", studentDescription: "Lisez à votre rythme, explorez le vocabulaire scientifique et entraînez votre compréhension.", enterTeacher: "Entrer dans l’espace enseignant", enterStudent: "Entrer dans l’espace étudiant", disclaimer: "Profils fictifs et données de démonstration. Aucun compte scolaire réel ni authentification.",
+  };
+  return <div className="flex min-h-[calc(100dvh-140px)] flex-col justify-between bg-parchment text-ink">
+    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center px-5 py-12 text-center md:py-16">
+      <p className="mb-5 inline-flex items-center gap-2 rounded-lg border border-terracotta/30 bg-terracotta-soft px-3 py-1.5 text-xs font-bold text-terracotta"><Sparkles size={15} aria-hidden="true" />{t.badge}</p>
+      <h1 className="max-w-3xl text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl lg:text-5xl">{t.title}</h1>
+      <p className="mt-5 max-w-2xl text-sm leading-7 text-ink sm:text-base">{t.subtitle}</p>
+      <div className="mt-10 grid w-full gap-5 text-start md:grid-cols-2 md:gap-6">{(["teacher", "student"] as DemoProfile[]).map(profile => {
+        const teacher = profile === "teacher";
+        return <button type="button" key={profile} onClick={() => onSelect(profile)} className="group flex min-h-[296px] flex-col justify-between rounded-lg border border-sand bg-white p-6 text-start transition-colors hover:border-terracotta focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta md:p-7">
+          <span className="block w-full"><span className="mb-5 flex items-center justify-between gap-3"><span className={`inline-flex h-12 w-12 items-center justify-center rounded-lg border ${teacher ? "border-terracotta/20 bg-terracotta-soft text-terracotta" : "border-cypress bg-cypress text-white"}`}>{teacher ? <GraduationCap size={25} aria-hidden="true" /> : <BookOpen size={25} aria-hidden="true" />}</span><span className={`rounded-lg border px-2.5 py-1 text-[10px] font-extrabold ${teacher ? "border-terracotta/30 bg-terracotta-soft text-terracotta" : "border-cypress/20 bg-cypress-soft text-cypress"}`}>{t.demo}</span></span>
+            <span className="block text-xl font-bold text-ink">{teacher ? t.teacher : t.student}</span><span className={`mt-1 block text-xs font-bold ${teacher ? "text-terracotta" : "text-cypress"}`}>{teacher ? t.teacherName : t.studentName}</span><span className="mt-4 block text-sm leading-7 text-ink">{teacher ? t.teacherDescription : t.studentDescription}</span>
+          </span>
+          <span className="mt-7 flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-cypress px-4 py-3 text-sm font-bold text-white transition-colors group-hover:bg-terracotta">{teacher ? t.enterTeacher : t.enterStudent}{ar ? <ArrowLeft size={17} aria-hidden="true" /> : <ArrowRight size={17} aria-hidden="true" />}</span>
+        </button>;
+      })}</div>
+    </main>
+    <footer className="border-t border-sand bg-white px-5 py-5 text-center"><p className="mx-auto flex max-w-3xl items-center justify-center gap-2 text-xs leading-6 text-ink"><ShieldCheck size={17} className="shrink-0 text-terracotta" aria-hidden="true" />{t.disclaimer}</p></footer>
+  </div>;
 }
 
 export function TeacherDashboard({ language, storageKey, onNavigate }: { language: Language; storageKey: string; onNavigate: (view: "calendar" | "planner") => void }) {

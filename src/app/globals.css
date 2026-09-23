@@ -2,6 +2,7 @@
 @source "../components/LessonPlanStudio.tsx";
 @source "../components/TeacherScheduleCalendar.tsx";
 @source "../components/PedagoWorkspace.tsx";
+@source "../components/EntryDashboard.tsx";
 
 @theme inline {
   --color-terracotta: #CE5E37;
