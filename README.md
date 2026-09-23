@@ -8,11 +8,11 @@ Déploiement vérifié le 21 septembre 2026 : `dpl_2E89gGXWZzrmqALq7YJCnntvQmsz`
 
 ## Catalogue des cours
 
-Le fichier `src/components/curriculum-data.json` reprend les données fournies : 2 cycles, 6 niveaux, 58 leçons dont 9 de Physique-Chimie en 1AC. Le formulaire filtre successivement cycle, niveau/filière, matière et semestre, puis préremplit le titre et une compétence modifiable. L’identifiant de la leçon et le niveau précis restent associés à la fiche enregistrée et imprimée. Les libellés sont disponibles en français et en arabe.
+Le fichier `src/components/curriculum-data.json` reprend les données fournies : 2 cycles, 6 niveaux, 58 leçons dont 9 de Physique-Chimie en 1AC. Le formulaire filtre successivement cycle, niveau/filière, matière et semestre, puis préremplit le titre et une compétence modifiable. L’identifiant de la leçon et le niveau précis restent associés à la fiche enregistrée et imprimée. Les libellés sont disponibles en français, en arabe et en anglais.
 
 Ce catalogue fournit des intitulés ; il ne contient pas les textes scientifiques. Pour ses leçons, la génération locale produit une trame didactique à compléter et permet d’ajouter un texte fourni par l’enseignant, sans présenter un autre cours comme s’il correspondait au titre choisi. Les anciennes fiches restent lisibles.
 
-Vérification : `npm test` couvre les 58 leçons dans les deux langues et la compatibilité des données sauvegardées.
+Vérification : `npm test` couvre les 58 leçons dans les trois langues et la compatibilité des données sauvegardées.
 
 ## Développement
 
@@ -64,4 +64,4 @@ Documentation : [déploiement Vercel CLI](https://vercel.com/docs/projects/deplo
 
 À chaque ouverture du site, y compris depuis un ancien lien direct, la page d’entrée propose Amine (enseignant) et Salma (étudiante), deux profils fictifs sans mot de passe ni authentification. Les routes `#teacher` et `#student` ouvrent leurs tableaux de bord. L’enseignant retrouve le calendrier et le studio ; l’étudiante dispose des quatre lectures modèles, de trois niveaux de lecture, du lexique et de trois questions. Les réponses sont enregistrées uniquement dans le navigateur, sans correction automatique ni transmission à un enseignant.
 
-Le choix français/arabe est conservé sur cet appareil. Les exemples, le catalogue, le calendrier, les fiches et l’impression suivent ce choix. Les textes personnels sont préservés ; le changement de langue ne fournit pas une traduction automatique du contenu saisi librement.
+Le choix français/arabe/anglais est conservé sur cet appareil. Les exemples, le catalogue, le calendrier, les fiches et l’impression suivent ce choix. Les textes personnels sont préservés ; le changement de langue ne fournit pas une traduction automatique du contenu saisi librement.
