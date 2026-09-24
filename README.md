@@ -64,6 +64,4 @@ Documentation : [déploiement Vercel CLI](https://vercel.com/docs/projects/deplo
 
 À chaque ouverture du site, y compris depuis un ancien lien direct, la page d’entrée propose Amine (enseignant) et Salma (étudiante), deux profils fictifs sans mot de passe ni authentification. Les routes `#teacher` et `#student` ouvrent leurs tableaux de bord. L’enseignant retrouve le calendrier et le studio ; l’étudiante dispose des quatre lectures modèles, de trois niveaux de lecture, du lexique et de trois questions. Les réponses sont enregistrées uniquement dans le navigateur, sans correction automatique ni transmission à un enseignant.
 
-La page d’entrée présente un aperçu de fiche et deux accès directs aux profils. Sa typographie Lora et sa couleur d’accent brun sont limitées à cette page ; les espaces de travail conservent la palette officielle.
-
 Le choix français/arabe/anglais est conservé sur cet appareil. Les exemples, le catalogue, le calendrier, les fiches et l’impression suivent ce choix. Les textes personnels sont préservés ; le changement de langue ne fournit pas une traduction automatique du contenu saisi librement.
