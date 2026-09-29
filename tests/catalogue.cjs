@@ -7,14 +7,23 @@ for (const ext of ['.ts', '.tsx']) require.extensions[ext] = (module, filename) 
     jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true, resolveJsonModule: true,
   }}).outputText, filename);
 };
-const { curriculum, curriculumLessons, curriculumCompetency, findCurriculumLesson } = require('../src/components/curriculum.ts');
+const { curriculum, curriculumChapters, curriculumLessons, curriculumCompetency, findCurriculumLesson } = require('../src/components/curriculum.ts');
 const { createLocalLesson, isLessonDocument } = require('../src/components/LessonPlanStudio.tsx');
 const { createDemoSchedule, isScheduleData } = require('../src/components/TeacherScheduleCalendar.tsx');
 assert.equal(curriculum.cycles.length, 2);
 assert.equal(curriculum.cycles.flatMap(c => c.levels).length, 6);
-assert.equal(curriculumLessons.length, 58);
-assert.equal(new Set(curriculumLessons.map(l => l.id)).size, 58);
+assert.equal(curriculumLessons.length, 97);
+assert.equal(new Set(curriculumLessons.map(l => l.id)).size, 97);
 assert.equal(curriculumLessons.filter(l => l.subject === 'pc').length, 9);
+const chapters = curriculumChapters.flatMap(grade => grade.units.flatMap(unit => unit.chapters));
+assert.equal(chapters.length, 47);
+for (const chapter of chapters) {
+  const entries = curriculumLessons.filter(lesson => lesson.chapterId === chapter.id);
+  assert.equal(entries.length, 1, chapter.id);
+  assert.equal(entries[0].estimatedHours, chapter.estimatedHours);
+  assert.deepEqual(entries[0].keyConcepts, chapter.keyConcepts);
+}
+assert.equal(curriculumLessons.filter(lesson => lesson.id.startsWith('svt_chapter_')).length, 39);
 let total = 0;
 for (const entry of curriculumLessons) for (const language of ['fr','ar','en']) {
   assert.equal(findCurriculumLesson(entry.id), entry);
@@ -44,7 +53,7 @@ assert(createLocalLesson(legacyInput).readings[1].text.includes('photosynthèse'
 const schedule=createDemoSchedule('2026-09-21','fr');
 schedule.classes[0].subject='pc';
 assert(isScheduleData(schedule));
-console.log(`PASS: ${total} fiches trilingues, conservation des titres, persistance, 9 cours de physique-chimie, compatibilité des anciennes fiches.`);
+console.log(`PASS: ${total} fiches trilingues, 47 chapitres SVT ajoutés ou enrichis, 9 cours de physique-chimie, compatibilité des anciennes fiches.`);
 const { localizeLesson, initialInput, localizeLessonInput } = require('../src/components/LessonPlanStudio.tsx');
 const { localizeSchedule } = require('../src/components/TeacherScheduleCalendar.tsx');
 for (const subject of ['svt','pc','math','arabic','french']) for (const schoolLevel of ['primary','middle','high']) {
@@ -79,11 +88,14 @@ assert(arabic.classes.every(c=>!/[A-Za-z]/.test(c.name+c.room)));
 assert(arabic.sessions.every(s=>!/[A-Za-z]/.test(s.title+s.competency+s.notes)));
 assert.deepEqual(localizeSchedule(arabic,'fr'),demo);
 assert(isScheduleData(arabic));
-console.log('PASS: traduction immédiate des 5 matières, 3 niveaux scolaires, 58 cours, calendrier et conservation des modifications.');
+console.log('PASS: traduction immédiate des 5 matières, 3 niveaux scolaires, 97 cours, calendrier et conservation des modifications.');
 
 const { englishLessonTitles } = require('../src/components/curriculum-english.ts');
+const { englishChapterTitles, englishChapterUnits } = require('../src/components/svt-chapters-english.ts');
 const { localizeText, languageName } = require('../src/components/localization.ts');
 assert.equal(Object.keys(englishLessonTitles).length, 58);
+assert.equal(Object.keys(englishChapterTitles).length, 47);
+assert.equal(Object.keys(englishChapterUnits).length, 14);
 assert.equal(languageName('en','en'), 'English');
 assert.equal(languageName('en','ar'), 'الإنجليزية');
 for (const subject of ['svt','pc','math','arabic','french']) for (const schoolLevel of ['primary','middle','high']) {
@@ -111,7 +123,7 @@ for (const entry of curriculumLessons) {
   assert(en.phases[0].situation.includes(entry.title_en));
   assert.deepEqual(JSON.parse(JSON.stringify(localizeLesson(en,'fr'))),fr);
   assert(isLessonDocument(en));
-  assert.equal(localizeText(entry.title_ar,'en'),entry.title_en);
+  if (curriculumLessons.filter(other => other.title_ar === entry.title_ar).length === 1) assert.equal(localizeText(entry.title_ar,'en'),entry.title_en);
 }
 const englishSchedule=localizeSchedule(demo,'en');
 assert(englishSchedule.classes.every(c => !/[\u0600-\u06ff]/u.test(c.name+c.room)));

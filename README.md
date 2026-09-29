@@ -8,11 +8,11 @@ Déploiement vérifié le 21 septembre 2026 : `dpl_2E89gGXWZzrmqALq7YJCnntvQmsz`
 
 ## Catalogue des cours
 
-Le fichier `src/components/curriculum-data.json` reprend les données fournies : 2 cycles, 6 niveaux, 58 leçons dont 9 de Physique-Chimie en 1AC. Le formulaire filtre successivement cycle, niveau/filière, matière et semestre, puis préremplit le titre et une compétence modifiable. L’identifiant de la leçon et le niveau précis restent associés à la fiche enregistrée et imprimée. Les libellés sont disponibles en français, en arabe et en anglais.
+Les fichiers `src/components/curriculum-data.json` et `src/components/svt-chapters.json` réunissent les données fournies : 2 cycles, 6 niveaux et 97 choix de cours, dont 9 de Physique-Chimie en 1AC. Le second fichier apporte 47 chapitres de SVT avec durée indicative et notions clés. Huit chapitres de même titre et de même semestre enrichissent un cours existant au lieu de créer un doublon ; 39 nouveaux choix s’ajoutent au sélecteur. Le formulaire filtre successivement cycle, niveau/filière, matière et semestre, puis préremplit le titre et une compétence modifiable. L’identifiant de la leçon et le niveau précis restent associés à la fiche enregistrée et imprimée. Les libellés sont disponibles en français, en arabe et en anglais.
 
 Ce catalogue fournit des intitulés ; il ne contient pas les textes scientifiques. Pour ses leçons, la génération locale produit une trame didactique à compléter et permet d’ajouter un texte fourni par l’enseignant, sans présenter un autre cours comme s’il correspondait au titre choisi. Les anciennes fiches restent lisibles.
 
-Vérification : `npm test` couvre les 58 leçons dans les trois langues et la compatibilité des données sauvegardées.
+Vérification : `npm test` couvre les 97 choix dans les trois langues, les 47 chapitres et la compatibilité des données sauvegardées.
 
 ## Développement
 

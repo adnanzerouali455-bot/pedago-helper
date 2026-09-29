@@ -1,5 +1,7 @@
 import data from "./curriculum-data.json";
 import { englishLessonTitle, englishLevelName, englishUnitName } from "./curriculum-english";
+import chapters from "./svt-chapters.json";
+import { englishChapterTitle, englishChapterUnit } from "./svt-chapters-english";
 
 export type CurriculumLanguage = "fr" | "ar" | "en";
 export interface CurriculumLesson {
@@ -19,10 +21,15 @@ export interface CurriculumLesson {
   unit_fr: string;
   unit_ar: string;
   unit_en: string;
+  unitId?: string;
+  chapterId?: string;
+  estimatedHours?: number;
+  keyConcepts?: string[];
 }
 
 export const curriculum = data;
-export const curriculumLessons: CurriculumLesson[] = data.cycles.flatMap(cycle =>
+export const curriculumChapters = chapters;
+const originalLessons: CurriculumLesson[] = data.cycles.flatMap(cycle =>
   cycle.levels.flatMap(level => level.subjects.flatMap(subject =>
     subject.semesters.flatMap(semester => semester.lessons.map(lesson => ({
       ...lesson,
@@ -42,6 +49,42 @@ export const curriculumLessons: CurriculumLesson[] = data.cycles.flatMap(cycle =
     }))),
   )),
 );
+const originalByTitle = new Map(originalLessons.map(lesson => [`${lesson.levelId}:${lesson.semester}:${lesson.title_fr}`, lesson]));
+const gradeIds: Record<string, string> = { "1AC": "1ac", "2AC": "2ac", "3AC": "3ac", TCS: "tcs", "2BAC_SVT": "2bac_svt" };
+const additionalLessons: CurriculumLesson[] = chapters.flatMap(grade => {
+  const levelId = gradeIds[grade.gradeId];
+  const level = data.cycles.flatMap(cycle => cycle.levels).find(item => item.id === levelId);
+  if (!level) throw new Error(`Unknown curriculum grade: ${grade.gradeId}`);
+  const subjectId = `svt_${levelId === "2bac_svt" ? "2bac" : levelId}`;
+  return grade.units.flatMap(unit => unit.chapters.flatMap(chapter => {
+    const metadata = { unitId: unit.unitId, chapterId: chapter.id, estimatedHours: chapter.estimatedHours, keyConcepts: chapter.keyConcepts };
+    const existing = originalByTitle.get(`${levelId}:${unit.semester}:${chapter.titleFr}`);
+    if (existing && existing.subjectId === subjectId) {
+      Object.assign(existing, metadata);
+      return [];
+    }
+    return [{
+      ...metadata,
+      id: `svt_chapter_${chapter.id.toLowerCase().replaceAll("-", "_")}`,
+      cycleId: grade.cycle,
+      levelId,
+      subjectId,
+      subject: "svt" as const,
+      schoolLevel: grade.cycle === "college" ? "middle" as const : "high" as const,
+      semester: unit.semester,
+      title_fr: chapter.titleFr,
+      title_ar: chapter.titleAr,
+      title_en: englishChapterTitle(chapter.id),
+      level_fr: level.name_fr,
+      level_ar: level.name_ar,
+      level_en: englishLevelName(levelId),
+      unit_fr: unit.titleFr,
+      unit_ar: unit.titleAr,
+      unit_en: englishChapterUnit(unit.unitId),
+    }];
+  }));
+});
+export const curriculumLessons: CurriculumLesson[] = [...originalLessons, ...additionalLessons];
 
 export function findCurriculumLesson(id?: string): CurriculumLesson | undefined {
   return curriculumLessons.find(lesson => lesson.id === id);

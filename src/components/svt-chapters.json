@@ -1,0 +1,483 @@
+[
+  {
+    "gradeId": "1AC",
+    "cycle": "college",
+    "labelFr": "1ère Année Collégiale (1AC)",
+    "labelAr": "الأولى إعدادي",
+    "units": [
+      {
+        "unitId": "1AC-U1",
+        "titleFr": "Relations entre les êtres vivants et leurs interactions avec le milieu",
+        "titleAr": "العلاقات بين الكائنات الحية وتفاعلها مع أوساطها",
+        "semester": 1,
+        "chapters": [
+          {
+            "id": "1AC-U1-C1",
+            "titleFr": "Découverte d'un milieu naturel et diversité des êtres vivants",
+            "titleAr": "استكشاف وسط طبيعي وتنوع الكائنات الحية",
+            "estimatedHours": 6,
+            "keyConcepts": ["Milieu naturel", "Cellule", "Microscope", "Unité structurale"]
+          },
+          {
+            "id": "1AC-U1-C2",
+            "titleFr": "La respiration dans différents milieux de vie",
+            "titleAr": "التنفس في أوساط مختلفة",
+            "estimatedHours": 8,
+            "keyConcepts": ["Échanges gazeux respiratoires", "Trachées", "Branchies", "Poumons"]
+          },
+          {
+            "id": "1AC-U1-C3",
+            "titleFr": "L'alimentation et les régimes alimentaires chez les êtres vivants",
+            "titleAr": "التغذية والأنظمة الغذائية عند الكائنات الحية",
+            "estimatedHours": 8,
+            "keyConcepts": ["Régime herbivore", "Régime carnivore", "Tube digestif", "Dentition"]
+          },
+          {
+            "id": "1AC-U1-C4",
+            "titleFr": "Relations trophiques et flux de matière et d'énergie",
+            "titleAr": "العلاقات الغذائية وتدفق المادة والطاقة",
+            "estimatedHours": 6,
+            "keyConcepts": ["Chaîne alimentaire", "Réseau trophique", "Producteurs", "Décomposeurs"]
+          }
+        ]
+      },
+      {
+        "unitId": "1AC-U2",
+        "titleFr": "Les phénomènes géologiques externes",
+        "titleAr": "الظواهر الجيولوجية الخارجية",
+        "semester": 2,
+        "chapters": [
+          {
+            "id": "1AC-U2-C1",
+            "titleFr": "Érosion et altération des roches",
+            "titleAr": "حت وتجوية الصخور",
+            "estimatedHours": 6,
+            "keyConcepts": ["Érosion mécanique", "Altération chimique", "Paysage géologique"]
+          },
+          {
+            "id": "1AC-U2-C2",
+            "titleFr": "Transport des produits d'érosion",
+            "titleAr": "نقل نواتج الحت",
+            "estimatedHours": 4,
+            "keyConcepts": ["Agent de transport", "Granulométrie", "Diagramme de Hjulström"]
+          },
+          {
+            "id": "1AC-U2-C3",
+            "titleFr": "Sédimentation dans les milieux actuels",
+            "titleAr": "الترسب في الأوساط الحالية",
+            "estimatedHours": 6,
+            "keyConcepts": ["Milieu marin", "Milieu continental", "Sédiments"]
+          },
+          {
+            "id": "1AC-U2-C4",
+            "titleFr": "Diagenèse et formation des roches sédimentaires",
+            "titleAr": "التصخر وتشكل الصخور الرسوبية",
+            "estimatedHours": 6,
+            "keyConcepts": ["Compaction", "Cimentation", "Roches sédimentaires", "Fossiles"]
+          },
+          {
+            "id": "1AC-U2-C5",
+            "titleFr": "Les ressources en eau et l'échelle des temps géologiques",
+            "titleAr": "الموارد المائية والسلم الاستراتيغرافي",
+            "estimatedHours": 6,
+            "keyConcepts": ["Nappe phréatique", "Cycle de l'eau", "Temps géologique"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "gradeId": "2AC",
+    "cycle": "college",
+    "labelFr": "2ème Année Collégiale (2AC)",
+    "labelAr": "الثانية إعدادي",
+    "units": [
+      {
+        "unitId": "2AC-U1",
+        "titleFr": "Les phénomènes géologiques internes",
+        "titleAr": "الظواهر الجيولوجية الباطنية",
+        "semester": 1,
+        "chapters": [
+          {
+            "id": "2AC-U1-C1",
+            "titleFr": "La théorie de la tectonique des plaques",
+            "titleAr": "نظرية تكتونية الصفائح",
+            "estimatedHours": 8,
+            "keyConcepts": ["Dérive des continents", "Courants de convection", "Expansion océanique"]
+          },
+          {
+            "id": "2AC-U1-C2",
+            "titleFr": "Les séismes et leur relation avec la tectonique des plaques",
+            "titleAr": "الزلازل وعلاقتها بتكتونية الصفائح",
+            "estimatedHours": 8,
+            "keyConcepts": ["Foyer", "Épicentre", "Ondes sismiques P/S/L", "Sismographe"]
+          },
+          {
+            "id": "2AC-U1-C3",
+            "titleFr": "Le volcanisme et la formation des roches magmatiques",
+            "titleAr": "البركانية وتشكل الصخور الصهارية",
+            "estimatedHours": 8,
+            "keyConcepts": ["Volcanisme effusif", "Volcanisme explosif", "Basalte", "Granite"]
+          },
+          {
+            "id": "2AC-U1-C4",
+            "titleFr": "Les déformations tectoniques et la genèse des chaînes de montagnes",
+            "titleAr": "التشوهات التكتونية ونشأة السلاسل الجبلية",
+            "estimatedHours": 6,
+            "keyConcepts": ["Plis", "Failles normales/inverses", "Subduction", "Collision"]
+          }
+        ]
+      },
+      {
+        "unitId": "2AC-U2",
+        "titleFr": "La reproduction chez les êtres vivants et l'hérédité humaine",
+        "titleAr": "التوالد عند الكائنات الحية والوراثة عند الإنسان",
+        "semester": 2,
+        "chapters": [
+          {
+            "id": "2AC-U2-C1",
+            "titleFr": "La reproduction sexuée chez les animaux",
+            "titleAr": "التوالد الجنسي عند الحيوانات",
+            "estimatedHours": 6,
+            "keyConcepts": ["Gamètes", "Fécondation interne/externe", "Oviparité", "Viviparité"]
+          },
+          {
+            "id": "2AC-U2-C2",
+            "titleFr": "La reproduction sexuée chez les végétaux",
+            "titleAr": "التوالد الجنسي عند النباتات",
+            "estimatedHours": 6,
+            "keyConcepts": ["Fleur", "Pollinisation", "Germination", "Graine"]
+          },
+          {
+            "id": "2AC-U2-C3",
+            "titleFr": "La reproduction asexuée chez les êtres vivants",
+            "titleAr": "التوالد اللاجنسي عند الكائنات الحية",
+            "estimatedHours": 4,
+            "keyConcepts": ["Bouturage", "Multiplication végétative", "Scissiparité"]
+          },
+          {
+            "id": "2AC-U2-C4",
+            "titleFr": "La reproduction chez l'Homme",
+            "titleAr": "التوالd عند الإنسان",
+            "estimatedHours": 8,
+            "keyConcepts": ["Appareil génital", "Cycle ovarien et utérin", "Fécondation", "Grossesse", "Accouchement"]
+          },
+          {
+            "id": "2AC-U2-C5",
+            "titleFr": "L'hérédité humaine",
+            "titleAr": "الوراثة عند الإنسان",
+            "estimatedHours": 6,
+            "keyConcepts": ["Chromosomes", "Caryotype", "Arbre généalogique", "Maladies héréditaires"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "gradeId": "3AC",
+    "cycle": "college",
+    "labelFr": "3ème Année Collégiale (3AC)",
+    "labelAr": "الثالثة إعدادي",
+    "units": [
+      {
+        "unitId": "3AC-U1",
+        "titleFr": "Fonctions de nutrition et éducation nutritionnelle",
+        "titleAr": "وظائف الاقتيات والتربية الغذائية",
+        "semester": 1,
+        "chapters": [
+          {
+            "id": "3AC-U1-C1",
+            "titleFr": "La digestion des aliments et l'absorption intestinale",
+            "titleAr": "هضم الأغذية والامتصاص المعوي",
+            "estimatedHours": 8,
+            "keyConcepts": ["Enzymes", "Nutriments", "Villosité intestinale", "Absorption"]
+          },
+          {
+            "id": "3AC-U1-C2",
+            "titleFr": "La respiration chez l'Homme et les échanges gazeux",
+            "titleAr": "التنفس عند الإنسان والتبادلات الغازية",
+            "estimatedHours": 6,
+            "keyConcepts": ["Alvéoles pulmonaires", "Respiration cellulaire", "Hémoglobine"]
+          },
+          {
+            "id": "3AC-U1-C3",
+            "titleFr": "Le sang et la circulation sanguine",
+            "titleAr": "الدم والدوران الدموي",
+            "estimatedHours": 6,
+            "keyConcepts": ["Cœur", "Vaisseaux sanguins", "Cycle cardiaque", "Pression artérielle"]
+          },
+          {
+            "id": "3AC-U1-C4",
+            "titleFr": "L'excrétion urinaire et l'appareil urinaire",
+            "titleAr": "الإبراز البولي والجهاز البولي",
+            "estimatedHours": 6,
+            "keyConcepts": ["Néphron", "Filtration glomérulaire", "Urine", "Homéostasie"]
+          },
+          {
+            "id": "3AC-U1-C5",
+            "titleFr": "L'éducation nutritionnelle et l'hygiène de l'appareil digestif",
+            "titleAr": "التربية الغذائية وصحة الجهاز الهضمي",
+            "estimatedHours": 4,
+            "keyConcepts": ["Ration alimentaire", "Carences nutritionnelles", "Kwashiorkor", "Rachitisme"]
+          }
+        ]
+      },
+      {
+        "unitId": "3AC-U2",
+        "titleFr": "Fonctions de communication et immunologie",
+        "titleAr": "وظائف الربط والمناعة",
+        "semester": 2,
+        "chapters": [
+          {
+            "id": "3AC-U2-C1",
+            "titleFr": "Le système nerveux : motricité et sensibilité",
+            "titleAr": "الجهاز العصبي : الحساسية الشعورية والتحركية",
+            "estimatedHours": 8,
+            "keyConcepts": ["Neurone", "Moelle épinière", "Cerveau", "Arc réflexe", "Synapse"]
+          },
+          {
+            "id": "3AC-U2-C2",
+            "titleFr": "Le système musculaire et les propriétés des muscles",
+            "titleAr": "الجهاز العضلي وخاصيات العضلات",
+            "estimatedHours": 6,
+            "keyConcepts": ["Excitabilité", "Contractilité", "Élasticité", "Plaque motrice"]
+          },
+          {
+            "id": "3AC-U2-C3",
+            "titleFr": "Les micro-organismes (microbes)",
+            "titleAr": "الجراثيم (المتعضيات المجهرية)",
+            "estimatedHours": 4,
+            "keyConcepts": ["Bactéries", "Virus", "Champignons", "Protozoaires", "Pathogénicité"]
+          },
+          {
+            "id": "3AC-U2-C4",
+            "titleFr": "L'immunité naturelle (innée) et l'immunité acquise (spécifique)",
+            "titleAr": "المناعة الطبيعية والمناعة النوعية المكتسبة",
+            "estimatedHours": 8,
+            "keyConcepts": ["Phagocytose", "Lymphocytes B / Anticorps", "Lymphocytes T", "Mémoire immunitaire"]
+          },
+          {
+            "id": "3AC-U2-C5",
+            "titleFr": "Les dysfonctionnements du système immunitaire et la transfusion sanguine",
+            "titleAr": "اضطرابات الجهاز المناعي والتحاقن الدموي",
+            "estimatedHours": 6,
+            "keyConcepts": ["Allergie", "SIDA (VIH)", "Groupes sanguins ABO et Rhésus"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "gradeId": "TCS",
+    "cycle": "lycee",
+    "labelFr": "Tronc Commun Scientifique (TCS)",
+    "labelAr": "الجذع المشترك العلمي",
+    "units": [
+      {
+        "unitId": "TCS-U1",
+        "titleFr": "Écologie et étude des écosystèmes",
+        "titleAr": "علم البيئة ودراسة الأوساط الطبيعية",
+        "semester": 1,
+        "chapters": [
+          {
+            "id": "TCS-U1-C1",
+            "titleFr": "Techniques d'étude écologique sur le terrain",
+            "titleAr": "تقنيات دراسة الأوساط البيئية في الميدان",
+            "estimatedHours": 8,
+            "keyConcepts": ["Relevé floristique", "Quadrats", "Strate végétale"]
+          },
+          {
+            "id": "TCS-U1-C2",
+            "titleFr": "Les facteurs édaphiques et leur influence sur les êtres vivants",
+            "titleAr": "العوامل التربوية وتأثيرها على الكائنات الحية",
+            "estimatedHours": 8,
+            "keyConcepts": ["Texture et structure du sol", "Capacité de rétention d'eau", "Complexe argilo-humique"]
+          },
+          {
+            "id": "TCS-U1-C3",
+            "titleFr": "Les facteurs climatiques et leur répartition",
+            "titleAr": "العوامل المناخية وتوزيع الكائنات الحية",
+            "estimatedHours": 8,
+            "keyConcepts": ["Diagramme ombrothermique", "Quotient d'Emberger", "Facteur limitant"]
+          },
+          {
+            "id": "TCS-U1-C4",
+            "titleFr": "Flux de matière et d'énergie dans l'écosystème",
+            "titleAr": "تدفق المادة والطاقة داخل الحميلة البيئية",
+            "estimatedHours": 6,
+            "keyConcepts": ["Biomasse", "Pyramides écologiques", "Productivité primaire et secondaire"]
+          }
+        ]
+      },
+      {
+        "unitId": "TCS-U2",
+        "titleFr": "La reproduction chez les végétaux",
+        "titleAr": "التوالد عند النباتات",
+        "semester": 2,
+        "chapters": [
+          {
+            "id": "TCS-U2-C1",
+            "titleFr": "La reproduction sexuée chez les Angiospermes",
+            "titleAr": "التوالد الجنسي عند كاسيات البذور",
+            "estimatedHours": 8,
+            "keyConcepts": ["Organes floraux", "Double fécondation", "Fruit", "Graine"]
+          },
+          {
+            "id": "TCS-U2-C2",
+            "titleFr": "La reproduction sexuée chez les Gymnospermes",
+            "titleAr": "التوالد الجنسي عند عاريات البذور",
+            "estimatedHours": 6,
+            "keyConcepts": ["Cônes mâles et femelles", "Grain de pollen ailé"]
+          },
+          {
+            "id": "TCS-U2-C3",
+            "titleFr": "La reproduction chez les végétaux sans fleurs",
+            "titleAr": "التوالد عند النباتات اللازهريـة",
+            "estimatedHours": 6,
+            "keyConcepts": ["Fougères", "Mousses", "Spores", "Prothalle"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "gradeId": "2BAC_SVT",
+    "cycle": "lycee",
+    "labelFr": "2ème Année Baccalauréat SVT",
+    "labelAr": "الثانية باك علوم الحياة والأرض",
+    "units": [
+      {
+        "unitId": "2BAC-U1",
+        "titleFr": "Consommation de la matière organique et flux d'énergie",
+        "titleAr": "استهلاك المادة العضوية وتدفق الطاقة",
+        "semester": 1,
+        "chapters": [
+          {
+            "id": "2BAC-U1-C1",
+            "titleFr": "Les réactions responsables de la libération d'énergie (Respiration & Fermentation)",
+            "titleAr": "التفاعلات المسؤولة عن تحرير الطاقة (التنفس والتخمر)",
+            "estimatedHours": 14,
+            "keyConcepts": ["Glycolyse", "Cycle de Krebs", "Phosphorylation oxydative", "ATP synthase", "Rendement énergétique"]
+          },
+          {
+            "id": "2BAC-U1-C2",
+            "titleFr": "Rôle du muscle squelettique strié dans la conversion de l'énergie",
+            "titleAr": "دور العضلة الهيكلية المخططة في تحويل الطاقة",
+            "estimatedHours": 10,
+            "keyConcepts": ["Sarcomère", "Actine", "Myosine", "Calcium", "Secousse musculaire", "Tétanos"]
+          }
+        ]
+      },
+      {
+        "unitId": "2BAC-U2",
+        "titleFr": "Nature de l'information génétique et mécanismes de son expression - Génie génétique",
+        "titleAr": "طبيعة الخبر الوراثي وآلية تعبيره - الهندسة الوراثية",
+        "semester": 1,
+        "chapters": [
+          {
+            "id": "2BAC-U2-C1",
+            "titleFr": "Notion de l'information génétique et réplication de l'ADN",
+            "titleAr": "مفهوم الخبر الوراثي ومضاعفة ADN",
+            "estimatedHours": 10,
+            "keyConcepts": ["Expérience de Griffith/Avery", "Double hélice", "Réplication semi-conservative", "Cycle cellulaire"]
+          },
+          {
+            "id": "2BAC-U2-C2",
+            "titleFr": "Expression de l'information génétique et mutations",
+            "titleAr": "تعبير الخبر الوراثي والطفرات",
+            "estimatedHours": 10,
+            "keyConcepts": ["Transcription (ARN polymérase)", "Traduction (Ribosome, ARNt)", "Code génétique", "Types de mutations"]
+          },
+          {
+            "id": "2BAC-U2-C3",
+            "titleFr": "Principes et techniques du génie génétique",
+            "titleAr": "مبادئ وتقنيات الهندسة الوراثية",
+            "estimatedHours": 6,
+            "keyConcepts": ["Enzymes de restriction", "Ligase", "Plasmide vecteur", "Transgénèse"]
+          }
+        ]
+      },
+      {
+        "unitId": "2BAC-U3",
+        "titleFr": "Transmission de l'information génétique par reproduction sexuée et génétique humaine",
+        "titleAr": "انتقال الخبر الوراثي عبر التوالد الجنسي والوراثة البشرية",
+        "semester": 2,
+        "chapters": [
+          {
+            "id": "2BAC-U3-C1",
+            "titleFr": "Brassage génétique lors de la méiose et fécondation",
+            "titleAr": "الخلط الوراثي أثناء الانقسام الاختزالي والإخصاب",
+            "estimatedHours": 8,
+            "keyConcepts": ["Brassage interchromosomique", "Brassage intrachromosomique (crossing-over)", "Lois de Mendel"]
+          },
+          {
+            "id": "2BAC-U3-C2",
+            "titleFr": "Génétique humaine et anomalies chromosomiques",
+            "titleAr": "الوراثة البشرية والشذوذات الصبغية",
+            "estimatedHours": 8,
+            "keyConcepts": ["Arbre généalogique", "Maladie autosomique", "Maladie liée au sexe (X/Y)", "Trisomie 21"]
+          }
+        ]
+      },
+      {
+        "unitId": "2BAC-U4",
+        "titleFr": "La génétique des populations",
+        "titleAr": "وراثة الساكنة",
+        "semester": 2,
+        "chapters": [
+          {
+            "id": "2BAC-U4-C1",
+            "titleFr": "Loi de Hardy-Weinberg et facteurs de variation génétique",
+            "titleAr": "قانون هاردي-واينبرغ وعوامل التغير الوراثي",
+            "estimatedHours": 8,
+            "keyConcepts": ["Fréquences alléliques p et q", "Équilibre p²+2pq+q²=1", "Dérive génétique", "Sélection naturelle"]
+          }
+        ]
+      },
+      {
+        "unitId": "2BAC-U5",
+        "titleFr": "Immunologie",
+        "titleAr": "علم المناعة",
+        "semester": 2,
+        "chapters": [
+          {
+            "id": "2BAC-U5-C1",
+            "titleFr": "Le soi et le non-soi et réponses immunitaires",
+            "titleAr": "الذاتي وغير الذاتي والاستجابات المناعية",
+            "estimatedHours": 10,
+            "keyConcepts": ["CMH I et II", "Antigène", "Lymphocytes T CD4/CD8", "Anticorps"]
+          },
+          {
+            "id": "2BAC-U5-C2",
+            "titleFr": "Dysfonctionnements immunitaires et aides à l'immunité",
+            "titleAr": "اضطرابات الجهاز المناعي وتدعيم الاستجابة المناعية",
+            "estimatedHours": 6,
+            "keyConcepts": ["Allergie (IgE, Histamine)", "VIH", "Sérothérapie", "Vaccination"]
+          }
+        ]
+      },
+      {
+        "unitId": "2BAC-U6",
+        "titleFr": "Phénomènes géologiques liés aux chaînes de montagnes",
+        "titleAr": "الظواهر الجيولوجية المصاحبة لتشكل السلاسل الجبلية",
+        "semester": 2,
+        "chapters": [
+          {
+            "id": "2BAC-U6-C1",
+            "titleFr": "Chaînes de subduction, d'obduction et de collision",
+            "titleAr": "سلاسل الطمر والطفو والاصطدام",
+            "estimatedHours": 8,
+            "keyConcepts": ["Prisme d'accrétion", "Ophiolite", "Suture géologique", "Andésite"]
+          },
+          {
+            "id": "2BAC-U6-C2",
+            "titleFr": "Métamorphisme et granitisation",
+            "titleAr": "التحول وعلاقته بدينامية الصفائح وتكون الغرانيت",
+            "estimatedHours": 8,
+            "keyConcepts": ["Schistosité", "Foliation", "Minéraux index", "Faciès métamorphiques", "Granite d'anatexie"]
+          }
+        ]
+      }
+    ]
+  }
+]

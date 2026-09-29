@@ -20,8 +20,11 @@ export default function CurriculumPicker({ language, selectedId, onSelect }: {
   const cycle = curriculum.cycles.find(item => item.id === cycleId)!;
   const level = cycle.levels.find(item => item.id === levelId)!;
   const subject = level.subjects.find(item => item.id === subjectId)!;
-  const term = subject.semesters.find(item => item.semester === semester)!;
+  const lessons = curriculumLessons.filter(item => item.levelId === levelId && item.subjectId === subjectId && item.semester === semester);
+  const units = [...new Set(lessons.map(item => item.unit_fr))].map(unit => ({ label: lessons.find(item => item.unit_fr === unit)!, lessons: lessons.filter(item => item.unit_fr === unit) }));
   const chosen = findCurriculumLesson(lessonId);
+  const title = (lesson: CurriculumLesson) => language === "ar" ? lesson.title_ar : language === "en" ? lesson.title_en : lesson.title_fr;
+  const unitTitle = (lesson: CurriculumLesson) => language === "ar" ? lesson.unit_ar : language === "en" ? lesson.unit_en : lesson.unit_fr;
   useEffect(() => {
     const item = findCurriculumLesson(selectedId);
     if (item) {
@@ -61,13 +64,13 @@ export default function CurriculumPicker({ language, selectedId, onSelect }: {
           {subject.semesters.map(item => <option key={item.semester} value={item.semester}>{label("Semestre", "الدورة", "Semester")} {item.semester}</option>)}
         </select>
       </div>
-      <p className="text-xs font-semibold leading-relaxed">{label("Unité", "الوحدة", "Unit")} : {localizeText(term.unit_title_fr, language)}</p>
       <div><label className="ph-label" htmlFor={`${id}-lesson`}>{label("Leçon du catalogue", "الدرس", "Curriculum lesson")}</label>
         <select className="ph-input" id={`${id}-lesson`} value={lessonId} onChange={event => setLessonId(event.target.value)}>
           <option value="">{label("Sélectionner une leçon", "اختر درسا", "Select a lesson")}</option>
-          {term.lessons.map(item => <option key={item.id} value={item.id}>{localizeText(item.title_fr, language)}</option>)}
+          {units.map(unit => <optgroup key={unit.label.unit_fr} label={unitTitle(unit.label)}>{unit.lessons.map(item => <option key={item.id} value={item.id}>{title(item)}</option>)}</optgroup>)}
         </select>
       </div>
+      {chosen && <p role="status" className="text-xs font-semibold leading-relaxed">{label("Unité", "الوحدة", "Unit")} : {unitTitle(chosen)}{chosen.estimatedHours ? <> · {chosen.estimatedHours} {label("heures prévues", "ساعات مقررة", "planned hours")}</> : null}</p>}
       <button type="button" className="ph-btn w-full !text-sm" disabled={!chosen} onClick={() => { if (chosen) onSelect(chosen); }}>{label("Utiliser ce cours", "استعمال هذا الدرس", "Use this lesson")}</button>
       <p className="ph-muted text-[11px] leading-relaxed">{label("Catalogue issu des données fournies. Seules les matières et les leçons présentes dans le fichier sont proposées.", "دليل مبني على المعطيات المقدمة. لا تتوفر إلا المواد والدروس الواردة في الملف.", "This curriculum uses the supplied data. Only subjects and lessons in that data are listed.")}</p>
     </div>
