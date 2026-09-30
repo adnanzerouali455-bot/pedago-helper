@@ -6,7 +6,9 @@ import { lessonEnglishCopy } from "./english-copy";
 import React, { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import CurriculumPicker from "./CurriculumPicker";
+import CurriculumNavigation from "./CurriculumNavigation";
 import { findCurriculumLesson, curriculumCompetency } from "./curriculum";
+import { getChapterById, getGradeByChapterId } from "../lib/curriculumUtils";
 
 export type Language = "fr" | "ar" | "en";
 export type Subject = "svt" | "pc" | "math" | "arabic" | "french";
@@ -21,6 +23,7 @@ export interface LessonInput {
   duration: number;
   sourceText: string;
   curriculumLessonId?: string;
+  svtChapterId?: string;
   className?: string;
   room?: string;
   scheduledDate?: string;
@@ -111,6 +114,11 @@ function planningUnit(title: Pair, competency: Pair): Unit {
   };
 }
 function unitForInput(input: LessonInput): Unit {
+  const chapter = getChapterById(input.svtChapterId ?? "");
+  if (chapter) return planningUnit(
+    [chapter.titleFr, chapter.titleAr, chapter.titleFr],
+    [`Analyser des documents relatifs à « ${chapter.titleFr} » et justifier une explication scientifique.`, `تحليل وثائق حول «${chapter.titleAr}» وتعليل تفسير علمي.`, `Analyze evidence about “${chapter.titleFr}” and justify a scientific explanation.`],
+  );
   const entry = findCurriculumLesson(input.curriculumLessonId);
   return entry ? planningUnit([entry.title_fr, entry.title_ar, entry.title_en], [curriculumCompetency(entry, "fr"), curriculumCompetency(entry, "ar"), curriculumCompetency(entry, "en")]) : UNITS[input.subject];
 }
@@ -316,6 +324,11 @@ export function isLessonDocument(value: unknown): value is LessonDocument {
     const entry = findCurriculumLesson(i.curriculumLessonId);
     if (!entry || entry.subject !== i.subject || entry.schoolLevel !== i.schoolLevel) return false;
   }
+  if (i.svtChapterId !== undefined) {
+    if (!isText(i.svtChapterId, 120) || i.subject !== "svt") return false;
+    const grade = getGradeByChapterId(i.svtChapterId);
+    if (!grade || i.schoolLevel !== (grade.cycleId === "college" ? "middle" : "high")) return false;
+  }
   if (["className", "room", "scheduledDate", "startTime", "endTime"].some(key => i[key] !== undefined && !isText(i[key], 240))) return false;
   if (!Array.isArray(value.phases) || value.phases.length !== 4 || !value.phases.every(p => isRecord(p) && typeof p.minutes === "number" && Number.isInteger(p.minutes) && p.minutes >= 0 && p.minutes <= 240 && ["situation", "learner", "teacher", "evidence"].every(k => isText(p[k], 6000)))) return false;
   if (!Array.isArray(value.obstacles) || value.obstacles.length < 1 || value.obstacles.length > 10 || !value.obstacles.every(o => isRecord(o) && isText(o.obstacle, 6000) && isText(o.remediation, 6000))) return false;
@@ -348,9 +361,10 @@ function Glossary({ entries, language }: { entries: ReadingMaterial["glossary"];
 function PrintSheet({ lesson, level }: { lesson: LessonDocument; level: ReadingLevel }) {
   const t = COPY[lesson.input.language]; const lang = lesson.input.language; const reading = lesson.readings[level];
   const catalogEntry = findCurriculumLesson(lesson.input.curriculumLessonId);
+  const svtGrade = getGradeByChapterId(lesson.input.svtChapterId ?? "");
   return <article className={`ph-print-sheet ph-font-${lang}`} lang={lang} dir={lang === "ar" ? "rtl" : "ltr"}>
     <header><p>{t.brand}</p><h1>{t.sheet}</h1><h2>{lesson.input.title}</h2><p>{t.teacherName} __________________ &nbsp; {t.className} {lesson.input.className || "__________"} &nbsp; {t.sessionDate} {lesson.input.scheduledDate || "__________"}</p></header>
-    <dl><dt>{t.subject}</dt><dd>{pick(SUBJECTS[lesson.input.subject], lang)}</dd><dt>{t.school}</dt><dd>{catalogEntry ? catalogEntry[lang === "ar" ? "level_ar" : lang === "en" ? "level_en" : "level_fr"] : pick(SCHOOLS[lesson.input.schoolLevel], lang)}</dd><dt>{t.duration}</dt><dd>{lesson.input.duration} {t.minutes}{lesson.input.startTime && <span dir="ltr"> · {lesson.input.startTime} – {lesson.input.endTime}</span>}{lesson.input.room && <> · {lesson.input.room}</>}</dd><dt>{t.competency}</dt><dd>{lesson.input.competency}</dd></dl>
+    <dl><dt>{t.subject}</dt><dd>{pick(SUBJECTS[lesson.input.subject], lang)}</dd><dt>{t.school}</dt><dd>{svtGrade ? (lang === "ar" ? svtGrade.titleAr : svtGrade.titleFr) : catalogEntry ? catalogEntry[lang === "ar" ? "level_ar" : lang === "en" ? "level_en" : "level_fr"] : pick(SCHOOLS[lesson.input.schoolLevel], lang)}</dd><dt>{t.duration}</dt><dd>{lesson.input.duration} {t.minutes}{lesson.input.startTime && <span dir="ltr"> · {lesson.input.startTime} – {lesson.input.endTime}</span>}{lesson.input.room && <> · {lesson.input.room}</>}</dd><dt>{t.competency}</dt><dd>{lesson.input.competency}</dd></dl>
     {catalogEntry && <p>{lang === "ar" ? "الدورة" : lang === "en" ? "Semester" : "Semestre"} {catalogEntry.semester} · {catalogEntry[lang === "ar" ? "unit_ar" : lang === "en" ? "unit_en" : "unit_fr"]}</p>}
     <h2>{t.phases}</h2><table><thead><tr><th>{t.phases}</th><th>{t.situation}</th><th>{t.learner}</th><th>{t.teacher}</th><th>{t.evidence}</th></tr></thead><tbody>{lesson.phases.map((p, i) => <tr key={i}><th>{i + 1}. {pick(PHASE_NAMES[i], lang)}<p>{p.minutes} {t.minutes}</p></th><td>{p.situation}</td><td>{p.learner}</td><td>{p.teacher}</td><td>{p.evidence}</td></tr>)}</tbody></table>
     <h2>{t.obstacles}</h2>{lesson.obstacles.map((o, i) => <div className="ph-print-block" key={i}><p><strong>{t.obstacle} : </strong>{o.obstacle}</p><p><strong>{t.remediation} : </strong>{o.remediation}</p></div>)}
@@ -438,12 +452,13 @@ export default function LessonPlanStudio({ embedded = false, active = true, uiLa
   }
   function change<K extends keyof LessonInput>(key: K, value: LessonInput[K]) { setForm(prev => {
     const next = { ...prev, [key]: value };
-    if (key === "schoolLevel" || key === "subject") delete next.curriculumLessonId;
+    if (key === "schoolLevel" || key === "subject") { delete next.curriculumLessonId; delete next.svtChapterId; }
     return next;
   }); }
   function loadExample(subject = form.subject, language = form.language) {
     const next = { ...form, ...initialInput(language, subject), duration: form.duration, schoolLevel: form.schoolLevel };
     delete next.curriculumLessonId;
+    delete next.svtChapterId;
     setForm(next);
   }
   async function generate(event: React.FormEvent) {
@@ -482,11 +497,19 @@ export default function LessonPlanStudio({ embedded = false, active = true, uiLa
     {!embedded && <header className="border-b border-[var(--color-sand-border)] bg-white"><div className="mx-auto flex max-w-[1500px] flex-wrap items-center justify-between gap-4 px-5 py-5 md:px-10"><div className="flex items-center gap-3"><span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--color-cypress)] text-white"><Icon name="book" size={24} /></span><div><p className="text-lg font-extrabold tracking-tight">{t.brand}</p><p className="ph-muted text-xs">{t.subtitle}</p></div></div><div className="flex items-center gap-5"><span className="hidden items-center gap-2 text-xs text-[var(--color-ink-muted)] sm:flex"><span className="h-2 w-2 rounded-lg bg-[var(--color-cypress)]" />{generateLesson ? t.connected : t.local}</span><div role="group" aria-label={t.language} className="flex rounded-lg border border-[var(--color-sand-border)] bg-[var(--color-cypress-light)] p-1">{(["fr", "ar", "en"] as Language[]).map(l => <button key={l} type="button" disabled={busy} lang={l} aria-pressed={lang === l} className={`rounded-lg px-3 py-1.5 text-xs font-semibold ${lang === l ? "bg-white shadow-none text-[var(--color-cypress)]" : "text-[var(--color-ink-muted)]"}`} onClick={() => { switchLanguage(l); onLanguageChange?.(l); }}>{languageName(l, lang)}</button>)}</div></div></div></header>}
     <div className="mx-auto max-w-[1500px] px-5 pb-14 pt-9 md:px-10">
       <div className="mb-8 flex items-end justify-between gap-5"><div><p className="ph-eyebrow mb-3">{t.studio} / 01</p><h1 className="whitespace-pre-line text-3xl font-semibold leading-[1.3] tracking-tight md:text-[38px]">{t.heading}</h1><p className="ph-muted mt-3 max-w-2xl text-sm">{t.intro}</p><p className="ph-muted mt-2 text-xs">{lang === "ar" ? "تترجم النماذج تلقائيا. تحتفظ النصوص التي كتبتها بنفسك بلغتها الأصلية." : lang === "en" ? "Model lessons change language automatically. Your own text keeps its original language." : "Les modèles changent de langue automatiquement. Vos textes personnels conservent leur langue d’origine."}</p></div><div className="hidden h-24 w-24 rotate-[-10deg] items-center justify-center rounded-lg border border-[var(--color-sand-border)] bg-[var(--color-cypress-light)] text-[var(--color-ink-muted)] lg:flex"><Icon name="leaf" size={48} /></div></div>
+      <details className="mb-6 rounded-lg border border-sand bg-white p-4"><summary className="cursor-pointer text-sm font-bold text-cypress">{lang === "ar" ? "تصفح البرنامج الكامل لعلوم الحياة والأرض" : lang === "en" ? "Browse the full Life and Earth Sciences curriculum" : "Parcourir le programme complet de SVT"}</summary><div className="mt-4"><CurriculumNavigation language={lang} onSelectChapter={(chapter, grade) => {
+        const next: LessonInput = { ...form, subject: "svt", schoolLevel: grade.cycleId === "college" ? "middle" : "high", svtChapterId: chapter.id, title: lang === "ar" ? chapter.titleAr : chapter.titleFr, competency: lang === "ar" ? `تحليل وثائق حول «${chapter.titleAr}» وتعليل تفسير علمي.` : lang === "en" ? `Analyze evidence about “${chapter.titleFr}” and justify a scientific explanation.` : `Analyser des documents relatifs à « ${chapter.titleFr} » et justifier une explication scientifique.`, sourceText: "" };
+        delete next.curriculumLessonId;
+        setForm(next);
+        setNotice({ text: lang === "ar" ? "تم اختيار الفصل. راجع المعطيات ثم أنشئ الجذاذة." : lang === "en" ? "Chapter selected. Review the fields, then generate the lesson sheet." : "Chapitre sélectionné. Vérifiez les champs, puis générez la fiche." });
+        document.getElementById(`${id}-title`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }} /></div></details>
       <div className="grid items-start gap-6 lg:grid-cols-[310px_minmax(0,1fr)] xl:grid-cols-[330px_minmax(0,1fr)]">
         <aside className="space-y-5">
           <form onSubmit={generate} className="ph-card overflow-hidden"><div className="border-b border-[var(--color-sand-border)] px-6 py-5"><h2 className="text-base font-bold">{t.settings}</h2><p className="ph-muted mt-1 text-xs">{t.settingsHint}</p></div><fieldset disabled={busy} className="min-w-0 space-y-5 p-6">
-            <CurriculumPicker language={lang} selectedId={form.curriculumLessonId} onSelect={entry => setForm(prev => ({ ...prev, curriculumLessonId: entry.id, subject: entry.subject, schoolLevel: entry.schoolLevel, title: lang === "ar" ? entry.title_ar : lang === "en" ? entry.title_en : entry.title_fr, competency: curriculumCompetency(entry, lang) }))} />
+            <CurriculumPicker language={lang} selectedId={form.curriculumLessonId} onSelect={entry => setForm(prev => ({ ...prev, curriculumLessonId: entry.id, svtChapterId: undefined, subject: entry.subject, schoolLevel: entry.schoolLevel, title: lang === "ar" ? entry.title_ar : lang === "en" ? entry.title_en : entry.title_fr, competency: curriculumCompetency(entry, lang) }))} />
             {form.curriculumLessonId && <p role="status" className="rounded-lg bg-[var(--color-cypress-light)] p-3 text-xs">{lang === "ar" ? "الدرس المختار" : lang === "en" ? "Selected lesson" : "Cours sélectionné"} : {findCurriculumLesson(form.curriculumLessonId)?.[lang === "ar" ? "level_ar" : lang === "en" ? "level_en" : "level_fr"]} · {form.title}</p>}
+            {form.svtChapterId && <p role="status" className="rounded-lg bg-[var(--color-cypress-light)] p-3 text-xs">{lang === "ar" ? "فصل البرنامج المختار" : lang === "en" ? "Selected curriculum chapter" : "Chapitre du programme sélectionné"} : {form.svtChapterId} · {form.title}</p>}
             <div><label className="ph-label" htmlFor={`${id}-subject`}>{t.subject}</label><select className="ph-input" id={`${id}-subject`} value={form.subject} onChange={e => loadExample(e.target.value as Subject)}>{(Object.keys(SUBJECTS) as Subject[]).map(s => <option key={s} value={s}>{pick(SUBJECTS[s], lang)}</option>)}</select></div>
             <div><label className="ph-label" htmlFor={`${id}-school`}>{t.school}</label><select className="ph-input" id={`${id}-school`} value={form.schoolLevel} onChange={e => change("schoolLevel", e.target.value as SchoolLevel)}>{(Object.keys(SCHOOLS) as SchoolLevel[]).map(s => <option key={s} value={s}>{pick(SCHOOLS[s], lang)}</option>)}</select></div>
             <div><label className="ph-label" htmlFor={`${id}-title`}>{t.title}</label><input required maxLength={240} className="ph-input" id={`${id}-title`} value={form.title} onChange={e => change("title", e.target.value)} /></div>
@@ -494,7 +517,7 @@ export default function LessonPlanStudio({ embedded = false, active = true, uiLa
             <div><label className="ph-label" htmlFor={`${id}-duration`}>{t.duration}</label><div className="flex items-center gap-3"><input required type="number" min={20} max={240} step={1} id={`${id}-duration`} className="ph-input" value={form.duration || ""} onChange={e => change("duration", e.target.value === "" ? 0 : Number(e.target.value))} /><span className="ph-muted text-sm">{t.minutes}</span></div></div>
             <details className="rounded-lg border border-[var(--color-sand-border)] p-3"><summary className="cursor-pointer text-xs font-semibold">{t.source}</summary><div className="mt-3"><TextField label={t.sourceHint} value={form.sourceText} onChange={value => change("sourceText", value)} maxLength={12000} rows={6} /><p className="ph-muted mt-2 text-[11px]">{t.sourceInfo}</p></div></details>
             <button type="submit" className="ph-btn ph-primary w-full" disabled={busy} aria-busy={busy}><Icon name="spark" />{busy ? t.generating : t.generate}</button>
-            {!generateLesson && <p className="ph-muted text-[11px] leading-relaxed">{form.curriculumLessonId || form.subject === "pc" ? (lang === "ar" ? "الدليل يوفر عناوين الدروس. يولد الوضع المحلي هيكلا للتحضير يجب إتمامه بالمحتوى العلمي والوسائل والنصوص المناسبة قبل استعماله." : lang === "en" ? "The curriculum provides lesson titles. Local mode creates a teaching framework that you must complete with scientific content, materials and suitable reading texts before use." : "Le catalogue fournit les titres. Le mode local crée une trame à compléter avec les contenus scientifiques, les supports et les textes adaptés avant utilisation.") : t.demo}</p>}
+            {!generateLesson && <p className="ph-muted text-[11px] leading-relaxed">{form.curriculumLessonId || form.svtChapterId || form.subject === "pc" ? (lang === "ar" ? "الدليل يوفر عناوين الدروس. يولد الوضع المحلي هيكلا للتحضير يجب إتمامه بالمحتوى العلمي والوسائل والنصوص المناسبة قبل استعماله." : lang === "en" ? "The curriculum provides lesson titles. Local mode creates a teaching framework that you must complete with scientific content, materials and suitable reading texts before use." : "Le catalogue fournit les titres. Le mode local crée une trame à compléter avec les contenus scientifiques, les supports et les textes adaptés avant utilisation.") : t.demo}</p>}
             <button type="button" className="ph-link" onClick={() => loadExample()}>{t.library}</button>
           </fieldset></form>
           <>{lesson.input.className && <div className="ph-card flex flex-wrap items-center gap-3 p-4 text-xs"><strong>{lesson.input.className}</strong><span>{lesson.input.room}</span><span>{lesson.input.scheduledDate}</span><span dir="ltr">{lesson.input.startTime} – {lesson.input.endTime}</span></div>}</><section className="ph-card p-5"><div className="mb-3 flex items-center justify-between"><h2 className="font-bold">{t.saved}</h2><span className="rounded-lg bg-[var(--color-cypress-light)] px-2 py-0.5 text-xs">{saved.length}</span></div><p className="ph-muted mb-4 text-[11px]">{t.savedHint}</p>{saved.length === 0 ? <p className="ph-muted rounded-lg border border-dashed border-[var(--color-sand-border)] p-4 text-xs">{t.empty}</p> : <ul className="max-h-80 space-y-3 overflow-auto">{saved.map(item => <li key={item.id} className="rounded-lg border border-[var(--color-sand-border)] p-3"><p dir="auto" className="text-xs font-semibold">{localizeLessonInput(item.input, lang).title}</p><p className="ph-muted my-1 text-[10px]">{item.savedAt ? dateFormatter.format(new Date(item.savedAt)) : ""}</p><div className="flex gap-4"><button type="button" className="ph-link" disabled={busy} onClick={() => { const localized = localizeLesson(item, lang); setLesson(localized); setForm(localized.input); setEditingText(false); setNotice({ text: t.loadOk }); }}>{t.load}</button><button type="button" className="ph-link" onClick={() => { if (persist(saved.filter(s => s.id !== item.id))) { setDeleted(item); setNotice({ text: t.deleteOk }); } }} aria-label={`${t.remove} : ${localizeLessonInput(item.input, lang).title}`}>{t.remove}</button></div></li>)}</ul>}{deleted && <button type="button" className="ph-link mt-3" onClick={() => { if (saved.length >= 30) { setNotice({ text: t.limit, error: true }); return; } if (persist([deleted, ...saved.filter(s => s.id !== deleted.id)])) setDeleted(null); }}>{t.restore}</button>}</section>

@@ -10,6 +10,38 @@ for (const ext of ['.ts', '.tsx']) require.extensions[ext] = (module, filename) 
 const { curriculum, curriculumChapters, curriculumLessons, curriculumCompetency, findCurriculumLesson } = require('../src/components/curriculum.ts');
 const { createLocalLesson, isLessonDocument } = require('../src/components/LessonPlanStudio.tsx');
 const { createDemoSchedule, isScheduleData } = require('../src/components/TeacherScheduleCalendar.tsx');
+const { svtMoroccoCurriculum } = require('../src/data/svtMoroccoCurriculum.ts');
+const { getGradesByCycle, getUnitsByGrade, getChapterById, getGradeByChapterId, searchChapters } = require('../src/lib/curriculumUtils.ts');
+assert.equal(svtMoroccoCurriculum.length, 2);
+assert.equal(svtMoroccoCurriculum.flatMap(c => c.grades).length, 10);
+assert.equal(svtMoroccoCurriculum.flatMap(c => c.grades.flatMap(g => g.units)).length, 28);
+const fullChapters = svtMoroccoCurriculum.flatMap(c => c.grades.flatMap(g => g.units.flatMap(u => u.chapters)));
+assert.equal(fullChapters.length, 86);
+assert.equal(new Set(fullChapters.map(c => c.id)).size, 86);
+assert.equal(getGradesByCycle('college').length, 3);
+assert.equal(getGradesByCycle('lycee').length, 7);
+assert.equal(getUnitsByGrade('2bac-svt').length, 6);
+assert.equal(getUnitsByGrade('missing').length, 0);
+assert.equal(getChapterById('2bac-svt-u4-c2').titleFr.includes('Hardy-Weinberg'), true);
+assert.equal(getChapterById('missing'), undefined);
+assert.equal(searchChapters('érosion').some(c => c.id === '1ac-s2-c2'), true);
+assert.equal(searchChapters('الانقسام').some(c => c.id === '2bac-svt-u3-c1'), true);
+assert.equal(searchChapters('  ATP  ').some(c => c.id === '2bac-svt-u1-c2'), true);
+for (const chapter of fullChapters) {
+  assert(chapter.titleFr && chapter.titleAr && chapter.slug && chapter.keywords.length);
+  assert(chapter.estimatedDurationMin > 0 && chapter.estimatedDurationMin % 55 === 0);
+  assert.equal(getChapterById(chapter.id), chapter);
+  const grade = getGradeByChapterId(chapter.id);
+  assert(grade);
+  for (const language of ['fr', 'ar']) {
+    const input = { language, subject: 'svt', schoolLevel: grade.cycleId === 'college' ? 'middle' : 'high', title: language === 'ar' ? chapter.titleAr : chapter.titleFr, competency: 'Compétence de démonstration', duration: 55, sourceText: '', svtChapterId: chapter.id };
+    const sheet = createLocalLesson(input);
+    assert(isLessonDocument(sheet));
+    assert(sheet.phases[0].situation.includes(input.title));
+    assert.equal(sheet.readings[1].text, '');
+  }
+}
+console.log('PASS: 10 filières, 86 chapitres bilingues, recherche et création de fiches liées.');
 assert.equal(curriculum.cycles.length, 2);
 assert.equal(curriculum.cycles.flatMap(c => c.levels).length, 6);
 assert.equal(curriculumLessons.length, 97);
