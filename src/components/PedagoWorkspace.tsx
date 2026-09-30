@@ -2,7 +2,7 @@
 import { ProfilePicker, TeacherDashboard, StudentDashboard, type DemoProfile } from "./EntryDashboard";
 import { localizeText, languageName } from "./localization";
 import React, { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, CalendarDays, FilePenLine, Link2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarDays, FilePenLine, Link2, LogOut } from "lucide-react";
 import TeacherScheduleCalendar, { type LessonPlanLaunchContext } from "./TeacherScheduleCalendar";
 import LessonPlanStudio, { isLessonDocument, type Language, type LessonDocument, type LessonInput } from "./LessonPlanStudio";
 
@@ -75,19 +75,19 @@ export default function PedagoWorkspace({ logoSrc = "/pedago-helper-logo.jpeg", 
     }
     setLanguage(context.language); setEditorId(id); navigate("planner");
   }
-  return <div dir={ar ? "rtl" : "ltr"} lang={language} style={{ fontFamily: ar ? "var(--font-arabic)" : "var(--font-latin)" }} className="min-h-screen bg-[var(--color-parchment)] text-[var(--color-cypress)]">
-    <header className="sticky top-0 z-30 border-b border-[var(--color-sand-border)] bg-white shadow-none ">
-      <div className="mx-auto flex max-w-[1550px] flex-wrap items-center justify-between gap-3 px-4 py-2 md:px-9">
+  return <div dir={ar ? "rtl" : "ltr"} lang={language} style={{ fontFamily: ar ? "var(--font-arabic)" : "var(--font-latin)" }} className="ph-shell min-h-screen bg-[var(--color-parchment)] text-[var(--color-cypress)]">
+    <header className="ph-app-header sticky top-0 z-30 border-b border-[var(--color-sand-border)] bg-white shadow-none">
+      <div className="mx-auto flex max-w-[1550px] flex-nowrap items-center justify-between gap-2 px-4 py-2 md:gap-4 md:px-9">
         <a href="#home" onClick={event => { event.preventDefault(); navigate("home"); }} className="flex items-center gap-3 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-amber-alert)]">
-          <span className="relative block h-[102px] w-[150px] shrink-0 overflow-hidden sm:h-[119px] sm:w-[175px]">
-            <img src={logoSrc} alt={t.brand} width={1024} height={1024} decoding="async" className="absolute left-[-24px] top-[-44px] h-[192px] w-[192px] max-w-none sm:left-[-28px] sm:top-[-52px] sm:h-[224px] sm:w-[224px]" />
+          <span className="relative block h-[68px] w-[100px] shrink-0 overflow-hidden sm:h-[82px] sm:w-[124px]">
+            <img src={logoSrc} alt={t.brand} width={1024} height={1024} decoding="async" className="absolute left-[-16px] top-[-29px] h-[128px] w-[128px] max-w-none sm:left-[-20px] sm:top-[-36px] sm:h-[159px] sm:w-[159px]" />
           </span>
-          {ar && <strong className="text-lg">{t.brand}</strong>}
+          {ar && <strong className="hidden text-base lg:block">{t.brand}</strong>}
           <span className="hidden max-w-[240px] text-[11px] text-[var(--color-ink-muted)] md:block">{t.tagline}</span>
         </a>
-        <div role="group" aria-label={t.language} className="flex rounded-lg border border-[var(--color-sand-border)] bg-[var(--color-cypress-light)] p-1">{(["fr", "ar", "en"] as Language[]).map(lang => <button key={lang} type="button" lang={lang} aria-pressed={language === lang} onClick={() => setLanguage(lang)} className={`min-h-9 rounded-lg px-3 text-xs focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-amber-alert)] ${language === lang ? "bg-[var(--color-terracotta-light)] font-bold shadow-none" : "text-[var(--color-ink-muted)]"}`}>{languageName(lang, language)}</button>)}</div>
+        <div role="group" aria-label={t.language} className="flex shrink-0 rounded-lg border border-[var(--color-sand-border)] bg-[var(--color-cypress-light)] p-0.5 sm:p-1">{(["fr", "ar", "en"] as Language[]).map(lang => <button key={lang} type="button" lang={lang} aria-pressed={language === lang} onClick={() => setLanguage(lang)} className={`min-h-10 rounded-lg px-2 text-[11px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-amber-alert)] sm:px-3 sm:text-xs ${language === lang ? "bg-white font-bold text-[var(--color-cypress)] shadow-none" : "text-[var(--color-ink-muted)]"}`}>{languageName(lang, language)}</button>)}</div>
       </div>
-      {profile && <nav aria-label={t.navigation} className="mx-auto flex max-w-[1550px] gap-2 px-4 md:px-9">{(["home", ...(profile === "teacher" ? ["calendar", "planner"] : [])] as View[]).map(tab => <a key={tab} href={`#${tab}`} aria-current={view === tab ? "page" : undefined} onClick={event => { event.preventDefault(); navigate(tab); }} className={`flex min-h-12 flex-1 items-center justify-center gap-2 border-b-[3px] px-2 text-center text-xs font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-amber-alert)] sm:flex-none sm:px-5 sm:text-sm ${view === tab ? "border-[var(--color-terracotta)] bg-[var(--color-terracotta-light)] text-[var(--color-cypress)]" : "border-transparent text-[var(--color-ink-muted)] hover:bg-[var(--color-surface-white)]"}`}>{tab === "calendar" ? <CalendarDays size={18} /> : <FilePenLine size={18} />}{tab === "home" ? (ar ? "الرئيسية" : en ? "Dashboard" : "Tableau de bord") : t[tab]}</a>)}<button type="button" className="ms-auto px-3 py-2 text-xs font-bold" onClick={() => selectProfile(null)}>{ar ? "تغيير الحساب التجريبي" : en ? "Change demo account" : "Changer de compte démo"}</button></nav>}
+      {profile && <nav aria-label={t.navigation} className="ph-main-nav mx-auto flex max-w-[1550px] flex-nowrap items-center gap-1 overflow-x-auto px-4 md:gap-2 md:px-9">{(["home", ...(profile === "teacher" ? ["calendar", "planner"] : [])] as View[]).map(tab => <a key={tab} href={`#${tab}`} aria-current={view === tab ? "page" : undefined} onClick={event => { event.preventDefault(); navigate(tab); }} className={`flex min-h-12 shrink-0 items-center justify-center gap-2 border-b-[3px] px-3 text-center text-xs font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-amber-alert)] sm:px-5 sm:text-sm ${view === tab ? "border-[var(--color-terracotta)] bg-[var(--color-terracotta-light)] text-[var(--color-cypress)]" : "border-transparent text-[var(--color-ink-muted)] hover:bg-[var(--color-surface-white)]"}`}>{tab === "calendar" ? <CalendarDays size={18} /> : <FilePenLine size={18} />}{tab === "home" ? (ar ? "الرئيسية" : en ? "Dashboard" : "Tableau de bord") : t[tab]}</a>)}<button type="button" aria-label={ar ? "تغيير الحساب التجريبي" : en ? "Change demo account" : "Changer de compte démo"} className="ms-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-xs font-bold hover:bg-[var(--color-cypress-light)] sm:h-auto sm:w-auto sm:gap-2 sm:px-3 sm:py-2" onClick={() => selectProfile(null)}><LogOut size={17} aria-hidden="true" /><span className="hidden sm:inline">{ar ? "تغيير الحساب التجريبي" : en ? "Change demo account" : "Changer de compte démo"}</span></button></nav>}
     </header>
     {view === "home" && (profile === "teacher" ? <TeacherDashboard language={language} storageKey={scheduleStorageKey} onNavigate={navigate} /> : profile === "student" ? <StudentDashboard language={language} /> : <ProfilePicker language={language} onSelect={selectProfile} />)}
     <div hidden={view !== "calendar"}>
