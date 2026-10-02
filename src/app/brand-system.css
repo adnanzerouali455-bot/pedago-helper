@@ -152,6 +152,12 @@ html[data-theme="dark"] .ph-shell .ph-dashboard-feature { background: var(--bran
 html[data-theme="dark"] .ph-shell .ph-dashboard-feature button { background: var(--brand-white); color: var(--brand-black); }
 html[data-theme="dark"] .ph-shell .ph-workspace-back { background: var(--brand-black); color: var(--brand-white); border-color: var(--brand-white); }
 html[data-theme="dark"] .ph-shell .sc-day-column, html[data-theme="dark"] .ph-program-section > div:last-child { background: var(--brand-black); }
+html[data-theme="dark"] .student-svt-library { border-color: var(--brand-white); }
+html[data-theme="dark"] .student-svt-library .border-black { border-color: var(--brand-white); }
+html[data-theme="dark"] .student-svt-library :is(.student-svt-unit, .student-svt-card) { background: var(--brand-black); color: var(--brand-white); border-color: var(--brand-white); }
+html[data-theme="dark"] .student-svt-library :is(.student-svt-count, .student-svt-number) { color: var(--brand-black); }
+html[data-theme="dark"] .student-svt-library li.rounded { border-color: var(--brand-white); }
+html[data-theme="dark"] .student-svt-library button { border-color: var(--brand-white); }
 html[data-theme="dark"] .sc-dialog { background: var(--brand-black); color: var(--brand-white); border: 1px solid var(--brand-white); }
 html[data-theme="dark"] .sc-dialog :is(h2,h3) { color: var(--brand-white); }
 html[data-theme="dark"] .sc-dialog p.whitespace-pre-wrap { background: var(--brand-orange-light); color: var(--brand-black); }

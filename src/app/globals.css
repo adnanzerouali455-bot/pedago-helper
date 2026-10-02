@@ -4,6 +4,7 @@
 @source "../components/PedagoWorkspace.tsx";
 @source "../components/EntryDashboard.tsx";
 @source "../components/CurriculumNavigation.tsx";
+@source "../components/StudentSvtLibrary.tsx";
 
 @theme inline {
   --color-terracotta: #D9704F;

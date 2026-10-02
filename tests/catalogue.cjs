@@ -11,7 +11,20 @@ const { curriculum, curriculumChapters, curriculumLessons, curriculumCompetency,
 const { createLocalLesson, isLessonDocument } = require('../src/components/LessonPlanStudio.tsx');
 const { createDemoSchedule, isScheduleData } = require('../src/components/TeacherScheduleCalendar.tsx');
 const { svtMoroccoCurriculum } = require('../src/data/svtMoroccoCurriculum.ts');
+const { svtCurriculumWithVideos } = require('../src/data/svtCurriculumWithVideos.ts');
 const { getGradesByCycle, getUnitsByGrade, getChapterById, getGradeByChapterId, searchChapters } = require('../src/lib/curriculumUtils.ts');
+assert.equal(svtCurriculumWithVideos.length, 7);
+const studentChapters = svtCurriculumWithVideos.flatMap(grade => grade.units.flatMap(unit => unit.chapters));
+assert.equal(new Set(studentChapters.map(chapter => chapter.id)).size, studentChapters.length);
+assert(studentChapters.length > 50);
+for (const chapter of studentChapters) {
+  assert(chapter.titleFr && chapter.titleAr && chapter.keywords.length > 0 && chapter.durationMin > 0);
+  if (chapter.video) {
+    assert.match(chapter.video.youtubeId, /^[a-zA-Z0-9_-]{11}$/);
+    assert.equal(chapter.video.url, `https://www.youtube.com/watch?v=${chapter.video.youtubeId}`);
+  }
+}
+assert(studentChapters.some(chapter => chapter.video));
 assert.equal(svtMoroccoCurriculum.length, 2);
 assert.equal(svtMoroccoCurriculum.flatMap(c => c.grades).length, 10);
 assert.equal(svtMoroccoCurriculum.flatMap(c => c.grades.flatMap(g => g.units)).length, 28);
