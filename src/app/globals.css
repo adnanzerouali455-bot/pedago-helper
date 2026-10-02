@@ -6,83 +6,83 @@
 @source "../components/CurriculumNavigation.tsx";
 
 @theme inline {
-  --color-terracotta: #CE5E37;
-  --color-terracotta-soft: #F7ECE7;
-  --color-cypress: #163E26;
-  --color-cypress-soft: #EAF2ED;
-  --color-parchment: #FBF9F5;
-  --color-sand: #E8E2D8;
-  --color-ink: #222623;
-  --color-amber-alert: #C87820;
-  --font-sans: "Plus Jakarta Sans", Arial, sans-serif;
-  --font-arabic: "Cairo", Tahoma, Arial, sans-serif;
+  --color-terracotta: #D9704F;
+  --color-terracotta-soft: #FBE9E2;
+  --color-cypress: #111111;
+  --color-cypress-soft: #F5F5F5;
+  --color-parchment: #FFFFFF;
+  --color-sand: #F5F5F5;
+  --color-ink: #111111;
+  --color-amber-alert: #B9552F;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-arabic: "Noto Naskh Arabic", system-ui, sans-serif;
   --radius-lg: 8px;
 }
 
-/* Shared papeterie system for the three workspaces. */
+/* Shared interface styles for the three workspaces. */
 :root {
-  --color-terracotta-action: #B64C2C;
-  --color-terracotta-action-hover: #9F3E23;
-  --font-latin: "Plus Jakarta Sans", Arial, sans-serif;
-  --font-arabic: "Cairo", Tahoma, Arial, sans-serif;
+  --color-terracotta-action: #B9552F;
+  --color-terracotta-action-hover: #B9552F;
+  --font-latin: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-arabic: "Noto Naskh Arabic", system-ui, sans-serif;
 }
 
 html { scroll-behavior: smooth; }
-html, body { margin: 0; min-height: 100%; background: #FBF9F5; }
-body { color: #222623; font-family: var(--font-latin); line-height: 1.58; -webkit-font-smoothing: antialiased; }
+html, body { margin: 0; min-height: 100%; background: #FFFFFF; }
+body { color: #111111; font-family: var(--font-latin); line-height: 1.58; -webkit-font-smoothing: antialiased; }
 html[lang="ar"] body { font-family: var(--font-arabic); }
-::selection { background: #F1D1C2; color: #163E26; }
+::selection { background: #FBE9E2; color: #111111; }
 
-.ph-shell { background: linear-gradient(180deg, #FFFFFF 0, #FBF9F5 350px); }
+.ph-shell { background: #FFFFFF; }
 .ph-app-header { background: rgba(255, 255, 255, .97); }
-.ph-main-nav { scrollbar-width: thin; scrollbar-color: #CE5E37 transparent; overscroll-behavior-inline: contain; }
+.ph-main-nav { scrollbar-width: thin; scrollbar-color: #D9704F transparent; overscroll-behavior-inline: contain; }
 .ph-main-nav a, .ph-app-header button { transition: background-color .2s ease, color .2s ease, border-color .2s ease; }
-.ph-main-nav a:hover { color: #163E26; background: #EAF2ED; }
-.ph-app-header :focus-visible { outline: 3px solid #B64C2C; outline-offset: 2px; }
+.ph-main-nav a:hover { color: #111111; background: #F5F5F5; }
+.ph-app-header :focus-visible { outline: 3px solid #B9552F; outline-offset: 2px; }
 
 .ph-profile-screen {
-  background: linear-gradient(160deg, #FFFFFF 0%, #FBF9F5 48%, #F8F4ED 100%);
+  background: #FFFFFF;
 }
 .ph-profile-main h1, .ph-dashboard h1, .ph-student-dashboard h1,
 .sc-root h1, .ph-studio h1 { text-wrap: balance; letter-spacing: -.035em; }
 [lang="ar"] .ph-profile-main h1, [lang="ar"] .ph-dashboard h1,
 [lang="ar"] .ph-student-dashboard h1, [lang="ar"] .sc-root h1,
 [lang="ar"] .ph-studio h1 { letter-spacing: 0; }
-.ph-profile-main > p:nth-of-type(2) { color: #5B625B; }
+.ph-profile-main > p:nth-of-type(2) { color: #111111; }
 .ph-role-card { position: relative; overflow: hidden; transition: border-color .2s ease, background-color .2s ease, transform .24s ease; }
-.ph-role-card::before { content: ""; position: absolute; inset-block-start: 0; inset-inline: 0; height: 3px; background: #CE5E37; }
-.ph-role-card-student::before { background: #163E26; }
-.ph-role-card:hover { transform: translateY(-3px); background: #FFFEFC; }
-.ph-role-card-student:hover { border-color: #163E26; }
+.ph-role-card::before { content: ""; position: absolute; inset-block-start: 0; inset-inline: 0; height: 3px; background: #D9704F; }
+.ph-role-card-student::before { background: #111111; }
+.ph-role-card:hover { transform: translateY(-3px); background: #FFFFFF; }
+.ph-role-card-student:hover { border-color: #111111; }
 .ph-role-card:active { transform: translateY(0); }
-.ph-role-card > span:first-child > span:nth-child(2) { color: #163E26; letter-spacing: -.02em; }
+.ph-role-card > span:first-child > span:nth-child(2) { color: #111111; letter-spacing: -.02em; }
 .ph-role-action { transition: background-color .2s ease, transform .2s ease; }
 .ph-role-card-teacher .ph-role-action, .ph-role-card-teacher:hover .ph-role-action { background: var(--color-terracotta-action); }
 .ph-role-card-teacher:hover .ph-role-action { background: var(--color-terracotta-action-hover); }
-.ph-role-card-student:hover .ph-role-action { background: #235236; }
+.ph-role-card-student:hover .ph-role-action { background: #111111; }
 .ph-role-action svg { transition: transform .2s ease; }
 .ph-role-card:hover .ph-role-action svg { transform: translateX(3px); }
 [dir="rtl"] .ph-role-card:hover .ph-role-action svg { transform: translateX(-3px); }
 
-.ph-dashboard, .ph-student-dashboard { color: #163E26; }
+.ph-dashboard, .ph-student-dashboard { color: #111111; }
 .ph-dashboard > p:first-child, .ph-student-dashboard > p:first-child { letter-spacing: .08em; font-size: .75rem; }
 [lang="ar"] .ph-dashboard > p:first-child, [lang="ar"] .ph-student-dashboard > p:first-child { letter-spacing: 0; }
 .ph-dashboard h1, .ph-student-dashboard h1 { line-height: 1.22; }
 .ph-dashboard-metric { position: relative; overflow: hidden; }
-.ph-dashboard-metric::before { content: ""; position: absolute; inset-inline-start: 0; inset-block: 0; width: 3px; background: #CE5E37; }
-.ph-dashboard-metric:nth-child(2)::before { background: #163E26; }
-.ph-dashboard-metric:nth-child(3)::before { background: #638875; }
-.ph-dashboard-metric svg { color: #B64C2C; }
-.ph-dashboard-metric:nth-child(2) svg, .ph-dashboard-metric:nth-child(3) svg { color: #163E26; }
-.ph-dashboard-feature { background: linear-gradient(140deg, #163E26, #235236); }
+.ph-dashboard-metric::before { content: ""; position: absolute; inset-inline-start: 0; inset-block: 0; width: 3px; background: #D9704F; }
+.ph-dashboard-metric:nth-child(2)::before { background: #111111; }
+.ph-dashboard-metric:nth-child(3)::before { background: #B9552F; }
+.ph-dashboard-metric svg { color: #B9552F; }
+.ph-dashboard-metric:nth-child(2) svg, .ph-dashboard-metric:nth-child(3) svg { color: #111111; }
+.ph-dashboard-feature { background: #111111; }
 .ph-dashboard-feature h2 { color: #FFFFFF; }
 .ph-dashboard-feature button, .ph-dashboard-upcoming button { min-height: 44px; transition: background-color .2s ease, border-color .2s ease, transform .2s ease; }
 .ph-dashboard-feature button:hover, .ph-dashboard-upcoming button:hover { transform: translateY(-2px); }
-.ph-dashboard-feature button:hover { background: #EAF2ED; }
-.ph-dashboard-upcoming button:hover { border-color: #163E26; background: #EAF2ED; }
+.ph-dashboard-feature button:hover { background: #F5F5F5; }
+.ph-dashboard-upcoming button:hover { border-color: #111111; background: #F5F5F5; }
 .ph-student-dashboard textarea, .ph-student-dashboard select { font-size: 16px; }
 
-.ph-studio .ph-card, .sc-root .sc-card { border-color: #E8E2D8; box-shadow: none; }
+.ph-studio .ph-card, .sc-root .sc-card { border-color: #F5F5F5; box-shadow: none; }
 .ph-shell .ph-studio .ph-primary, .ph-shell .sc-root .sc-primary, body .sc-dialog .sc-primary {
   background: var(--color-terracotta-action);
   border-color: var(--color-terracotta-action);
@@ -98,12 +98,12 @@ html[lang="ar"] body { font-family: var(--font-arabic); }
 }
 .ph-studio .ph-btn:not(:disabled):hover, .sc-root .sc-btn:not(:disabled):hover,
 .sc-dialog .sc-btn:not(:disabled):hover { transform: translateY(-1px); }
-.sc-root .sc-event:hover { transform: translateY(-2px); border-color: #163E26 !important; }
+.sc-root .sc-event:hover { transform: translateY(-2px); border-color: #111111 !important; }
 .ph-studio .ph-input, .sc-root .sc-input, .sc-dialog .sc-input { min-height: 46px; font-size: 14px; }
 .ph-studio textarea.ph-input, .sc-root textarea.sc-input, .sc-dialog textarea.sc-input { min-height: 90px; }
-.ph-studio .ph-input:hover, .sc-root .sc-input:hover, .sc-dialog .sc-input:hover { border-color: #ACBAAE; }
-.ph-studio .ph-input:focus, .sc-root .sc-input:focus, .sc-dialog .sc-input:focus { border-color: #B64C2C; }
-.sc-root .sc-day-column { background-color: #FFFEFC; }
+.ph-studio .ph-input:hover, .sc-root .sc-input:hover, .sc-dialog .sc-input:hover { border-color: #111111; }
+.ph-studio .ph-input:focus, .sc-root .sc-input:focus, .sc-dialog .sc-input:focus { border-color: #B9552F; }
+.sc-root .sc-day-column { background-color: #FFFFFF; }
 
 @media screen and (min-width: 640px) {
   .ph-profile-main, .ph-dashboard, .ph-student-dashboard, .sc-root > div.mx-auto,

@@ -1,36 +1,49 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, CheckCircle2, GraduationCap, ShieldCheck, Sparkles, Users } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, CheckCircle2, GraduationCap, ShieldCheck, Users } from "lucide-react";
 import { createLocalLesson, initialInput, type Language, type Subject } from "./LessonPlanStudio";
 import { createDemoSchedule, isScheduleData, localizeSchedule } from "./TeacherScheduleCalendar";
 import CurriculumNavigation from "./CurriculumNavigation";
+import StudioButton from "./StudioButton";
 
 export type DemoProfile = "teacher" | "student";
 export function ProfilePicker({ language, onSelect }: { language: Language; onSelect: (profile: DemoProfile) => void }) {
   const ar = language === "ar"; const en = language === "en";
   const t = ar ? {
-    badge: "منصة بيداغوجية وديداكتيكية", title: "فضاء واحد لتحضير الدروس والتعلم.", subtitle: "اختر حسابا تجريبيا لاكتشاف المنصة دون تسجيل أو كلمة مرور.", demo: "حساب تجريبي", teacher: "فضاء الأستاذ", teacherName: "أمين · أستاذ علوم الحياة والأرض", teacherDescription: "نظم أقسامك وجدولك، وأعد جذاذاتك وفق مراحل غي بروسو الأربع مع توزيع زمن الحصة.", student: "فضاء التلميذ", studentName: "سلمى · السنة الثالثة إعدادي", studentDescription: "اقرأ نصوصا بمستويات مختلفة، واكتشف المفردات العلمية وتدرب على الفهم.", enterTeacher: "الدخول إلى فضاء الأستاذ", enterStudent: "الدخول إلى فضاء التلميذ", disclaimer: "شخصيات وبيانات تجريبية. لا توجد حسابات مدرسية حقيقية أو مصادقة.",
+    badge: "منصة بيداغوجية وديداكتيكية", title: "فضاء واحد لتحضير الدروس والتعلم.", subtitle: "اختر حسابا تجريبيا لاكتشاف المنصة دون تسجيل أو كلمة مرور.", demo: "حساب تجريبي", teacher: "أنا أستاذ", teacherName: "أمين · أستاذ علوم الحياة والأرض", teacherDescription: "نظم أقسامك وجدولك، وأعد جذاذاتك وفق مراحل غي بروسو الأربع مع توزيع زمن الحصة.", student: "أنا تلميذ", studentName: "سلمى · السنة الثالثة إعدادي", studentDescription: "اقرأ نصوصا بمستويات مختلفة، واكتشف المفردات العلمية وتدرب على الفهم.", enterTeacher: "الدخول إلى فضاء الأستاذ", enterStudent: "الدخول إلى فضاء التلميذ", disclaimer: "شخصيات وبيانات تجريبية. لا توجد حسابات مدرسية حقيقية أو مصادقة.",
   } : en ? {
-    badge: "Teaching and learning platform", title: "One place to plan lessons and learn.", subtitle: "Choose a demo account to explore the app without signing up or entering a password.", demo: "DEMO ACCOUNT", teacher: "Teacher space", teacherName: "Amine · Life and Earth Sciences teacher", teacherDescription: "Organize classes and your timetable, then prepare lesson plans with Brousseau’s four phases and a clear time budget.", student: "Student space", studentName: "Salma · 3rd year of middle school", studentDescription: "Read texts at different levels, explore scientific vocabulary and practice comprehension.", enterTeacher: "Enter teacher space", enterStudent: "Enter student space", disclaimer: "Fictional profiles and sample data. No real school accounts or authentication.",
+    badge: "Teaching and learning platform", title: "One place to plan lessons and learn.", subtitle: "Choose a demo account to explore the app without signing up or entering a password.", demo: "DEMO ACCOUNT", teacher: "I’m a teacher", teacherName: "Amine · Life and Earth Sciences teacher", teacherDescription: "Organize classes and your timetable, then prepare lesson plans with Brousseau’s four phases and a clear time budget.", student: "I’m a student", studentName: "Salma · 3rd year of middle school", studentDescription: "Read texts at different levels, explore scientific vocabulary and practice comprehension.", enterTeacher: "Enter teacher space", enterStudent: "Enter student space", disclaimer: "Fictional profiles and sample data. No real school accounts or authentication.",
   } : {
-    badge: "Plateforme pédagogique et didactique", title: "Un seul espace pour préparer vos cours et apprendre.", subtitle: "Choisissez un compte de démonstration pour explorer l’application sans inscription ni mot de passe.", demo: "COMPTE DÉMO", teacher: "Espace enseignant", teacherName: "Amine · Professeur de SVT", teacherDescription: "Organisez vos classes et votre emploi du temps, puis préparez vos fiches selon les quatre phases de Brousseau avec un temps maîtrisé.", student: "Espace étudiant", studentName: "Salma · 3ème année collégiale", studentDescription: "Lisez à votre rythme, explorez le vocabulaire scientifique et entraînez votre compréhension.", enterTeacher: "Entrer dans l’espace enseignant", enterStudent: "Entrer dans l’espace étudiant", disclaimer: "Profils fictifs et données de démonstration. Aucun compte scolaire réel ni authentification.",
+    badge: "Plateforme pédagogique et didactique", title: "Un seul espace pour préparer vos cours et apprendre.", subtitle: "Choisissez un compte de démonstration pour explorer l’application sans inscription ni mot de passe.", demo: "COMPTE DÉMO", teacher: "Je suis enseignant", teacherName: "Amine · Professeur de SVT", teacherDescription: "Organisez vos classes et votre emploi du temps, puis préparez vos fiches selon les quatre phases de Brousseau avec un temps maîtrisé.", student: "Je suis élève", studentName: "Salma · 3ème année collégiale", studentDescription: "Lisez à votre rythme, explorez le vocabulaire scientifique et entraînez votre compréhension.", enterTeacher: "Entrer dans l’espace enseignant", enterStudent: "Entrer dans l’espace élève", disclaimer: "Profils fictifs et données de démonstration. Aucun compte scolaire réel ni authentification.",
   };
-  return <div className="ph-profile-screen flex min-h-[calc(100dvh-140px)] flex-col justify-between bg-parchment text-ink">
-    <main className="ph-profile-main mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center px-5 py-10 text-center md:py-16">
-      <p className="mb-5 inline-flex items-center gap-2 rounded-lg border border-terracotta/30 bg-terracotta-soft px-3 py-1.5 text-xs font-bold text-terracotta"><Sparkles size={15} aria-hidden="true" />{t.badge}</p>
-      <h1 className="max-w-3xl text-3xl font-extrabold leading-tight tracking-tight text-cypress sm:text-4xl lg:text-5xl">{t.title}</h1>
-      <p className="mt-5 max-w-2xl text-sm leading-7 text-ink sm:text-base">{t.subtitle}</p>
-      <div className="mt-8 grid w-full gap-4 text-start md:mt-10 md:grid-cols-2 md:gap-6">{(["teacher", "student"] as DemoProfile[]).map(profile => {
-        const teacher = profile === "teacher";
-        return <button type="button" key={profile} onClick={() => onSelect(profile)} className={`ph-role-card ${teacher ? "ph-role-card-teacher" : "ph-role-card-student"} group flex min-h-[254px] flex-col justify-between rounded-lg border border-sand bg-white p-5 text-start hover:border-terracotta focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta md:min-h-[282px] md:p-7`}>
-          <span className="block w-full"><span className="mb-5 flex items-center justify-between gap-3"><span className={`inline-flex h-12 w-12 items-center justify-center rounded-lg border ${teacher ? "border-terracotta/20 bg-terracotta-soft text-terracotta" : "border-cypress bg-cypress text-white"}`}>{teacher ? <GraduationCap size={25} aria-hidden="true" /> : <BookOpen size={25} aria-hidden="true" />}</span><span className={`rounded-lg border px-2.5 py-1 text-[10px] font-extrabold ${teacher ? "border-terracotta/30 bg-terracotta-soft text-terracotta" : "border-cypress/20 bg-cypress-soft text-cypress"}`}>{t.demo}</span></span>
-            <span className="block text-xl font-bold text-ink">{teacher ? t.teacher : t.student}</span><span className={`mt-1 block text-xs font-bold ${teacher ? "text-terracotta" : "text-cypress"}`}>{teacher ? t.teacherName : t.studentName}</span><span className="mt-4 block text-sm leading-7 text-ink">{teacher ? t.teacherDescription : t.studentDescription}</span>
-          </span>
-          <span className="ph-role-action mt-6 flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-cypress px-4 py-3 text-sm font-bold text-white">{teacher ? t.enterTeacher : t.enterStudent}{ar ? <ArrowLeft size={17} aria-hidden="true" /> : <ArrowRight size={17} aria-hidden="true" />}</span>
-        </button>;
-      })}</div>
+  const hero = ar ? { line: "دروس العلوم،", accent: "بكل وضوح.", subtitle: "جدول الأقسام، جذاذات بيداغوجية ونصوص ملائمة بالفرنسية والعربية والإنجليزية.", start: "ابدأ الآن", explore: "استكشف برنامج العلوم", choose: "اختر فضاءك", program: "برنامج علوم الحياة والأرض", programIntro: "تصفح الدروس حسب المستوى والمسلك." }
+    : en ? { line: "Science lessons,", accent: "made clearer.", subtitle: "Class timetables, lesson plans and adapted texts in French, Arabic and English.", start: "Get started", explore: "Explore the science curriculum", choose: "Choose your space", program: "Life and Earth Sciences curriculum", programIntro: "Browse lessons by grade and track." }
+    : { line: "La SVT,", accent: "mieux préparée.", subtitle: "Calendrier des classes, fiches pédagogiques et textes adaptés en français, arabe et anglais.", start: "Commencer", explore: "Explorer le programme SVT", choose: "Choisissez votre espace", program: "Programme de SVT", programIntro: "Parcourez les cours selon le niveau et la filière." };
+  return <div className="ph-profile-screen">
+    <main className="ph-profile-main">
+      <section className="ph-hero" aria-labelledby="ph-hero-title">
+        <div className="ph-hero-content">
+          <p className="ph-hero-kicker">SVT <span aria-hidden="true">·</span> {ar ? "الإعدادي" : en ? "Middle school" : "Collège"}</p>
+          <h1 id="ph-hero-title"><span>{hero.line}</span><span className="ph-hero-accent">{hero.accent}</span></h1>
+          <p className="ph-hero-subtitle">{hero.subtitle}</p>
+          <div className="ph-hero-actions"><StudioButton size="large" onClick={() => onSelect("teacher")}>{hero.start}{ar ? <ArrowLeft size={20} aria-hidden="true" /> : <ArrowRight size={20} aria-hidden="true" />}</StudioButton><StudioButton variant="secondary" size="large" onClick={() => { const target = document.getElementById("ph-curriculum"); if (target) window.scrollTo({ top: window.scrollY + target.getBoundingClientRect().top - 120, behavior: "smooth" }); }}>{hero.explore}</StudioButton></div>
+        </div>
+        <div className="ph-hero-art" aria-hidden="true"><span className="ph-hero-arch" /><span className="ph-hero-arch-inner" /><span className="ph-hero-spine" /></div>
+      </section>
+      <section className="ph-profile-section" aria-label={hero.choose}>
+        <div className="ph-section-heading"><span className="ph-section-index">01 / 02</span><h2>{hero.choose}</h2><p>{t.subtitle}</p></div>
+        <div className="ph-role-grid">{(["teacher", "student"] as DemoProfile[]).map(profile => {
+          const teacher = profile === "teacher";
+          return <article key={profile} className={`ph-role-card ${teacher ? "ph-role-card-teacher" : "ph-role-card-student"}`}>
+            <div className="ph-role-top"><span className="ph-role-icon">{teacher ? <GraduationCap size={29} aria-hidden="true" /> : <BookOpen size={29} aria-hidden="true" />}</span><span className="ph-role-demo">{t.demo}</span></div>
+            <div><h3>{teacher ? t.teacher : t.student}</h3><p className="ph-role-name">{teacher ? t.teacherName : t.studentName}</p><p className="ph-role-description">{teacher ? t.teacherDescription : t.studentDescription}</p></div>
+            <StudioButton variant={teacher ? "primary" : "dark"} onClick={() => onSelect(profile)} className="ph-role-action">{teacher ? t.enterTeacher : t.enterStudent}{ar ? <ArrowLeft size={18} aria-hidden="true" /> : <ArrowRight size={18} aria-hidden="true" />}</StudioButton>
+          </article>;
+        })}</div>
+      </section>
+      <section className="ph-program-section" id="ph-curriculum"><div className="ph-section-heading"><span className="ph-section-index">02 / 02</span><h2>{hero.program}</h2><p>{hero.programIntro}</p></div><CurriculumNavigation language={language} /></section>
     </main>
-    <footer className="border-t border-sand bg-white px-5 py-5 text-center"><p className="mx-auto flex max-w-3xl items-center justify-center gap-2 text-xs leading-6 text-ink"><ShieldCheck size={17} className="shrink-0 text-terracotta" aria-hidden="true" />{t.disclaimer}</p></footer>
+    <footer className="ph-profile-footer"><p><ShieldCheck size={17} aria-hidden="true" />{t.disclaimer}</p></footer>
   </div>;
 }
 
