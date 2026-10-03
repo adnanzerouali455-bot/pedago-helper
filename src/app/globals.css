@@ -5,6 +5,9 @@
 @source "../components/EntryDashboard.tsx";
 @source "../components/CurriculumNavigation.tsx";
 @source "../components/StudentSvtLibrary.tsx";
+@source "../components/NeuralNetworkHeroCanvas.tsx";
+@source "../components/ForgettingCurveSVG.tsx";
+@source "../components/CourseToPathwayFlow.tsx";
 
 @theme inline {
   --color-terracotta: #D9704F;

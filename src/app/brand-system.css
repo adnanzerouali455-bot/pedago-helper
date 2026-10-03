@@ -67,8 +67,12 @@ html, body { background: var(--brand-white); color: var(--brand-black); }
 .ph-hero-arch { position: absolute; inset-inline-end: -30px; top: 0; width: 610px; height: 690px; border: 68px solid var(--brand-orange); border-bottom: 0; border-radius: 360px 360px 0 0; }
 .ph-hero-arch-inner { position: absolute; inset-inline-end: 95px; top: 146px; width: 356px; height: 510px; border: 28px solid var(--brand-orange); border-bottom: 0; border-radius: 220px 220px 0 0; }
 .ph-hero-spine { position: absolute; inset-inline-end: 270px; bottom: -20px; width: 28px; height: 245px; background: var(--brand-orange); }
-.ph-profile-section, .ph-program-section { max-width: 1260px; margin-inline: auto; padding: 60px 28px 84px; }
+.ph-hero-arch, .ph-hero-arch-inner, .ph-hero-spine { z-index: 1; }
+.ph-neural-visual { pointer-events: none; }
+.ph-neural-caption { box-shadow: 3px 3px 0 #B5651D; }
+.ph-profile-section, .ph-science-section, .ph-program-section { max-width: 1260px; margin-inline: auto; padding: 60px 28px 84px; }
 .ph-profile-section { border-top: 2px solid var(--brand-black); }
+.ph-science-section { border-top: 2px solid var(--brand-black); }
 .ph-section-heading { margin-bottom: 28px; }
 .ph-section-index { display: block; margin-bottom: 13px; color: var(--brand-orange-dark); font: 700 13px/1 var(--font-heading); letter-spacing: .08em; }
 .ph-section-heading h2 { margin: 0; color: var(--brand-black); font-size: clamp(28px, 3.2vw, 42px); font-weight: 700; line-height: 1.12; }
@@ -152,6 +156,8 @@ html[data-theme="dark"] .ph-shell .ph-dashboard-feature { background: var(--bran
 html[data-theme="dark"] .ph-shell .ph-dashboard-feature button { background: var(--brand-white); color: var(--brand-black); }
 html[data-theme="dark"] .ph-shell .ph-workspace-back { background: var(--brand-black); color: var(--brand-white); border-color: var(--brand-white); }
 html[data-theme="dark"] .ph-shell .sc-day-column, html[data-theme="dark"] .ph-program-section > div:last-child { background: var(--brand-black); }
+html[data-theme="dark"] .ph-shell .ph-science-section .bg-white:not(button) { background: #FFFFFF !important; color: #111111; }
+html[data-theme="dark"] .ph-science-section :is(figure, section) :is(h3, h4) { color: #111111; }
 html[data-theme="dark"] .student-svt-library { border-color: var(--brand-white); }
 html[data-theme="dark"] .student-svt-library .border-black { border-color: var(--brand-white); }
 html[data-theme="dark"] .student-svt-library :is(.student-svt-unit, .student-svt-card) { background: var(--brand-black); color: var(--brand-white); border-color: var(--brand-white); }
@@ -194,8 +200,8 @@ html[data-theme="dark"] .sc-dialog button[aria-pressed="true"] { background: var
   .ph-hero-actions { align-items: stretch; flex-direction: column; margin-top: 26px; }
   .ph-hero-actions .ph-button { width: 100%; }
   .ph-hero-actions .ph-button--secondary { font-size: 15px; }
-  .ph-hero-art { width: calc(100% + 40px); margin-inline: -20px; height: 170px; }
-  .ph-profile-section, .ph-program-section { padding: 38px 20px 52px; }
+  .ph-hero-art { width: calc(100% + 40px); margin-inline: -20px; height: 260px; }
+  .ph-profile-section, .ph-science-section, .ph-program-section { padding: 38px 20px 52px; }
   .ph-role-grid { grid-template-columns: 1fr; }
   .ph-role-card { min-height: 290px; padding: 24px; }
   .ph-role-action { width: 100%; min-width: 0; }

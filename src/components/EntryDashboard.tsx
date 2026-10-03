@@ -5,6 +5,9 @@ import { createLocalLesson, initialInput, type Language, type Subject } from "./
 import { createDemoSchedule, isScheduleData, localizeSchedule } from "./TeacherScheduleCalendar";
 import CurriculumNavigation from "./CurriculumNavigation";
 import StudentSvtLibrary from "./StudentSvtLibrary";
+import NeuralNetworkHeroCanvas from "./NeuralNetworkHeroCanvas";
+import ForgettingCurveSVG from "./ForgettingCurveSVG";
+import CourseToPathwayFlow from "./CourseToPathwayFlow";
 import StudioButton from "./StudioButton";
 
 export type DemoProfile = "teacher" | "student";
@@ -17,9 +20,9 @@ export function ProfilePicker({ language, onSelect }: { language: Language; onSe
   } : {
     badge: "Plateforme pédagogique et didactique", title: "Un seul espace pour préparer vos cours et apprendre.", subtitle: "Choisissez un compte de démonstration pour explorer l’application sans inscription ni mot de passe.", demo: "COMPTE DÉMO", teacher: "Je suis enseignant", teacherName: "Amine · Professeur de SVT", teacherDescription: "Organisez vos classes et votre emploi du temps, puis préparez vos fiches selon les quatre phases de Brousseau avec un temps maîtrisé.", student: "Je suis élève", studentName: "Salma · 3ème année collégiale", studentDescription: "Lisez à votre rythme, explorez le vocabulaire scientifique et entraînez votre compréhension.", enterTeacher: "Entrer dans l’espace enseignant", enterStudent: "Entrer dans l’espace élève", disclaimer: "Profils fictifs et données de démonstration. Aucun compte scolaire réel ni authentification.",
   };
-  const hero = ar ? { line: "دروس العلوم،", accent: "بكل وضوح.", subtitle: "جدول الأقسام، جذاذات بيداغوجية ونصوص ملائمة بالفرنسية والعربية والإنجليزية.", start: "ابدأ الآن", explore: "استكشف برنامج العلوم", choose: "اختر فضاءك", program: "برنامج علوم الحياة والأرض", programIntro: "تصفح الدروس حسب المستوى والمسلك." }
-    : en ? { line: "Science lessons,", accent: "made clearer.", subtitle: "Class timetables, lesson plans and adapted texts in French, Arabic and English.", start: "Get started", explore: "Explore the science curriculum", choose: "Choose your space", program: "Life and Earth Sciences curriculum", programIntro: "Browse lessons by grade and track." }
-    : { line: "La SVT,", accent: "mieux préparée.", subtitle: "Calendrier des classes, fiches pédagogiques et textes adaptés en français, arabe et anglais.", start: "Commencer", explore: "Explorer le programme SVT", choose: "Choisissez votre espace", program: "Programme de SVT", programIntro: "Parcourez les cours selon le niveau et la filière." };
+  const hero = ar ? { line: "دروس العلوم،", accent: "بكل وضوح.", subtitle: "جدول الأقسام، جذاذات بيداغوجية ونصوص ملائمة بالفرنسية والعربية والإنجليزية.", start: "ابدأ الآن", explore: "استكشف برنامج العلوم", choose: "اختر فضاءك", science: "نفهم لنتذكر أكثر", scienceIntro: "رسوم توضيحية عن ترسيخ التعلم وتحويل الدروس إلى خطوات واضحة.", program: "برنامج علوم الحياة والأرض", programIntro: "تصفح الدروس حسب المستوى والمسلك." }
+    : en ? { line: "Science lessons,", accent: "made clearer.", subtitle: "Class timetables, lesson plans and adapted texts in French, Arabic and English.", start: "Get started", explore: "Explore the science curriculum", choose: "Choose your space", science: "Understand more, remember longer", scienceIntro: "Illustrations of memory, revision and a clear route from material to lesson plan.", program: "Life and Earth Sciences curriculum", programIntro: "Browse lessons by grade and track." }
+    : { line: "La SVT,", accent: "mieux préparée.", subtitle: "Calendrier des classes, fiches pédagogiques et textes adaptés en français, arabe et anglais.", start: "Commencer", explore: "Explorer le programme SVT", choose: "Choisissez votre espace", science: "Comprendre pour mieux retenir", scienceIntro: "Des repères visuels sur la mémoire, les révisions et le passage du cours à la séance.", program: "Programme de SVT", programIntro: "Parcourez les cours selon le niveau et la filière." };
   return <div className="ph-profile-screen">
     <main className="ph-profile-main">
       <section className="ph-hero" aria-labelledby="ph-hero-title">
@@ -29,10 +32,10 @@ export function ProfilePicker({ language, onSelect }: { language: Language; onSe
           <p className="ph-hero-subtitle">{hero.subtitle}</p>
           <div className="ph-hero-actions"><StudioButton size="large" onClick={() => onSelect("teacher")}>{hero.start}{ar ? <ArrowLeft size={20} aria-hidden="true" /> : <ArrowRight size={20} aria-hidden="true" />}</StudioButton><StudioButton variant="secondary" size="large" onClick={() => { const target = document.getElementById("ph-curriculum"); if (target) window.scrollTo({ top: window.scrollY + target.getBoundingClientRect().top - 120, behavior: "smooth" }); }}>{hero.explore}</StudioButton></div>
         </div>
-        <div className="ph-hero-art" aria-hidden="true"><span className="ph-hero-arch" /><span className="ph-hero-arch-inner" /><span className="ph-hero-spine" /></div>
+        <div className="ph-hero-art"><NeuralNetworkHeroCanvas language={language} /><span aria-hidden="true" className="ph-hero-arch" /><span aria-hidden="true" className="ph-hero-arch-inner" /><span aria-hidden="true" className="ph-hero-spine" /></div>
       </section>
       <section className="ph-profile-section" aria-label={hero.choose}>
-        <div className="ph-section-heading"><span className="ph-section-index">01 / 02</span><h2>{hero.choose}</h2><p>{t.subtitle}</p></div>
+        <div className="ph-section-heading"><span className="ph-section-index"><bdi dir="ltr">01 / 03</bdi></span><h2>{hero.choose}</h2><p>{t.subtitle}</p></div>
         <div className="ph-role-grid">{(["teacher", "student"] as DemoProfile[]).map(profile => {
           const teacher = profile === "teacher";
           return <article key={profile} className={`ph-role-card ${teacher ? "ph-role-card-teacher" : "ph-role-card-student"}`}>
@@ -42,7 +45,8 @@ export function ProfilePicker({ language, onSelect }: { language: Language; onSe
           </article>;
         })}</div>
       </section>
-      <section className="ph-program-section" id="ph-curriculum"><div className="ph-section-heading"><span className="ph-section-index">02 / 02</span><h2>{hero.program}</h2><p>{hero.programIntro}</p></div><CurriculumNavigation language={language} /></section>
+      <section className="ph-science-section" aria-label={hero.science}><div className="ph-section-heading"><span className="ph-section-index"><bdi dir="ltr">02 / 03</bdi></span><h2>{hero.science}</h2><p>{hero.scienceIntro}</p></div><div className="grid gap-6 lg:grid-cols-2"><ForgettingCurveSVG language={language} /><CourseToPathwayFlow language={language} /></div></section>
+      <section className="ph-program-section" id="ph-curriculum"><div className="ph-section-heading"><span className="ph-section-index"><bdi dir="ltr">03 / 03</bdi></span><h2>{hero.program}</h2><p>{hero.programIntro}</p></div><CurriculumNavigation language={language} /></section>
     </main>
     <footer className="ph-profile-footer"><p><ShieldCheck size={17} aria-hidden="true" />{t.disclaimer}</p></footer>
   </div>;
