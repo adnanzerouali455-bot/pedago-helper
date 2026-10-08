@@ -2,7 +2,8 @@
 
 Application Next.js réunissant le calendrier, le studio pédagogique et la route serveur `POST /api/ai/generate-joudada`.
 
-Site publié : https://pedago-helper.vercel.app
+Site publié : https://pedago-helper.vercel.app  
+Dépôt GitHub : https://github.com/adnanzerouali455-bot/pedago-helper
 
 Déploiement vérifié le 21 septembre 2026 : `dpl_2E89gGXWZzrmqALq7YJCnntvQmsz` (production). La première publication a été affectée automatiquement à la production par Vercel.
 
@@ -48,7 +49,7 @@ Après vérification du déploiement de prévisualisation :
 npx vercel deploy --prod
 ```
 
-Vercel utilise Next.js et `npm run build` grâce à `vercel.json`. Aucun dépôt Git n'est requis pour ce déploiement CLI. Pour automatiser les déploiements à chaque commit, connecter ultérieurement ce projet à un dépôt Git depuis Vercel.
+Vercel utilise Next.js et `npm run build` grâce à `vercel.json`. Le déploiement CLI peut utiliser ce dossier directement. Le compte GitHub auteur du dernier commit doit être lié au compte Vercel autorisé à déployer ce projet ; une adresse Git locale non reconnue bloque la publication.
 
 ## Génération et données
 
