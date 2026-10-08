@@ -7,6 +7,6 @@ const PedagoWorkspace = dynamic(() => import("../components/PedagoWorkspace"), {
   loading: () => <main role="status" className="flex min-h-screen items-center justify-center bg-parchment p-6 text-cypress">Pedago Helper</main>,
 });
 
-export default function WorkspaceClient() {
-  return <PedagoWorkspace />;
+export default function WorkspaceClient({ initialProfile }: { initialProfile?: "teacher" | "student" }) {
+  return <PedagoWorkspace initialProfile={initialProfile} logoSrc="/pedago-helper-logo.jpeg" />;
 }

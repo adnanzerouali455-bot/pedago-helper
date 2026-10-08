@@ -1,0 +1,58 @@
+.landing {
+  background-color: var(--bg);
+  background-image: radial-gradient(circle at center, color-mix(in srgb, var(--ink) 7%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--ink);
+  font-family: var(--font-landing-body), "Hanken Grotesk", system-ui, sans-serif;
+  text-align: start;
+}
+
+.landing[lang="ar"] { font-family: var(--font-landing-arabic), "Cairo", sans-serif; }
+.landing-display { font-family: var(--font-landing-heading), "Fraunces", Georgia, serif; }
+.landing[lang="ar"] .landing-display { font-family: var(--font-landing-arabic), "Cairo", sans-serif; font-weight: 800; letter-spacing: 0; }
+.landing :is(a, button):focus-visible { outline: 2px solid var(--acc); outline-offset: 3px; }
+.landing-eyebrow { color: var(--acc2); font-size: 12px; font-weight: 800; letter-spacing: .17em; }
+.landing[lang="ar"] .landing-eyebrow { letter-spacing: 0; }
+.landing-nav { backdrop-filter: blur(12px); }
+.landing-nav-link { display: inline-flex; min-height: 44px; align-items: center; border-radius: 10px; padding-inline: 12px; color: var(--ink); font-size: 13px; font-weight: 700; white-space: nowrap; }
+.landing-nav-link:hover { background: var(--line); }
+@media (max-width: 639px) {
+  .landing-nav .landing-language { min-width: 38px; }
+}
+.landing .btn-stamp {
+  background-color: var(--acc);
+  color: #fff;
+  border: 1.5px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.landing .btn-stamp:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.landing .btn-stamp:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+.landing .btn-stamp:focus-visible { outline: 3px solid var(--ink); outline-offset: 5px; }
+.landing[dir="rtl"] .landing-arrow { display: inline-block; transform: scaleX(-1); }
+.landing-pulse-dot { box-shadow: 0 0 0 0 var(--acc2); animation: landing-pulse 2.8s ease-out infinite; }
+.landing-analysis-card { animation: landing-rise .7s ease-out both; }
+.landing-analysis-row { animation: landing-row-in .55s ease-out both; }
+.landing-synapse { animation: landing-dash 9s linear infinite; }
+.landing-network-node { animation: landing-node 3.8s ease-in-out infinite; }
+.landing-space-card { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+.landing-space-card:hover { border-color: var(--acc2); transform: translateY(-6px) rotate(-.6deg); box-shadow: 5px 5px 0 var(--acc2); }
+.landing-cta-glow { animation: landing-drift 9s ease-in-out infinite alternate; }
+
+@keyframes landing-pulse { 0%, 70%, 100% { box-shadow: 0 0 0 0 transparent; } 25% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--acc2) 16%, transparent); } }
+@keyframes landing-rise { from { opacity: 0; transform: translateY(18px) rotate(1.5deg); } to { opacity: 1; transform: translateY(0) rotate(1.5deg); } }
+@keyframes landing-row-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes landing-dash { to { stroke-dashoffset: -90; } }
+@keyframes landing-node { 0%, 100% { opacity: .38; } 48% { opacity: 1; } }
+@keyframes landing-drift { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-28px, 20px, 0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .landing *, .landing *::before, .landing *::after { animation: none !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .landing .motion-reveal-item { opacity: 1 !important; transform: none !important; }
+}
