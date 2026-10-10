@@ -131,20 +131,20 @@ export async function POST(request: Request): Promise<Response> {
         contents: [{ role: "user", parts: [{ text: JSON.stringify(input) }] }],
         generationConfig: {
           responseFormat: { text: { mimeType: "APPLICATION_JSON", schema: responseSchema } },
+          thinkingConfig: { thinkingLevel: "low" },
           maxOutputTokens: 6_000,
         },
       }),
       cache: "no-store",
-      signal: AbortSignal.any([request.signal, AbortSignal.timeout(45_000)]),
+      signal: AbortSignal.any([request.signal, AbortSignal.timeout(52_000)]),
     });
 
     if (!response.ok) {
       const googleError: unknown = await response.json().catch(() => null);
-      const googleStatus = z.object({ error: z.object({ status: z.string().optional(), message: z.string().optional() }) }).safeParse(googleError);
+      const googleStatus = z.object({ error: z.object({ status: z.string().optional() }) }).safeParse(googleError);
       console.error("Neuro-IA Gemini request failed", {
         httpStatus: response.status,
         googleStatus: googleStatus.success ? googleStatus.data.error.status : "UNKNOWN",
-        detail: googleStatus.success ? googleStatus.data.error.message?.replaceAll(apiKey, "[secret]").slice(0, 600) : undefined,
       });
       if (response.status === 429) return json({ success: false, error: { code: "RATE_LIMITED", message: "Le service IA est momentanément limité. Réessayez dans quelques instants." } }, 429);
       return json({ success: false, error: { code: "GEMINI_UNAVAILABLE", message: "L'analyse IA est indisponible pour le moment." } }, 502);
