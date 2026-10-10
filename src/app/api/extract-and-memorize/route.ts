@@ -92,7 +92,7 @@ Pour chaque terme, retourne exactement :
 - term : terme scientifique précis dans la langue de l'interface, sans doublon. Pour l'arabe et l'anglais, ajoute si utile le terme français source entre parenthèses ;
 - morphology : explique dans la langue de l'interface le découpage préfixe/racine/suffixe du terme source et son sens simple. Si l'étymologie est incertaine, explique honnêtement la composition ou la fonction sans inventer de racines ;
 - everydayAnalogy : analogie concrète du quotidien marocain, scientifiquement fidèle au mécanisme essentiel, et sa limite si elle pourrait induire une erreur. Pour l'osmose, l'analogie doit conserver une membrane semi-perméable et un gradient de concentration des solutés ; une simple infusion ou filtration du thé n'est pas une osmose ;
-- darijaExplanation : une ou deux phrases courtes en darija marocaine, en alphabet arabe ;
+- darijaExplanation : une ou deux phrases courtes en darija marocaine, exclusivement en alphabet arabe. Vérifie chaque mot avant de répondre : aucun caractère hébreu ou d'un autre alphabet ne doit se glisser dans une phrase darija ;
 - visualAnchor : scène ou schéma mental exact à imaginer pour associer l'image au mot ;
 - activeRecallQuestion : question-piège de rappel actif spécifique au mot, qui oblige à distinguer une idée juste d'une confusion fréquente sans relire ;
 - activeRecallAnswer : réponse scientifique exacte et concise.
@@ -164,7 +164,7 @@ export async function POST(request: Request): Promise<Response> {
     const mainFields = [data.localizedCourseTitle, data.cognitiveDiagnosis, data.spacedReviewAdvice,
       ...data.terms.flatMap(term => [term.term, term.morphology, term.everydayAnalogy, term.visualAnchor, term.activeRecallQuestion, term.activeRecallAnswer])];
     if (distinctTerms.size !== data.terms.length
-      || data.terms.some(term => !/[\u0600-\u06FF]/u.test(term.darijaExplanation))
+      || data.terms.some(term => !/[\u0600-\u06FF]/u.test(term.darijaExplanation) || /[\u0590-\u05FF]/u.test(term.darijaExplanation))
       || (input.language === "ar" && mainFields.some(value => !/[\u0600-\u06FF]/u.test(value)))) throw new Error("Invalid terms or language");
     return json({ success: true, data }, 200);
   } catch (error) {

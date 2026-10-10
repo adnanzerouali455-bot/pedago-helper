@@ -162,7 +162,7 @@ export default function NeuroTermExtractor({ courseTitle, displayTitle, grade, d
   const titleId = useId();
   const descriptionId = useId();
   const t = copy[language];
-  const cacheKey = useMemo(() => `pedago-helper:neuro:v2:${accountId ?? "demo"}:${fingerprint(JSON.stringify([courseTitle, grade, courseSummaryOrText ?? "", language]))}`, [accountId, courseTitle, grade, courseSummaryOrText, language]);
+  const cacheKey = useMemo(() => `pedago-helper:neuro:v3:${accountId ?? "demo"}:${fingerprint(JSON.stringify([courseTitle, grade, courseSummaryOrText ?? "", language]))}`, [accountId, courseTitle, grade, courseSummaryOrText, language]);
 
   useEffect(() => {
     setData(null);
