@@ -4,6 +4,7 @@ export const neuroExtractionInputSchema = z.object({
   courseTitle: z.string().trim().min(2).max(240),
   grade: z.string().trim().min(2).max(160),
   courseSummaryOrText: z.string().trim().max(8_000).optional(),
+  language: z.enum(["fr", "ar", "en"]).default("fr"),
 }).strict();
 
 export const extractedTermSchema = z.object({
@@ -17,6 +18,7 @@ export const extractedTermSchema = z.object({
 }).strict();
 
 export const neuroExtractionSchema = z.object({
+  localizedCourseTitle: z.string().trim().min(2).max(240),
   cognitiveDiagnosis: z.string().trim().min(12).max(1_000),
   terms: z.array(extractedTermSchema).min(3).max(5),
   spacedReviewAdvice: z.string().trim().min(12).max(1_000),

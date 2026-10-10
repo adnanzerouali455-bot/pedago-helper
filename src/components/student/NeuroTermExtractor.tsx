@@ -8,7 +8,9 @@ type Language = "fr" | "ar" | "en";
 
 export interface NeuroTermExtractorProps {
   courseTitle: string;
+  displayTitle?: string;
   grade: string;
+  displayGrade?: string;
   courseSummaryOrText?: string;
   language?: Language;
   accountId?: string;
@@ -16,6 +18,7 @@ export interface NeuroTermExtractorProps {
 
 const copy = {
   fr: {
+    badge: "NEURO-IA · SVT",
     trigger: "⚡ Extraire les mots complexes & mémoriser (Neuro-IA)",
     signIn: "Connectez-vous comme élève pour utiliser Neuro-IA.",
     signInLink: "Se connecter",
@@ -44,6 +47,7 @@ const copy = {
     timeout: "L'analyse prend trop de temps. Réessayez.",
   },
   ar: {
+    badge: "الذكاء العصبي · علوم الحياة والأرض",
     trigger: "⚡ استخراج المصطلحات الصعبة وتذكرها (الذكاء العصبي)",
     signIn: "سجّل الدخول كتلميذ لاستعمال التحليل الذكي.",
     signInLink: "تسجيل الدخول",
@@ -72,6 +76,7 @@ const copy = {
     timeout: "استغرق التحليل وقتا طويلا. حاول مجددا.",
   },
   en: {
+    badge: "NEURO-AI · LIFE SCIENCES",
     trigger: "⚡ Extract complex terms & memorize (Neuro-AI)",
     signIn: "Sign in as a student to use Neuro-AI.",
     signInLink: "Sign in",
@@ -143,7 +148,7 @@ function errorFor(code: unknown, language: Language): string {
   return t.error;
 }
 
-export default function NeuroTermExtractor({ courseTitle, grade, courseSummaryOrText, language = "fr", accountId }: NeuroTermExtractorProps) {
+export default function NeuroTermExtractor({ courseTitle, displayTitle, grade, displayGrade, courseSummaryOrText, language = "fr", accountId }: NeuroTermExtractorProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<NeuroExtractionResponse | null>(null);
@@ -157,7 +162,7 @@ export default function NeuroTermExtractor({ courseTitle, grade, courseSummaryOr
   const titleId = useId();
   const descriptionId = useId();
   const t = copy[language];
-  const cacheKey = useMemo(() => `pedago-helper:neuro:v1:${accountId ?? "demo"}:${fingerprint(JSON.stringify([courseTitle, grade, courseSummaryOrText ?? ""]))}`, [accountId, courseTitle, grade, courseSummaryOrText]);
+  const cacheKey = useMemo(() => `pedago-helper:neuro:v2:${accountId ?? "demo"}:${fingerprint(JSON.stringify([courseTitle, grade, courseSummaryOrText ?? "", language]))}`, [accountId, courseTitle, grade, courseSummaryOrText, language]);
 
   useEffect(() => {
     setData(null);
@@ -203,7 +208,7 @@ export default function NeuroTermExtractor({ courseTitle, grade, courseSummaryOr
       const response = await fetch("/api/extract-and-memorize", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ courseTitle, grade, ...(courseSummaryOrText ? { courseSummaryOrText } : {}) }),
+        body: JSON.stringify({ courseTitle, grade, language, ...(courseSummaryOrText ? { courseSummaryOrText } : {}) }),
         cache: "no-store",
         signal: controller.signal,
       });
@@ -265,9 +270,9 @@ export default function NeuroTermExtractor({ courseTitle, grade, courseSummaryOr
     <div className="mt-4 border-t border-[#E7E5E4] pt-4"><button ref={triggerRef} type="button" onClick={openDialog} className="min-h-11 w-full rounded-lg border border-[#B5651D] bg-[#FAF3EC] px-3 py-2 text-start text-sm font-bold text-[#75400E] transition-transform hover:-translate-y-0.5 hover:bg-white focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-[#B5651D] motion-reduce:transform-none">{t.trigger}</button></div>
     {open && typeof document !== "undefined" && createPortal(
       <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/65 p-0 sm:items-center sm:p-4" onMouseDown={event => { if (event.target === event.currentTarget) close(); }}>
-        <section ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descriptionId} aria-busy={loading} onKeyDown={onDialogKeyDown} className="max-h-[94dvh] w-full overflow-y-auto rounded-t-lg border border-[#111111] bg-white p-5 text-[#111111] sm:max-h-[88dvh] sm:max-w-3xl sm:rounded-lg sm:p-7" dir={language === "ar" ? "rtl" : "ltr"}>
+        <section ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descriptionId} aria-busy={loading} onKeyDown={onDialogKeyDown} className="max-h-[94dvh] w-full overflow-y-auto rounded-t-lg border border-[#111111] bg-white p-5 text-[#111111] sm:max-h-[88dvh] sm:max-w-3xl sm:rounded-lg sm:p-7" dir={language === "ar" ? "rtl" : "ltr"} lang={language}>
           <div className="flex items-start justify-between gap-4 border-b border-[#E7E5E4] pb-5">
-            <div className="min-w-0"><p className="text-xs font-bold tracking-wide text-[#75400E]">NEURO-IA · SVT</p><h2 id={titleId} className="mt-1 text-2xl font-bold">{t.title}</h2><p className="mt-2 text-sm font-semibold">{courseTitle} · {grade}</p><p id={descriptionId} className="mt-1 text-xs text-[#444444]">{t.source}</p></div>
+            <div className="min-w-0"><p className="text-xs font-bold tracking-wide text-[#75400E]">{t.badge}</p><h2 id={titleId} className="mt-1 text-2xl font-bold">{t.title}</h2><p className="mt-2 text-sm font-semibold">{data?.localizedCourseTitle ?? displayTitle ?? courseTitle} · {displayGrade ?? grade}</p><p id={descriptionId} className="mt-1 text-xs text-[#444444]">{t.source}</p></div>
             <button ref={closeRef} type="button" onClick={close} aria-label={t.close} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#111111] bg-white text-2xl leading-none hover:bg-[#FAF3EC] focus-visible:outline-4 focus-visible:outline-[#B5651D]">×</button>
           </div>
 
@@ -278,7 +283,7 @@ export default function NeuroTermExtractor({ courseTitle, grade, courseSummaryOr
           {data && !loading && <div className="space-y-6 pt-6">
             <section className="rounded-lg border border-[#B5651D] bg-[#FAF3EC] p-4"><h3 className="text-sm font-bold text-[#75400E]">{t.diagnosis}</h3><p className="mt-2 text-sm leading-7">{data.cognitiveDiagnosis}</p></section>
             <section aria-label={t.terms}><h3 className="mb-3 text-sm font-bold">{t.terms}</h3><div className="flex gap-2 overflow-x-auto pb-2" role="tablist" aria-label={t.terms}>{data.terms.map((term, index) => <button key={`${term.term}-${index}`} type="button" role="tab" id={`${titleId}-tab-${index}`} aria-controls={`${titleId}-panel`} aria-selected={activeIndex === index} tabIndex={activeIndex === index ? 0 : -1} onClick={() => { setActiveIndex(index); setRevealed(false); }} onKeyDown={event => onTabKeyDown(event, index, data.terms.length)} className={`min-h-11 shrink-0 rounded-lg border px-3 py-2 text-sm font-bold focus-visible:outline-4 focus-visible:outline-[#B5651D] ${activeIndex === index ? "border-[#111111] bg-[#111111] text-white" : "border-[#E7E5E4] bg-white text-[#111111] hover:border-[#B5651D]"}`}>{term.term}</button>)}</div></section>
-            {activeTerm && <section id={`${titleId}-panel`} role="tabpanel" aria-labelledby={`${titleId}-tab-${activeIndex}`} className="space-y-4 rounded-lg border border-[#E7E5E4] p-4 sm:p-5"><h3 className="text-xl font-bold" lang="fr">{activeTerm.term}</h3><div className="grid gap-4 sm:grid-cols-2"><div><h4 className="text-sm font-bold text-[#75400E]">{t.morphology}</h4><p className="mt-1 text-sm leading-7">{activeTerm.morphology}</p></div><div><h4 className="text-sm font-bold text-[#75400E]">{t.analogy}</h4><p className="mt-1 text-sm leading-7">{activeTerm.everydayAnalogy}</p></div></div><div className="rounded-lg border border-[#E7E5E4] bg-[#FAF3EC] p-4" dir="rtl" lang="ar"><h4 className="text-right text-sm font-bold text-[#75400E]">{t.darija}</h4><p className="mt-1 text-right text-sm leading-8">{activeTerm.darijaExplanation}</p></div><div><h4 className="text-sm font-bold text-[#75400E]">{t.visual}</h4><p className="mt-1 text-sm leading-7">{activeTerm.visualAnchor}</p></div><div className="rounded-lg border-2 border-[#111111] bg-white p-4"><h4 className="text-sm font-bold">{t.recall}</h4><p className="mt-2 text-sm leading-7">{activeTerm.activeRecallQuestion}</p><button type="button" aria-expanded={revealed} onClick={() => setRevealed(value => !value)} className="mt-4 min-h-11 rounded-lg border border-[#111111] bg-[#111111] px-4 py-2 text-sm font-bold text-white hover:bg-[#333333] focus-visible:outline-4 focus-visible:outline-[#B5651D]">{revealed ? t.hide : t.reveal}</button>{revealed && <p role="status" className="mt-3 border-t border-[#E7E5E4] pt-3 text-sm leading-7"><strong>{t.answer} :</strong> {activeTerm.activeRecallAnswer}</p>}</div></section>}
+            {activeTerm && <section id={`${titleId}-panel`} role="tabpanel" aria-labelledby={`${titleId}-tab-${activeIndex}`} className="space-y-4 rounded-lg border border-[#E7E5E4] p-4 sm:p-5"><h3 className="text-xl font-bold">{activeTerm.term}</h3><div className="grid gap-4 sm:grid-cols-2"><div><h4 className="text-sm font-bold text-[#75400E]">{t.morphology}</h4><p className="mt-1 text-sm leading-7">{activeTerm.morphology}</p></div><div><h4 className="text-sm font-bold text-[#75400E]">{t.analogy}</h4><p className="mt-1 text-sm leading-7">{activeTerm.everydayAnalogy}</p></div></div><div className="rounded-lg border border-[#E7E5E4] bg-[#FAF3EC] p-4" dir="rtl" lang="ar"><h4 className="text-right text-sm font-bold text-[#75400E]">{t.darija}</h4><p className="mt-1 text-right text-sm leading-8">{activeTerm.darijaExplanation}</p></div><div><h4 className="text-sm font-bold text-[#75400E]">{t.visual}</h4><p className="mt-1 text-sm leading-7">{activeTerm.visualAnchor}</p></div><div className="rounded-lg border-2 border-[#111111] bg-white p-4"><h4 className="text-sm font-bold">{t.recall}</h4><p className="mt-2 text-sm leading-7">{activeTerm.activeRecallQuestion}</p><button type="button" aria-expanded={revealed} onClick={() => setRevealed(value => !value)} className="mt-4 min-h-11 rounded-lg border border-[#111111] bg-[#111111] px-4 py-2 text-sm font-bold text-white hover:bg-[#333333] focus-visible:outline-4 focus-visible:outline-[#B5651D]">{revealed ? t.hide : t.reveal}</button>{revealed && <p role="status" className="mt-3 border-t border-[#E7E5E4] pt-3 text-sm leading-7"><strong>{t.answer} :</strong> {activeTerm.activeRecallAnswer}</p>}</div></section>}
             <section className="rounded-lg border border-[#E7E5E4] bg-[#FAF3EC] p-4"><h3 className="text-sm font-bold">{t.spaced}</h3><div className="mt-2 flex flex-wrap gap-2"><span className="rounded border border-[#B5651D] bg-white px-2 py-1 text-xs font-bold">{t.dayTwo}</span><span className="rounded border border-[#B5651D] bg-white px-2 py-1 text-xs font-bold">{t.daySeven}</span></div><p className="mt-2 text-sm leading-7">{data.spacedReviewAdvice}</p></section>
           </div>}
         </section>
