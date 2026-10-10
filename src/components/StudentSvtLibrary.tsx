@@ -68,8 +68,17 @@ const copy = {
   },
 } as const;
 
-export default function StudentSvtLibrary({ language, initialGradeId, accountId }: { language: Language; initialGradeId?: string; accountId?: string }) {
-  const [gradeId, setGradeId] = useState(initialGradeId ?? "3AC");
+function resolveInitialGradeId(gradeId?: string, branch?: string): string {
+  const normalizedGrade = gradeId?.trim().toUpperCase();
+  const normalizedBranch = branch?.trim().toUpperCase();
+  const curriculumGrade = normalizedGrade === "1BAC" ? "1BAC_SE"
+    : normalizedGrade === "2BAC" ? (normalizedBranch === "PC" ? "2BAC_PC" : "2BAC_SVT")
+    : normalizedGrade;
+  return svtCurriculumWithVideos.find(item => item.gradeId === curriculumGrade)?.gradeId ?? "3AC";
+}
+
+export default function StudentSvtLibrary({ language, initialGradeId, initialBranch, accountId }: { language: Language; initialGradeId?: string; initialBranch?: string; accountId?: string }) {
+  const [gradeId, setGradeId] = useState(() => resolveInitialGradeId(initialGradeId, initialBranch));
   const [semester, setSemester] = useState<Semester>("all");
   const [query, setQuery] = useState("");
   const grade = svtCurriculumWithVideos.find(item => item.gradeId === gradeId) ?? svtCurriculumWithVideos[0];

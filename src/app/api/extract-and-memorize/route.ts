@@ -130,7 +130,7 @@ export async function POST(request: Request): Promise<Response> {
         systemInstruction: { parts: [{ text: systemPrompt(input) }] },
         contents: [{ role: "user", parts: [{ text: JSON.stringify(input) }] }],
         generationConfig: {
-          responseFormat: { text: { mimeType: "application/json", schema: responseSchema } },
+          responseFormat: { text: { mimeType: "APPLICATION_JSON", schema: responseSchema } },
           maxOutputTokens: 6_000,
         },
       }),
@@ -138,8 +138,17 @@ export async function POST(request: Request): Promise<Response> {
       signal: AbortSignal.any([request.signal, AbortSignal.timeout(45_000)]),
     });
 
-    if (response.status === 429) return json({ success: false, error: { code: "RATE_LIMITED", message: "Le service IA est momentanément limité. Réessayez dans quelques instants." } }, 429);
-    if (!response.ok) return json({ success: false, error: { code: "GEMINI_UNAVAILABLE", message: "L'analyse IA est indisponible pour le moment." } }, 502);
+    if (!response.ok) {
+      const googleError: unknown = await response.json().catch(() => null);
+      const googleStatus = z.object({ error: z.object({ status: z.string().optional(), message: z.string().optional() }) }).safeParse(googleError);
+      console.error("Neuro-IA Gemini request failed", {
+        httpStatus: response.status,
+        googleStatus: googleStatus.success ? googleStatus.data.error.status : "UNKNOWN",
+        detail: googleStatus.success ? googleStatus.data.error.message?.replaceAll(apiKey, "[secret]").slice(0, 600) : undefined,
+      });
+      if (response.status === 429) return json({ success: false, error: { code: "RATE_LIMITED", message: "Le service IA est momentanément limité. Réessayez dans quelques instants." } }, 429);
+      return json({ success: false, error: { code: "GEMINI_UNAVAILABLE", message: "L'analyse IA est indisponible pour le moment." } }, 502);
+    }
 
     const envelope = geminiResponseSchema.safeParse(await response.json());
     const candidate = envelope.success ? envelope.data.candidates[0] : null;
@@ -150,6 +159,10 @@ export async function POST(request: Request): Promise<Response> {
     if (distinctTerms.size !== data.terms.length || data.terms.some(term => !/[\u0600-\u06FF]/u.test(term.darijaExplanation))) throw new Error("Invalid terms");
     return json({ success: true, data }, 200);
   } catch (error) {
+    console.error("Neuro-IA Gemini response failed", {
+      errorType: error instanceof Error ? error.name : typeof error,
+      invalidFields: error instanceof z.ZodError ? error.issues.map(issue => issue.path.join(".")) : undefined,
+    });
     if (error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError")) {
       return json({ success: false, error: { code: "TIMEOUT", message: "L'analyse prend trop de temps. Réessayez." } }, 504);
     }
