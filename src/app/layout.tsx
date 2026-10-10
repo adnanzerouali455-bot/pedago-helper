@@ -4,6 +4,7 @@ import { Cairo, Fraunces, Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
 import "./brand-system.css";
 import "./landing.css";
+import "./workspace-theme.css";
 
 const headingFont = Fraunces({ subsets: ["latin"], variable: "--font-landing-heading", display: "swap" });
 const bodyFont = Hanken_Grotesk({ subsets: ["latin"], variable: "--font-landing-body", display: "swap" });

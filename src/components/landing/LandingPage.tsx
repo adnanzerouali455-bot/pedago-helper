@@ -31,7 +31,7 @@ export default function LandingPage({ language, theme, onLanguageChange, onTheme
     <NeuralBackground />
     <div className="relative z-10">
       <Navbar language={language} messages={messages} theme={theme} onLanguageChange={onLanguageChange} onThemeToggle={onThemeToggle} onOpenApp={openApp} />
-      <main><Hero messages={messages} onOpenApp={openApp} /><ConstatSection language={language} messages={messages} /><SpacesSection messages={messages} onSelect={onSelect} /><HowSection messages={messages} direction={language === "ar" ? "rtl" : "ltr"} /><CognitiveScienceSection messages={messages} /><CallToAction messages={messages} onOpenApp={openApp} /></main>
+      <main><Hero messages={messages} onOpenApp={openApp} /><ConstatSection language={language} messages={messages} /><SpacesSection messages={messages} onSelect={onSelect} /><HowSection messages={messages} direction={language === "ar" ? "rtl" : "ltr"} /><CognitiveScienceSection messages={messages} /><CallToAction messages={messages} /></main>
       <Footer messages={messages} />
     </div>
   </div>;

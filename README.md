@@ -1,6 +1,6 @@
 # Pedago Helper — Vercel
 
-Application Next.js réunissant le calendrier, le studio pédagogique et la route serveur `POST /api/ai/generate-joudada`.
+Application Next.js réunissant le calendrier, le studio pédagogique, la route serveur `POST /api/ai/generate-joudada` et des espaces de compte Supabase optionnels.
 
 Site publié : https://pedago-helper.vercel.app  
 Dépôt GitHub : https://github.com/adnanzerouali455-bot/pedago-helper
@@ -16,6 +16,12 @@ Les fichiers `src/components/curriculum-data.json` et `src/components/svt-chapte
 Ce catalogue fournit des intitulés ; il ne contient pas les textes scientifiques. Pour ses leçons, la génération locale produit une trame didactique à compléter et permet d’ajouter un texte fourni par l’enseignant, sans présenter un autre cours comme s’il correspondait au titre choisi. Les anciennes fiches restent lisibles.
 
 Vérification : `npm test` couvre les 97 choix dans les trois langues, les 47 chapitres et la compatibilité des données sauvegardées.
+
+## Comptes Supabase
+
+Les pages `/connexion` et `/inscription` proposent trois rôles : enseignant, élève et établissement. Leurs espaces `/espace-enseignant`, `/espace-eleve` et `/espace-etablissement` sont protégés par session et par rôle. Suivre [le guide d’activation](supabase/README.md) et exécuter [le schéma SQL](supabase/schema.sql) puis [la migration des documents personnels](supabase/user-documents.sql). La route `/app` conserve les profils de démonstration sans compte.
+
+Ce dépôt utilise Next.js 16 : son `src/proxy.ts` remplit le rôle du `middleware.ts` demandé dans les versions précédentes. Pour les comptes authentifiés, le calendrier, les classes, les fiches, les réponses d’exercices et les préférences sont liés à l’utilisateur Supabase avec RLS. Le catalogue et les exemples restent partagés ; les profils de démonstration conservent leur stockage local.
 
 ## Développement
 
@@ -55,9 +61,9 @@ Vercel utilise Next.js et `npm run build` grâce à `vercel.json`. Le déploieme
 
 Le studio conserve son fonctionnement local interactif. La route IA est hébergée à la même origine, mais le bouton de génération n'est pas encore raccordé à cette route : un adaptateur reste nécessaire pour les champs du studio et ses trois textes de lecture. La route génère uniquement la fiche pédagogique.
 
-Pour activer les appels directs à l'API, configurer `OPENAI_API_KEY` côté serveur dans Vercel et redéployer. `OPENAI_MODEL` est facultatif (défaut : `gpt-4.1-mini`). Ne jamais mettre une clé dans une variable `NEXT_PUBLIC_`. Sans clé, l'API renvoie une erreur contrôlée et le site reste utilisable en mode local. Le serveur ne dispose pas encore d'un système de comptes ou de quotas applicatifs.
+Pour activer les appels directs à l'API, configurer `OPENAI_API_KEY` côté serveur dans Vercel et redéployer. `OPENAI_MODEL` est facultatif (défaut : `gpt-4.1-mini`). Ne jamais mettre une clé secrète dans une variable `NEXT_PUBLIC_`. Sans clé, l'API renvoie une erreur contrôlée et le site reste utilisable en mode local. L’API de génération ne dispose pas encore de quotas applicatifs.
 
-Les classes et les leçons sont enregistrées dans le navigateur, séparément pour chaque origine. Les données sauvegardées sur localhost ne sont pas transférées automatiquement à l'adresse Vercel. Le logo est inclus dans `public/pedago-helper-logo.jpeg`.
+Pour les comptes authentifiés, les classes et les leçons sont enregistrées dans Supabase et suivent le compte entre les appareils et les domaines. Les anciennes données locales propres au compte sont migrées au premier accès depuis le navigateur et le domaine où elles se trouvent ; les données des comptes de démonstration restent propres à chaque origine. Le logo est inclus dans `public/pedago-helper-logo.jpeg`.
 
 Les fichiers `.env*`, `.vercel`, `node_modules` et `.next` sont exclus du paquet téléchargeable. `.env.example` est fourni sans secret.
 

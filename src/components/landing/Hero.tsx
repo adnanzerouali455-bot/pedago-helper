@@ -1,4 +1,5 @@
 import type { Messages } from "../../messages/types";
+import Link from "next/link";
 import ParallaxCard from "../motion/ParallaxCard";
 
 interface HeroProps { messages: Messages; onOpenApp: () => void }
@@ -16,9 +17,10 @@ export default function Hero({ messages, onOpenApp }: HeroProps) {
       </h1>
       <p className="mt-8 max-w-[580px] text-base leading-8 text-[var(--mut)] sm:text-lg">{hero.body}</p>
       <div className="mt-8 flex flex-wrap gap-3">
-        <a href="/app" onClick={event => { event.preventDefault(); onOpenApp(); }} className="btn-stamp inline-flex min-h-12 items-center justify-center rounded-[14px] px-6 py-3 text-sm font-bold">{hero.open}<span aria-hidden="true" className="ms-3 landing-arrow">↗</span></a>
+        <Link href="/inscription" className="btn-stamp inline-flex min-h-12 items-center justify-center rounded-[14px] px-6 py-3 text-sm font-bold">{hero.open}<span aria-hidden="true" className="ms-3 landing-arrow">↗</span></Link>
         <a href="#spaces" className="inline-flex min-h-12 items-center justify-center rounded-[14px] border-[1.5px] border-[var(--line)] bg-[var(--card)] px-6 py-3 text-sm font-bold text-[var(--ink)] hover:border-[var(--acc2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--acc)]">{hero.discover}</a>
       </div>
+      <a href="/app" onClick={event => { event.preventDefault(); onOpenApp(); }} className="mt-4 inline-flex min-h-11 items-center text-sm font-bold text-[var(--ink)] underline decoration-[var(--acc)] underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--acc)]">{hero.demo}</a>
       <p className="mt-7 text-xs font-medium text-[var(--mut)]">{hero.available} <span className="ms-2 font-bold text-[var(--ink)]">Français <span className="mx-1" aria-hidden="true">/</span> العربية <span className="mx-1" aria-hidden="true">/</span> English</span></p>
     </div>
     <div className="landing-analysis-wrap relative mx-auto w-full max-w-[510px] lg:ms-3">

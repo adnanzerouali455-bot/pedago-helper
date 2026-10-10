@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import teacherPhoto from "../../../public/teacher-svt-classroom.jpg";
 import studentPhoto from "../../../public/students-svt-lab.jpg";
 import type { Messages } from "../../messages/types";
@@ -21,8 +22,9 @@ export default function SpacesSection({ messages, onSelect }: SpacesProps) {
         <h3 className="landing-display mt-5 text-3xl font-bold leading-tight">{item.title}</h3><p className="mt-3 text-sm leading-7 text-[var(--mut)]">{item.body}</p>
         <ul className="mt-6 space-y-2">{item.features.map(feature => <li key={feature} className="flex items-start gap-2 text-sm font-semibold"><span aria-hidden="true" className="mt-[.45em] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--acc)]" />{feature}</li>)}</ul>
         <p className="mt-5 text-xs leading-5 text-[var(--mut)]">{item.note}</p>
-        <a href="/app" onClick={event => { event.preventDefault(); onSelect(role); }} className="btn-stamp mt-auto inline-flex min-h-12 items-center justify-center self-start rounded-[12px] px-5 py-3 text-sm font-bold">{item.action}</a>
+        <div className="mt-auto flex flex-wrap items-center gap-x-5 gap-y-2 pt-7"><Link href={`/inscription?role=${role}`} className="btn-stamp inline-flex min-h-12 items-center justify-center rounded-[12px] px-5 py-3 text-sm font-bold">{item.action}</Link><a href="/app" onClick={event => { event.preventDefault(); onSelect(role); }} className="inline-flex min-h-11 items-center text-sm font-bold text-[var(--ink)] underline decoration-[var(--acc)] underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--acc)]">{spaces.preview}</a></div>
       </article>;
     })}</ScrollReveal>
+    <Link href="/inscription?role=school" className="mt-7 inline-flex min-h-11 items-center text-sm font-bold text-[var(--ink)] underline decoration-[var(--acc)] underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--acc)]">{spaces.schoolAction}<span aria-hidden="true" className="ms-2">↗</span></Link>
   </section>;
 }

@@ -2,39 +2,79 @@
 import { TeacherDashboard, StudentDashboard, type DemoProfile } from "./EntryDashboard";
 import LandingPage from "./landing/LandingPage";
 import { localizeText, languageName } from "./localization";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, CalendarDays, FilePenLine, Link2, LogOut, Moon, Sun } from "lucide-react";
 import BrandMark from "./BrandMark";
 import StudioButton from "./StudioButton";
-import TeacherScheduleCalendar, { type LessonPlanLaunchContext } from "./TeacherScheduleCalendar";
+import TeacherScheduleCalendar, { type LessonPlanLaunchContext, type ScheduleSubject, type ScheduleSchoolLevel } from "./TeacherScheduleCalendar";
 import LessonPlanStudio, { isLessonDocument, type Language, type LessonDocument, type LessonInput } from "./LessonPlanStudio";
+import AccountMenu from "./auth/AccountMenu";
+import InAppTour from "./InAppTour";
+import type { Profile } from "../utils/supabase/types";
+import { readAccountDocument, writeAccountDocument } from "../utils/supabase/documents";
 
 type View = "home" | "calendar" | "planner";
 type Editor = { id: string; context?: LessonPlanLaunchContext; saved?: LessonDocument };
+function teacherSubject(value: string | null | undefined): ScheduleSubject {
+  const subject = value?.trim().toLocaleLowerCase() ?? "";
+  if (subject.includes("physique") || subject === "pc") return "pc";
+  if (subject.includes("math")) return "math";
+  if (subject.includes("arab") || subject.includes("عرب")) return "arabic";
+  if (subject.includes("fran")) return "french";
+  return "svt";
+}
+function teacherLevel(value: string | null | undefined): ScheduleSchoolLevel {
+  return value?.toLocaleLowerCase().includes("lycée") ? "high" : "middle";
+}
 export interface PedagoWorkspaceProps {
   initialProfile?: DemoProfile;
+  account?: Profile;
   logoSrc?: string;
   scheduleStorageKey?: string;
   lessonStoragePrefix?: string;
   generalLessonStorageKey?: string;
 }
 
-export default function PedagoWorkspace({ initialProfile, logoSrc, scheduleStorageKey = "pedago-helper:schedule:v1", lessonStoragePrefix = "pedago-helper:session-lesson", generalLessonStorageKey = "pedago-helper:lesson-studio:v1" }: PedagoWorkspaceProps) {
+export default function PedagoWorkspace({ initialProfile, account, logoSrc, scheduleStorageKey = "pedago-helper:schedule:v1", lessonStoragePrefix = "pedago-helper:session-lesson", generalLessonStorageKey = "pedago-helper:lesson-studio:v1" }: PedagoWorkspaceProps) {
+  if (account) {
+    scheduleStorageKey = `pedago-helper:account:${account.id}:schedule:v1`;
+    lessonStoragePrefix = `pedago-helper:account:${account.id}:session-lesson`;
+    generalLessonStorageKey = `pedago-helper:account:${account.id}:lesson-studio:v1`;
+  }
   const [view, setView] = useState<View>("home");
-  const [language, setLanguage] = useState<Language>(() => { try { return (["fr", "ar", "en"] as Language[]).includes(localStorage.getItem("pedago-helper:language") as Language) ? localStorage.getItem("pedago-helper:language") as Language : "fr"; } catch { return "fr"; } });
-  const [theme, setTheme] = useState<"light" | "dark">(() => { try { const saved = localStorage.getItem("pedago-helper:theme"); return saved === "dark" ? "dark" : saved === "light" ? "light" : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; } catch { return "light"; } });
-  const [manualTheme, setManualTheme] = useState(() => { try { return localStorage.getItem("pedago-helper:theme") !== null; } catch { return false; } });
+  const [language, setLanguage] = useState<Language>(() => { if (account) return "fr"; try { return (["fr", "ar", "en"] as Language[]).includes(localStorage.getItem("pedago-helper:language") as Language) ? localStorage.getItem("pedago-helper:language") as Language : "fr"; } catch { return "fr"; } });
+  const [theme, setTheme] = useState<"light" | "dark">(() => { if (account) return "light"; try { const saved = localStorage.getItem("pedago-helper:theme"); return saved === "dark" ? "dark" : saved === "light" ? "light" : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; } catch { return "light"; } });
+  const [manualTheme, setManualTheme] = useState(() => { if (account) return false; try { return localStorage.getItem("pedago-helper:theme") !== null; } catch { return false; } });
+  const [preferencesReady, setPreferencesReady] = useState(!account);
+  const [preferencesError, setPreferencesError] = useState(false);
+  const preferenceWrite = useRef<Promise<void>>(Promise.resolve());
+  useEffect(() => {
+    if (!account) return;
+    let active = true;
+    const key = `pedago-helper:account:${account.id}:preferences:v1`;
+    const isPreferences = (value: unknown): value is { version: 1; language: Language; theme: "light" | "dark" } => !!value && typeof value === "object" && !Array.isArray(value) && "version" in value && value.version === 1 && "language" in value && (value.language === "fr" || value.language === "ar" || value.language === "en") && "theme" in value && (value.theme === "light" || value.theme === "dark");
+    void readAccountDocument(account.id, key, isPreferences)
+      .then(value => { if (!active) return; if (value) { setLanguage(value.language); setTheme(value.theme); setManualTheme(true); } setPreferencesReady(true); })
+      .catch(() => { if (active) { setPreferencesError(true); setPreferencesReady(true); } });
+    return () => { active = false; };
+  }, [account?.id]);
+  useEffect(() => {
+    if (!account || !preferencesReady || preferencesError) return;
+    const key = `pedago-helper:account:${account.id}:preferences:v1`;
+    preferenceWrite.current = preferenceWrite.current.catch(() => {}).then(() => writeAccountDocument(account.id, key, { version: 1, language, theme }));
+    void preferenceWrite.current.catch(() => setPreferencesError(true));
+  }, [account?.id, preferencesReady, preferencesError, language, theme]);
   const [profile, setProfile] = useState<DemoProfile | null>(initialProfile ?? null);
   useEffect(() => {
     document.documentElement.lang = language;
     document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
     document.title = language === "ar" ? "المساعد البيداغوجي" : "Pedago Helper";
-    try { localStorage.setItem("pedago-helper:language", language); } catch { /* The interface still works when browser storage is unavailable. */ }
-  }, [language]);
+    if (!account) try { localStorage.setItem("pedago-helper:language", language); } catch { /* The interface still works when browser storage is unavailable. */ }
+  }, [language, account]);
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    if (manualTheme) try { localStorage.setItem("pedago-helper:theme", theme); } catch { /* The selected theme remains available during this visit. */ }
-  }, [theme, manualTheme]);
+    if (!account && manualTheme) try { localStorage.setItem("pedago-helper:theme", theme); } catch { /* The selected theme remains available during this visit. */ }
+  }, [theme, manualTheme, account]);
   useEffect(() => {
     if (manualTheme) return;
     const media = window.matchMedia("(prefers-color-scheme: dark)");
@@ -60,13 +100,13 @@ export default function PedagoWorkspace({ initialProfile, logoSrc, scheduleStora
     }
     const readRoute = () => {
       const hash = window.location.hash;
-      if (hash === "#planner" || hash === "#calendar") { setProfile("teacher"); setView(hash === "#planner" ? "planner" : "calendar"); }
-      else { setView("home"); setProfile(hash === "#teacher" ? "teacher" : hash === "#student" ? "student" : initialProfile ?? null); }
+      if (hash === "#planner" || hash === "#calendar") { setProfile(account?.role === "student" ? "student" : "teacher"); setView(account?.role === "student" ? "home" : hash === "#planner" ? "planner" : "calendar"); }
+      else { setView("home"); setProfile(account ? initialProfile ?? null : hash === "#teacher" ? "teacher" : hash === "#student" ? "student" : initialProfile ?? null); }
     };
     readRoute();
     window.addEventListener("popstate", readRoute); window.addEventListener("hashchange", readRoute);
     return () => { window.removeEventListener("popstate", readRoute); window.removeEventListener("hashchange", readRoute); };
-  }, [initialProfile]);
+  }, [initialProfile, account]);
   function toggleTheme() { setManualTheme(true); setTheme(current => current === "dark" ? "light" : "dark"); }
   function selectProfile(next: DemoProfile | null) {
     setProfile(next); setView("home");
@@ -83,7 +123,7 @@ export default function PedagoWorkspace({ initialProfile, logoSrc, scheduleStora
     const id = `session:${context.sessionId}`;
     if (!editors.some(editor => editor.id === id)) {
       let saved: LessonDocument | undefined;
-      try {
+      if (!account) try {
         const raw = localStorage.getItem(`${lessonStoragePrefix}:${context.sessionId}:v1`);
         const parsed: unknown = raw ? JSON.parse(raw) : null;
         if (typeof parsed === "object" && parsed !== null && "lessons" in parsed && Array.isArray(parsed.lessons)) saved = parsed.lessons.find(isLessonDocument);
@@ -93,18 +133,21 @@ export default function PedagoWorkspace({ initialProfile, logoSrc, scheduleStora
     }
     setLanguage(context.language); setEditorId(id); navigate("planner");
   }
+  if (account && !preferencesReady) return <main role="status" className="flex min-h-screen items-center justify-center bg-parchment p-6 text-cypress">Pedago Helper</main>;
   if (view === "home" && profile === null) return <LandingPage language={language} theme={theme} onLanguageChange={setLanguage} onThemeToggle={toggleTheme} onSelect={selectProfile} />;
-  return <div dir={ar ? "rtl" : "ltr"} lang={language} style={{ fontFamily: ar ? "var(--font-arabic)" : "var(--font-latin)" }} className="ph-shell min-h-screen">
+  return <div dir={ar ? "rtl" : "ltr"} lang={language} className="ph-shell min-h-screen">
+    {preferencesError && <p role="alert" className="border-b border-terracotta bg-terracotta-soft px-5 py-3 text-sm">{ar ? "تعذر مزامنة إعدادات حسابك." : en ? "Could not sync your account preferences." : "Impossible de synchroniser les préférences de votre compte."}</p>}
     <header className="ph-app-header sticky top-0 z-30">
       <div className="ph-header-inner">
         <a href="#home" onClick={event => { event.preventDefault(); navigate("home"); }} aria-label={t.brand} className="ph-brand-link"><BrandMark src={logoSrc} subtitle={t.tagline} /></a>
         <div className="ph-header-actions"><div role="group" aria-label={t.language} className="ph-language-switch">{(["fr", "ar", "en"] as Language[]).map(lang => <button key={lang} type="button" lang={lang} aria-label={languageName(lang, language)} aria-pressed={language === lang} onClick={() => setLanguage(lang)}>{lang.toUpperCase()}</button>)}</div><StudioButton variant="ghost" size="icon" aria-label={theme === "dark" ? (ar ? "تفعيل الوضع الفاتح" : en ? "Switch to light mode" : "Activer le mode clair") : (ar ? "تفعيل الوضع الداكن" : en ? "Switch to dark mode" : "Activer le mode sombre")} aria-pressed={theme === "dark"} onClick={toggleTheme}>{theme === "dark" ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}</StudioButton></div>
       </div>
-      {profile && <nav aria-label={t.navigation} className="ph-main-nav mx-auto flex max-w-[1550px] flex-nowrap items-center gap-1 overflow-x-auto px-4 md:gap-2 md:px-9">{(["home", ...(profile === "teacher" ? ["calendar", "planner"] : [])] as View[]).map(tab => <a key={tab} href={`#${tab}`} aria-current={view === tab ? "page" : undefined} onClick={event => { event.preventDefault(); navigate(tab); }} className={`flex min-h-12 shrink-0 items-center justify-center gap-2 border-b-[3px] px-3 text-center text-xs font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-amber-alert)] sm:px-5 sm:text-sm ${view === tab ? "border-[var(--color-terracotta)] bg-[var(--color-terracotta-light)] text-[var(--color-cypress)]" : "border-transparent text-[var(--color-ink-muted)] hover:bg-[var(--color-surface-white)]"}`}>{tab === "calendar" ? <CalendarDays size={18} /> : <FilePenLine size={18} />}{tab === "home" ? (ar ? "الرئيسية" : en ? "Dashboard" : "Tableau de bord") : t[tab]}</a>)}<button type="button" aria-label={ar ? "تغيير الحساب التجريبي" : en ? "Change demo account" : "Changer de compte démo"} className="ms-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-xs font-bold hover:bg-[var(--color-cypress-light)] sm:h-auto sm:w-auto sm:gap-2 sm:px-3 sm:py-2" onClick={() => selectProfile(null)}><LogOut size={17} aria-hidden="true" /><span className="hidden sm:inline">{ar ? "تغيير الحساب التجريبي" : en ? "Change demo account" : "Changer de compte démo"}</span></button></nav>}
+      {profile && <nav aria-label={t.navigation} className="ph-main-nav mx-auto flex max-w-[1120px] flex-nowrap items-center gap-1 overflow-x-auto px-5 md:gap-2 md:px-8">{(["home", ...(profile === "teacher" ? ["calendar", "planner"] : [])] as View[]).map(tab => <a key={tab} href={`#${tab}`} aria-current={view === tab ? "page" : undefined} onClick={event => { event.preventDefault(); navigate(tab); }} className="ph-nav-tab flex min-h-12 shrink-0 items-center justify-center gap-2 px-3 text-center text-xs font-semibold sm:px-5 sm:text-sm">{tab === "calendar" ? <CalendarDays size={18} /> : <FilePenLine size={18} />}{tab === "home" ? (ar ? "الرئيسية" : en ? "Dashboard" : "Tableau de bord") : t[tab]}</a>)}{account ? <div data-tour="workspace-account" className="ms-auto shrink-0"><AccountMenu profile={account} language={language} /></div> : <button data-tour="workspace-account" type="button" aria-label={ar ? "تغيير الحساب التجريبي" : en ? "Change demo account" : "Changer de compte démo"} className="ph-account-switch ms-auto flex h-11 w-11 shrink-0 items-center justify-center gap-2 rounded-lg text-xs font-bold sm:h-auto sm:w-auto sm:px-3 sm:py-2" onClick={() => selectProfile(null)}><LogOut size={17} aria-hidden="true" /><span className="hidden sm:inline">{ar ? "تغيير الحساب التجريبي" : en ? "Change demo account" : "Changer de compte démo"}</span></button>}</nav>}
     </header>
-    {view === "home" && (profile === "teacher" ? <TeacherDashboard language={language} storageKey={scheduleStorageKey} onNavigate={navigate} /> : <StudentDashboard language={language} />)}
+    {view === "home" && (profile === "teacher" ? <TeacherDashboard language={language} storageKey={scheduleStorageKey} onNavigate={navigate} accountName={account?.full_name} accountId={account?.id} accountSchool={account?.school_name} accountCycle={account?.teaching_cycle} /> : <StudentDashboard language={language} accountName={account?.full_name} accountId={account?.id} accountGrade={account?.grade} accountBranch={account?.branch} storageKey={account ? `pedago-helper:account:${account.id}:student:v1` : undefined} />)}
+    {profile && <InAppTour role={profile} language={language} accountId={account?.id} view={view} onNavigate={navigate} />}
     <div hidden={view !== "calendar"}>
-      <TeacherScheduleCalendar embedded active={view === "calendar"} uiLanguage={language} storageKey={scheduleStorageKey} onOpenLessonPlan={openLesson} />
+      <TeacherScheduleCalendar embedded active={view === "calendar"} uiLanguage={language} storageKey={scheduleStorageKey} accountId={account?.id} defaultSubject={teacherSubject(account?.subject)} defaultSchoolLevel={teacherLevel(account?.teaching_cycle)} onOpenLessonPlan={openLesson} />
     </div>
     <div hidden={view !== "planner"}>
       <section className="border-b border-[var(--color-sand-border)] bg-[var(--color-cypress-light)] px-4 py-4 md:px-9" aria-label={t.editor}>
@@ -118,10 +161,10 @@ export default function PedagoWorkspace({ initialProfile, logoSrc, scheduleStora
       {editors.map(editor => {
         const context = editor.context;
         const isActive = view === "planner" && editor.id === editorId;
-        const initialLesson: Partial<LessonInput> | undefined = context ? { subject: context.subject, schoolLevel: context.schoolLevel, title: context.title, duration: context.duration, className: context.className, room: context.room, scheduledDate: context.date, startTime: context.start, endTime: context.end, ...(context.competency ? { competency: context.competency } : {}) } : undefined;
+        const initialLesson: Partial<LessonInput> | undefined = context ? { subject: context.subject, schoolLevel: context.schoolLevel, title: context.title, duration: context.duration, className: context.className, room: context.room, scheduledDate: context.date, startTime: context.start, endTime: context.end, ...(context.competency ? { competency: context.competency } : {}) } : account ? { subject: teacherSubject(account.subject), schoolLevel: teacherLevel(account.teaching_cycle) } : undefined;
         return <div key={editor.id} hidden={editor.id !== editorId}>
           {context && (context.notes || context.resources.length > 0) && <details className="border-b border-[var(--color-sand-border)] bg-[var(--color-terracotta-light)] px-8 py-3 text-sm text-[var(--color-ink-muted)]"><summary className="cursor-pointer font-semibold">{t.notes}</summary><p className="my-3 whitespace-pre-wrap">{localizeText(context.notes, language)}</p><ul className="space-y-2">{context.resources.map(resource => <li key={resource.id}><a className="underline" href={resource.url} target="_blank" rel="noopener noreferrer">{localizeText(resource.title, language)}</a></li>)}</ul></details>}
-          <LessonPlanStudio embedded active={isActive} uiLanguage={language} onLanguageChange={setLanguage} initialLanguage={editor.saved?.input.language ?? context?.language ?? "fr"} initialLesson={initialLesson} initialDocument={editor.saved} storageKey={context ? `${lessonStoragePrefix}:${context.sessionId}:v1` : generalLessonStorageKey} />
+          <LessonPlanStudio embedded active={isActive} uiLanguage={language} onLanguageChange={setLanguage} initialLanguage={editor.saved?.input.language ?? context?.language ?? "fr"} initialLesson={initialLesson} initialDocument={editor.saved} storageKey={context ? `${lessonStoragePrefix}:${context.sessionId}:v1` : generalLessonStorageKey} accountId={account?.id} />
         </div>;
       })}
     </div>

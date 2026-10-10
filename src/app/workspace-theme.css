@@ -1,0 +1,244 @@
+@media screen {
+  .ph-shell,
+  .sc-dialog {
+    --color-terracotta: var(--acc);
+    --color-terracotta-light: color-mix(in srgb, var(--acc) 13%, var(--card));
+    --color-cypress: var(--ink);
+    --color-cypress-light: color-mix(in srgb, var(--acc2) 10%, var(--card));
+    --color-parchment: var(--bg);
+    --color-surface-white: var(--card);
+    --color-sand-border: var(--line);
+    --color-ink-charcoal: var(--ink);
+    --color-ink-muted: var(--mut);
+    --color-amber-alert: var(--acc);
+    --font-latin: var(--font-landing-body), "Hanken Grotesk", system-ui, sans-serif;
+    --font-arabic: var(--font-landing-arabic), "Cairo", sans-serif;
+    --workspace-action: #a43e1d;
+    --workspace-feature: #1f6b4f;
+    --workspace-on-feature: #fffaf0;
+    --workspace-stamp: var(--ink);
+  }
+
+  .ph-shell {
+    background-color: var(--bg);
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--ink) 7%, transparent) 1px, transparent 1px);
+    background-size: 24px 24px;
+    color: var(--ink);
+    font-family: var(--font-latin);
+  }
+  .ph-shell[lang="ar"] { font-family: var(--font-arabic); }
+  .ph-shell :is(h1, h2, h3) { color: var(--ink); }
+  .ph-shell :is(h1, h2) { font-family: var(--font-landing-heading), "Fraunces", Georgia, serif; }
+  .ph-shell[lang="ar"] :is(h1, h2, h3) { font-family: var(--font-arabic); letter-spacing: 0; }
+  .ph-shell :is(button, a, input, select, textarea, summary):focus-visible,
+  .sc-dialog :is(button, input, select, textarea):focus-visible {
+    outline: 3px solid var(--acc) !important;
+    outline-offset: 3px;
+  }
+
+  .ph-shell .ph-app-header {
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+    border-bottom: 1.5px solid var(--line);
+    backdrop-filter: blur(12px);
+  }
+  .ph-shell .ph-header-inner { max-width: 1120px; min-height: 76px; padding: 10px 24px; }
+  .ph-shell .ph-brand { background: var(--card); border: 1.5px solid var(--line); color: var(--ink); border-radius: 12px; }
+  .ph-shell .ph-brand-copy small { color: var(--mut); }
+  .ph-shell .ph-language-switch { border: 1.5px solid var(--line); background: var(--card); border-radius: 12px; }
+  .ph-shell .ph-language-switch button { color: var(--ink); border-radius: 8px; font-family: var(--font-latin); }
+  .ph-shell .ph-language-switch button[aria-pressed="true"] { background: var(--acc2); color: var(--bg); }
+  .ph-shell .ph-language-switch button:not([aria-pressed="true"]):hover { background: var(--line); }
+  .ph-shell .ph-header-actions .ph-button--ghost { width: 44px; height: 44px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--card); color: var(--ink); }
+  .ph-shell .ph-header-actions .ph-button--ghost:hover { border-color: var(--acc); box-shadow: none; transform: none; }
+  .ph-shell .ph-main-nav { border-top: 1px solid var(--line); scrollbar-color: var(--acc) transparent; }
+  .ph-shell .ph-main-nav .ph-nav-tab { margin-block: 5px; border-radius: 10px; color: var(--ink); transition: background-color .2s ease, color .2s ease; }
+  .ph-shell .ph-main-nav .ph-nav-tab[aria-current="page"] { background: var(--acc2); color: var(--bg); }
+  .ph-shell .ph-main-nav .ph-nav-tab:not([aria-current="page"]):hover { background: var(--line); }
+  .ph-shell .ph-account-switch { border: 1.5px solid var(--line); background: var(--card); color: var(--ink); }
+  .ph-shell .ph-account-switch:hover { border-color: var(--acc); background: var(--card); }
+
+  .ph-shell .ph-dashboard,
+  .ph-shell .ph-student-dashboard { max-width: 1120px; padding-top: clamp(28px, 5vw, 64px); padding-bottom: 84px; color: var(--ink); background: transparent; }
+  .ph-shell .ph-dashboard-intro {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(28px, 4vw, 52px);
+    border: 1.5px solid var(--line);
+    border-radius: 22px;
+    background: var(--card);
+    box-shadow: 8px 8px 0 var(--acc2);
+  }
+  .ph-shell .ph-dashboard-intro::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset-inline-end: -74px;
+    top: -72px;
+    width: 270px;
+    height: 350px;
+    border: 35px solid color-mix(in srgb, var(--acc) 55%, transparent);
+    border-bottom: 0;
+    border-radius: 180px 180px 0 0;
+    pointer-events: none;
+  }
+  .ph-shell .ph-dashboard-intro > p:first-child {
+    display: inline-flex;
+    margin: 0;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--acc2);
+    color: var(--bg);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .12em;
+  }
+  .ph-shell[lang="ar"] .ph-dashboard-intro > p:first-child { letter-spacing: 0; }
+  .ph-shell .ph-dashboard-intro h1 { position: relative; max-width: 780px; font-size: clamp(2.15rem, 4.5vw, 3.9rem); line-height: 1.1; letter-spacing: -.045em; }
+  .ph-shell .ph-dashboard-intro > p:not(:first-child) { position: relative; max-width: 650px; color: var(--mut); line-height: 1.7; }
+
+  .ph-shell .ph-dashboard-metric,
+  .ph-shell .ph-dashboard-upcoming,
+  .ph-shell .ph-student-dashboard :is(article, section, details),
+  .ph-shell .ph-studio .ph-card,
+  .ph-shell .sc-root .sc-card {
+    border: 1.5px solid var(--line);
+    border-radius: 18px;
+    background: var(--card);
+    color: var(--ink);
+    box-shadow: none;
+  }
+  .ph-shell .ph-dashboard-metric { border-radius: 20px 20px 12px 12px; }
+  .ph-shell .ph-dashboard-metric:nth-child(n)::before { width: 4px; background: var(--acc); }
+  .ph-shell .ph-dashboard-metric:nth-child(n) svg { color: var(--acc2); }
+  .ph-shell .ph-dashboard-metric p:nth-of-type(1) { font-family: var(--font-landing-heading), "Fraunces", Georgia, serif; }
+  .ph-shell .ph-dashboard-feature { border: 1.5px solid var(--acc2); border-radius: 20px 20px 12px 12px; background: var(--workspace-feature); color: var(--workspace-on-feature); }
+  .ph-shell .ph-dashboard-feature h2 { color: var(--workspace-on-feature); }
+  .ph-shell .ph-dashboard-feature > svg { color: var(--workspace-on-feature); }
+  .ph-shell .ph-dashboard-feature button {
+    border: 1.5px solid var(--ink);
+    border-radius: 12px;
+    background: var(--acc);
+    color: #fff;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .ph-shell .ph-dashboard-feature button:hover { background: var(--workspace-action); box-shadow: 5px 5px 0 var(--ink); transform: translate(-1px, -1px); }
+  .ph-shell .ph-dashboard-upcoming button,
+  .ph-shell .ph-student-dashboard button:not([aria-pressed="true"]) { border-color: var(--line); background: var(--card); color: var(--ink); }
+  .ph-shell .ph-dashboard-upcoming button:hover,
+  .ph-shell .ph-student-dashboard button:hover { border-color: var(--acc2); box-shadow: 3px 3px 0 var(--acc2); transform: translate(-1px, -1px); }
+  .ph-shell .ph-student-dashboard button[aria-pressed="true"] { border-color: var(--acc2); background: var(--acc2); color: var(--bg); }
+  .ph-shell .ph-student-dashboard button.bg-cypress { border: 1.5px solid var(--ink); background: var(--workspace-action); color: #fff; box-shadow: 3px 3px 0 var(--ink); }
+  .ph-shell .ph-student-dashboard :is(input, select, textarea) { border: 1.5px solid var(--line); background: var(--card); color: var(--ink); border-radius: 10px; }
+  .ph-shell .ph-student-dashboard :is(input, select, textarea):focus { border-color: var(--acc); }
+  .ph-shell .ph-student-dashboard .text-ink,
+  .ph-shell .ph-dashboard .text-ink { color: var(--mut); }
+  .ph-shell .ph-student-dashboard .text-terracotta,
+  .ph-shell .ph-dashboard .text-terracotta { color: var(--acc); }
+  .ph-shell .ph-student-dashboard .text-cypress { color: var(--ink); }
+  .ph-shell .ph-student-dashboard .border-sand,
+  .ph-shell .ph-dashboard .border-sand { border-color: var(--line); }
+
+  .ph-shell .student-svt-library { border: 1.5px solid var(--line); border-radius: 20px; background: var(--card); }
+  .ph-shell .student-svt-library .border-black { border-color: var(--line); }
+  .ph-shell .student-svt-library .student-svt-count,
+  .ph-shell .student-svt-library .student-svt-number { border-color: var(--line); background: var(--color-terracotta-light); color: var(--ink); }
+  .ph-shell .student-svt-library .student-svt-unit { background: var(--bg); }
+  .ph-shell .student-svt-library .student-svt-card { background: var(--card); }
+  .ph-shell .student-svt-library .student-svt-unit,
+  .ph-shell .student-svt-library .student-svt-card { border: 1.5px solid var(--line); border-radius: 16px; }
+  .ph-shell .student-svt-library button[aria-pressed="true"] { background: var(--acc2); color: var(--bg); border-color: var(--acc2); }
+  .ph-shell .student-svt-library a[target="_blank"] { background: var(--workspace-action); color: #fff; border-color: var(--workspace-action); }
+  .ph-shell .student-svt-library a[target="_blank"]:hover { background: var(--acc); color: #fff; }
+
+  .ph-shell .sc-root,
+  .ph-shell .ph-studio { background: var(--bg); color: var(--ink); font-family: var(--font-latin); }
+  .ph-shell[lang="ar"] :is(.sc-root, .ph-studio) { font-family: var(--font-arabic); }
+  .ph-shell .sc-root > div.mx-auto,
+  .ph-shell .ph-studio > div.mx-auto { max-width: 1120px; }
+  .ph-shell .sc-root h1,
+  .ph-shell .ph-studio h1 { font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.1; }
+  .ph-shell .sc-root h1,
+  .ph-shell .sc-root h2,
+  .ph-shell .ph-studio h1,
+  .ph-shell .ph-studio h2 { color: var(--ink); }
+  .ph-shell .sc-root .sc-card,
+  .ph-shell .ph-studio .ph-card { border-radius: 18px; }
+  .ph-shell .sc-root .sc-btn,
+  .ph-shell .ph-studio .ph-btn { border-color: var(--line); background: var(--card); color: var(--ink); border-radius: 10px; }
+  .ph-shell .sc-root .sc-primary,
+  .ph-shell .ph-studio .ph-primary,
+  .sc-dialog .sc-primary {
+    border: 1.5px solid var(--ink);
+    border-radius: 12px;
+    background: var(--workspace-action);
+    color: #fff;
+    box-shadow: 4px 4px 0 var(--workspace-stamp);
+  }
+  .ph-shell .sc-root .sc-primary:hover,
+  .ph-shell .ph-studio .ph-primary:hover,
+  .sc-dialog .sc-primary:hover { border-color: var(--ink); background: var(--acc); color: #fff; box-shadow: 5px 5px 0 var(--workspace-stamp); transform: translate(-1px, -1px); }
+  .ph-shell .sc-root .sc-day-column { background-color: var(--card); }
+  .ph-shell .sc-root .sc-event { border-radius: 9px; }
+  .ph-shell .sc-root .sc-input,
+  .ph-shell .ph-studio .ph-input,
+  .sc-dialog .sc-input { border-color: var(--line); border-radius: 10px; background: var(--card); color: var(--ink); }
+  .ph-shell .sc-root .sc-input:focus,
+  .ph-shell .ph-studio .ph-input:focus,
+  .sc-dialog .sc-input:focus { border-color: var(--acc); }
+  .ph-shell .ph-studio .ph-term { background: var(--color-cypress-light); border-color: var(--line); color: var(--ink); }
+  .ph-shell .ph-studio .ph-definition { background: var(--card); border-color: var(--line); color: var(--ink); }
+  .ph-shell .ph-workspace-back { border-color: var(--line); background: var(--card); color: var(--ink); }
+  .ph-shell .ph-workspace-back:hover { border-color: var(--acc2); background: var(--color-cypress-light); }
+  .sc-dialog { border: 1.5px solid var(--line); border-radius: 18px; background: var(--card); color: var(--ink); font-family: var(--font-latin); }
+  .sc-dialog :is(h2, h3) { color: var(--ink); font-family: var(--font-landing-heading), "Fraunces", Georgia, serif; }
+  .sc-dialog[lang="ar"] { font-family: var(--font-arabic); }
+  .sc-dialog[lang="ar"] :is(h2, h3) { font-family: var(--font-arabic); }
+
+  .ph-shell .bg-white:not(button),
+  .ph-shell .bg-parchment { background: var(--card); }
+  .ph-shell .bg-cypress-soft { background: var(--color-cypress-light); }
+  .ph-shell .bg-cypress { background: var(--acc2); color: var(--bg); }
+  .ph-shell .bg-terracotta-soft { background: var(--color-terracotta-light); }
+  .ph-shell .text-cypress { color: var(--ink); }
+  .ph-shell .border-sand { border-color: var(--line); }
+
+  html[data-theme="dark"] .ph-shell,
+  html[data-theme="dark"] .sc-dialog { --workspace-stamp: var(--acc2); }
+  html[data-theme="dark"] .ph-shell .ph-app-header,
+  html[data-theme="dark"] .ph-shell .ph-dashboard,
+  html[data-theme="dark"] .ph-shell .ph-student-dashboard,
+  html[data-theme="dark"] .ph-shell .sc-root,
+  html[data-theme="dark"] .ph-shell .ph-studio { background: var(--bg); color: var(--ink); }
+  html[data-theme="dark"] .ph-shell :is(.ph-dashboard-metric, .ph-dashboard-upcoming, .ph-student-dashboard article, .ph-student-dashboard section, .ph-student-dashboard details, .sc-card, .ph-card) { background: var(--card); color: var(--ink); border-color: var(--line); }
+  html[data-theme="dark"] .ph-shell .ph-dashboard-feature { background: var(--workspace-feature); color: var(--workspace-on-feature); }
+  html[data-theme="dark"] .ph-shell .ph-dashboard-feature h2 { color: var(--workspace-on-feature); }
+  html[data-theme="dark"] .ph-shell .ph-dashboard-feature button { background: var(--workspace-action); color: #fff; border-color: var(--ink); }
+  html[data-theme="dark"] .ph-shell .ph-dashboard-intro { background: var(--card); }
+  html[data-theme="dark"] .ph-shell .ph-language-switch button[aria-pressed="true"],
+  html[data-theme="dark"] .ph-shell .ph-nav-tab[aria-current="page"],
+  html[data-theme="dark"] .ph-shell .ph-student-dashboard button[aria-pressed="true"] { background: var(--acc2); color: var(--bg); }
+  html[data-theme="dark"] .ph-shell .ph-student-dashboard :is(input, select, textarea),
+  html[data-theme="dark"] .ph-shell .ph-studio .ph-input,
+  html[data-theme="dark"] .ph-shell .sc-root .sc-input,
+  html[data-theme="dark"] .sc-dialog .sc-input { background: var(--card); color: var(--ink); border-color: var(--line); }
+  html[data-theme="dark"] .ph-shell .student-svt-library :is(.student-svt-unit, .student-svt-card) { background: var(--card); color: var(--ink); border-color: var(--line); }
+  html[data-theme="dark"] .ph-shell .student-svt-library { background: var(--card); color: var(--ink); border-color: var(--line); }
+  html[data-theme="dark"] .ph-shell .student-svt-library .student-svt-unit { background: var(--bg); }
+  html[data-theme="dark"] .ph-shell .student-svt-library :is(.student-svt-count, .student-svt-number) { background: color-mix(in srgb, var(--acc) 20%, var(--card)); color: var(--ink); border-color: var(--line); }
+  html[data-theme="dark"] .ph-shell [class*="bg-[var(--color-cypress)]"] { background: var(--acc2); color: var(--bg); }
+
+  @media (max-width: 639px) {
+    .ph-shell .ph-header-inner { padding-inline: 16px; }
+    .ph-shell .ph-brand-copy small { display: none; }
+    .ph-shell .ph-dashboard-intro { padding: 26px 22px; box-shadow: 5px 5px 0 var(--acc2); }
+    .ph-shell .ph-dashboard-intro::after { inset-inline-end: -125px; opacity: .38; }
+    .ph-shell .ph-dashboard-intro h1 { font-size: clamp(2rem, 8vw, 2.6rem); }
+    .ph-shell .ph-dashboard,
+    .ph-shell .ph-student-dashboard { padding-bottom: 52px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ph-shell *, .ph-shell *::before, .ph-shell *::after, .sc-dialog * { animation: none !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  }
+}

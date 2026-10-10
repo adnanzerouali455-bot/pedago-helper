@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, CheckCircle2, GraduationCap, ShieldCheck, Users } from "lucide-react";
 import { createLocalLesson, initialInput, type Language, type Subject } from "./LessonPlanStudio";
 import { createDemoSchedule, isScheduleData, localizeSchedule } from "./TeacherScheduleCalendar";
@@ -9,6 +9,7 @@ import InteractiveCognitiveGuide from "./InteractiveCognitiveGuide";
 import ForgettingCurveSVG from "./ForgettingCurveSVG";
 import CourseToPathwayFlow from "./CourseToPathwayFlow";
 import StudioButton from "./StudioButton";
+import { accountDocumentEvent, readAccountDocument, writeAccountDocument, type AccountDocumentChange } from "../utils/supabase/documents";
 
 export type DemoProfile = "teacher" | "student";
 export function ProfilePicker({ language, onSelect }: { language: Language; onSelect: (profile: DemoProfile) => void }) {
@@ -51,20 +52,41 @@ export function ProfilePicker({ language, onSelect }: { language: Language; onSe
   </div>;
 }
 
-export function TeacherDashboard({ language, storageKey, onNavigate }: { language: Language; storageKey: string; onNavigate: (view: "calendar" | "planner") => void }) {
+export function TeacherDashboard({ language, storageKey, onNavigate, accountName, accountId, accountSchool, accountCycle }: { language: Language; storageKey: string; onNavigate: (view: "calendar" | "planner") => void; accountName?: string; accountId?: string; accountSchool?: string | null; accountCycle?: string | null }) {
   const ar = language === "ar"; const en = language === "en";
-  const [schedule, setSchedule] = useState(() => createDemoSchedule());
+  const [schedule, setSchedule] = useState(() => accountId ? { version: 1 as const, classes: [], sessions: [] } : createDemoSchedule());
   const [storageIssue, setStorageIssue] = useState(false);
+  const documentRevision = useRef(0);
   useEffect(() => {
+    if (accountId) {
+      let active = true;
+      const revision = documentRevision.current;
+      void readAccountDocument(accountId, storageKey, isScheduleData, storageKey)
+        .then(data => { if (active) { if (revision === documentRevision.current) setSchedule(data ?? { version: 1, classes: [], sessions: [] }); setStorageIssue(false); } })
+        .catch(() => { if (active) setStorageIssue(true); });
+      return () => { active = false; };
+    }
     try { const raw = localStorage.getItem(storageKey); if (raw) { const parsed: unknown = JSON.parse(raw); if (isScheduleData(parsed)) setSchedule(parsed); else setStorageIssue(true); } } catch { setStorageIssue(true); }
-  }, [storageKey]);
+  }, [storageKey, accountId]);
+  useEffect(() => {
+    if (!accountId) return;
+    const onDocumentChange = (event: Event) => {
+      const change = (event as CustomEvent<AccountDocumentChange>).detail;
+      if (change.ownerId === accountId && change.key === storageKey && isScheduleData(change.value)) { documentRevision.current++; setSchedule(change.value); }
+    };
+    window.addEventListener(accountDocumentEvent, onDocumentChange);
+    return () => window.removeEventListener(accountDocumentEvent, onDocumentChange);
+  }, [accountId, storageKey]);
   const data = localizeSchedule(schedule, language);
   const next = [...data.sessions].filter(s => s.status !== "completed").sort((a, b) => `${a.date}${a.start}`.localeCompare(`${b.date}${b.start}`)).slice(0, 3);
   return <main className="ph-dashboard mx-auto max-w-6xl px-5 py-9 md:py-12">
-    <p className="text-sm font-semibold text-terracotta">{ar ? "فضاء الأستاذ · حساب تجريبي" : en ? "TEACHER SPACE · DEMO ACCOUNT" : "ESPACE ENSEIGNANT · COMPTE DÉMO"}</p>
-    <h1 className="mt-3 text-3xl font-bold md:text-4xl">{ar ? "مرحبا أستاذ أمين" : en ? "Hello, Amine" : "Bonjour, Amine"}</h1>
+    <div data-tour="teacher-welcome" className="ph-dashboard-intro">
+    <p className="text-sm font-semibold text-terracotta">{accountName ? (ar ? "فضاء الأستاذ" : en ? "TEACHER SPACE" : "ESPACE ENSEIGNANT") : ar ? "فضاء الأستاذ · حساب تجريبي" : en ? "TEACHER SPACE · DEMO ACCOUNT" : "ESPACE ENSEIGNANT · COMPTE DÉMO"}</p>
+    <h1 className="mt-3 text-3xl font-bold md:text-4xl">{accountName ? (ar ? `مرحبا ${accountName}` : en ? `Hello, ${accountName}` : `Bonjour, ${accountName}`) : ar ? "مرحبا أستاذ أمين" : en ? "Hello, Amine" : "Bonjour, Amine"}</h1>
+    {accountId && (accountSchool || accountCycle) && <p className="mt-2 text-xs font-semibold text-ink">{[accountSchool, accountCycle].filter(Boolean).join(" · ")}</p>}
     <p className="mt-3 text-sm text-ink">{ar ? "نظرة على حصصك، ومساحة لإعداد الدرس القادم." : en ? "Your sessions at a glance, with room to plan what comes next." : "Vos séances en un coup d’œil, du temps pour préparer la suite."}</p>
-    {storageIssue && <p role="status" className="mt-4 text-sm">{ar ? "تعذر قراءة التخزين المحلي. تعرض الأرقام بيانات المثال." : en ? "Browser storage could not be read; the figures shown are sample data." : "Stockage local illisible : les chiffres affichés correspondent à l’exemple."}</p>}
+    {storageIssue && <p role="alert" className="mt-4 text-sm">{accountId ? (ar ? "تعذر تحميل جدولك من حسابك." : en ? "Could not load your timetable from your account." : "Impossible de charger votre calendrier depuis votre compte.") : ar ? "تعذر قراءة التخزين المحلي. تعرض الأرقام بيانات المثال." : en ? "Browser storage could not be read; the figures shown are sample data." : "Stockage local illisible : les chiffres affichés correspondent à l’exemple."}</p>}
+    </div>
     <div className="my-8 grid gap-4 sm:grid-cols-3">{[
       [Users, data.classes.length, ar ? "أقسام" : en ? "Classes" : "Classes"],
       [CalendarDays, data.sessions.length, ar ? "حصص في الجدول" : en ? "Scheduled sessions" : "Séances au calendrier"],
@@ -76,35 +98,61 @@ export function TeacherDashboard({ language, storageKey, onNavigate }: { languag
 }
 
 type Practice = Record<string, { answers: string[]; completed: boolean }>;
-export function StudentDashboard({ language }: { language: Language }) {
+function isPractice(value: unknown): value is Practice {
+  return !!value && typeof value === "object" && !Array.isArray(value) && Object.entries(value).every(([key, entry]) => {
+    if (!/^(svt|pc|math|arabic|french):(fr|ar|en):[123]$/.test(key) || !entry || typeof entry !== "object" || Array.isArray(entry)) return false;
+    const item = entry as { answers?: unknown; completed?: unknown };
+    return Array.isArray(item.answers) && item.answers.length === 3 && item.answers.every(answer => typeof answer === "string" && answer.length <= 4000) && typeof item.completed === "boolean";
+  });
+}
+export function StudentDashboard({ language, accountName, storageKey = "pedago-helper:demo-student:v1", accountId, accountGrade, accountBranch }: { language: Language; accountName?: string; storageKey?: string; accountId?: string; accountGrade?: string | null; accountBranch?: string | null }) {
   const ar = language === "ar"; const en = language === "en";
   const [subject, setSubject] = useState<Subject>("svt");
   const [level, setLevel] = useState<1 | 2 | 3>(1);
   const [practice, setPractice] = useState<Practice>({});
   const [feedback, setFeedback] = useState<"saved" | "error" | "required" | null>(null);
   const [storageValid, setStorageValid] = useState(true);
+  const [storageReady, setStorageReady] = useState(!accountId);
+  const practiceWrite = useRef<Promise<void>>(Promise.resolve());
   const key = `${subject}:${language}:${level}`;
   const current = practice[key] ?? { answers: ["", "", ""], completed: false };
   const lesson = createLocalLesson(initialInput(language, subject));
   const reading = lesson.readings[level];
   useEffect(() => {
-    try { const raw = localStorage.getItem("pedago-helper:demo-student:v1"); if (raw) { const value: unknown = JSON.parse(raw); if (!value || typeof value !== "object" || Array.isArray(value) || !Object.entries(value).every(([k, v]) => /^(svt|math|arabic|french):(fr|ar|en):[123]$/.test(k) && v && Array.isArray(v.answers) && v.answers.length === 3 && v.answers.every((a: unknown) => typeof a === "string" && a.length <= 4000) && typeof v.completed === "boolean")) throw new Error("Invalid practice"); setPractice(value as Practice); } } catch { setFeedback("error"); setStorageValid(false); }
-  }, []);
+    setStorageReady(false);
+    if (accountId) {
+      let active = true;
+      void readAccountDocument(accountId, storageKey, isPractice, storageKey)
+        .then(value => { if (active) { setPractice(value ?? {}); setStorageValid(true); setStorageReady(true); } })
+        .catch(() => { if (active) { setFeedback("error"); setStorageValid(false); setStorageReady(true); } });
+      return () => { active = false; };
+    }
+    try { const raw = localStorage.getItem(storageKey); if (raw) { const value: unknown = JSON.parse(raw); if (!isPractice(value)) throw new Error("Invalid practice"); setPractice(value); } } catch { setFeedback("error"); setStorageValid(false); }
+    setStorageReady(true);
+  }, [storageKey, accountId]);
   function save(completed: boolean) {
-    if (!storageValid) { setFeedback("error"); return; }
+    if (!storageReady || !storageValid) { setFeedback("error"); return; }
     if (completed && current.answers.some(a => !a.trim())) { setFeedback("required"); return; }
     const next = { ...practice, [key]: { ...current, completed } };
     setPractice(next);
-    try { localStorage.setItem("pedago-helper:demo-student:v1", JSON.stringify(next)); setFeedback("saved"); } catch { setFeedback("error"); }
+    if (accountId) {
+      practiceWrite.current = practiceWrite.current.catch(() => {}).then(() => writeAccountDocument(accountId, storageKey, next));
+      void practiceWrite.current.then(() => setFeedback("saved")).catch(() => setFeedback("error"));
+      return;
+    }
+    try { localStorage.setItem(storageKey, JSON.stringify(next)); setFeedback("saved"); } catch { setFeedback("error"); }
   }
   return <main className="ph-student-dashboard mx-auto max-w-6xl px-5 py-9 md:py-12">
-    <p className="text-sm font-semibold text-terracotta">{ar ? "فضاء الطالب · حساب تجريبي" : en ? "STUDENT SPACE · DEMO ACCOUNT" : "ESPACE ÉTUDIANT · COMPTE DÉMO"}</p>
-    <h1 className="mt-3 text-3xl font-bold">{ar ? "مرحبا سلمى، ماذا سنتعلم اليوم؟" : en ? "Hello Salma, what will you learn today?" : "Bonjour Salma, que va-t-on apprendre aujourd’hui ?"}</h1>
-    <p className="mt-3 text-sm text-ink">{ar ? "تدريبات نموذجية مستقلة. إجاباتك محفوظة على هذا المتصفح فقط ولا ترسل إلى أستاذ." : en ? "Independent sample exercises. Your answers stay in this browser and are not sent to a teacher." : "Des entraînements d’exemple en autonomie. Vos réponses restent dans ce navigateur et ne sont pas envoyées à un enseignant."}</p>
-    <StudentSvtLibrary language={language} />
+    <div data-tour="student-welcome" className="ph-dashboard-intro">
+    <p className="text-sm font-semibold text-terracotta">{accountName ? (ar ? "فضاء الطالب" : en ? "STUDENT SPACE" : "ESPACE ÉTUDIANT") : ar ? "فضاء الطالب · حساب تجريبي" : en ? "STUDENT SPACE · DEMO ACCOUNT" : "ESPACE ÉTUDIANT · COMPTE DÉMO"}</p>
+    <h1 className="mt-3 text-3xl font-bold">{accountName ? (ar ? `مرحبا ${accountName}، ماذا سنتعلم اليوم؟` : en ? `Hello ${accountName}, what will you learn today?` : `Bonjour ${accountName}, que va-t-on apprendre aujourd’hui ?`) : ar ? "مرحبا سلمى، ماذا سنتعلم اليوم؟" : en ? "Hello Salma, what will you learn today?" : "Bonjour Salma, que va-t-on apprendre aujourd’hui ?"}</h1>
+    {accountId && (accountGrade || accountBranch) && <p className="mt-2 text-xs font-semibold text-ink">{[accountGrade, accountBranch].filter(Boolean).join(" · ")}</p>}
+    <p className="mt-3 text-sm text-ink">{accountId ? (ar ? "إجاباتك محفوظة في حسابك ويمكنك استعادتها من أي جهاز." : en ? "Your answers are saved to your account and available across devices." : "Vos réponses sont enregistrées dans votre compte et accessibles sur vos appareils.") : ar ? "تدريبات نموذجية مستقلة. إجاباتك محفوظة على هذا المتصفح فقط ولا ترسل إلى أستاذ." : en ? "Independent sample exercises. Your answers stay in this browser and are not sent to a teacher." : "Des entraînements d’exemple en autonomie. Vos réponses restent dans ce navigateur et ne sont pas envoyées à un enseignant."}</p>
+    </div>
+    <StudentSvtLibrary language={language} initialGradeId={accountGrade ?? undefined} />
     <details className="mt-7 rounded-lg border border-sand bg-white p-4"><summary className="cursor-pointer text-sm font-bold text-cypress">{ar ? "استكشف برنامج علوم الحياة والأرض حسب المستوى" : en ? "Explore Life and Earth Sciences by grade" : "Explorer le programme de SVT par niveau"}</summary><div className="mt-4"><CurriculumNavigation language={language} /></div></details>
-    <div className="my-7 flex flex-wrap items-end gap-5 rounded-lg border border-sand bg-white p-5"><label className="flex-1 text-sm font-bold">{ar ? "المادة" : en ? "Subject" : "Matière"}<select className="mt-2 block w-full rounded-lg border border-sand p-3" value={subject} onChange={e => { setSubject(e.target.value as Subject); setFeedback(null); }}>{[["svt", ar ? "علوم الحياة والأرض" : en ? "Life and Earth Sciences" : "SVT"], ["math", ar ? "الرياضيات" : en ? "Mathematics" : "Mathématiques"], ["arabic", ar ? "اللغة العربية" : en ? "Arabic" : "Arabe"], ["french", ar ? "اللغة الفرنسية" : en ? "French" : "Français"]].map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label><fieldset><legend className="mb-2 text-sm font-bold">{ar ? "مستوى القراءة" : en ? "Reading level" : "Niveau de lecture"}</legend><div className="flex gap-2">{([1, 2, 3] as const).map((l, i) => <button key={l} aria-pressed={level === l} className={`rounded-lg border border-sand px-3 py-3 text-sm ${level === l ? "bg-cypress text-white" : "bg-white"}`} onClick={() => { setLevel(l); setFeedback(null); }}>{(ar ? ["مبتدئ", "متوسط", "متقدم"] : en ? ["Beginner", "Intermediate", "Advanced"] : ["Débutant", "Intermédiaire", "Avancé"])[i]}</button>)}</div></fieldset></div>
+    <div data-tour="student-reading" className="my-7 flex flex-wrap items-end gap-5 rounded-lg border border-sand bg-white p-5"><label className="flex-1 text-sm font-bold">{ar ? "المادة" : en ? "Subject" : "Matière"}<select className="mt-2 block w-full rounded-lg border border-sand p-3" value={subject} onChange={e => { setSubject(e.target.value as Subject); setFeedback(null); }}>{[["svt", ar ? "علوم الحياة والأرض" : en ? "Life and Earth Sciences" : "SVT"], ["math", ar ? "الرياضيات" : en ? "Mathematics" : "Mathématiques"], ["arabic", ar ? "اللغة العربية" : en ? "Arabic" : "Arabe"], ["french", ar ? "اللغة الفرنسية" : en ? "French" : "Français"]].map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label><fieldset><legend className="mb-2 text-sm font-bold">{ar ? "مستوى القراءة" : en ? "Reading level" : "Niveau de lecture"}</legend><div className="flex gap-2">{([1, 2, 3] as const).map((l, i) => <button key={l} aria-pressed={level === l} className={`rounded-lg border border-sand px-3 py-3 text-sm ${level === l ? "bg-cypress text-white" : "bg-white"}`} onClick={() => { setLevel(l); setFeedback(null); }}>{(ar ? ["مبتدئ", "متوسط", "متقدم"] : en ? ["Beginner", "Intermediate", "Advanced"] : ["Débutant", "Intermédiaire", "Avancé"])[i]}</button>)}</div></fieldset></div>
     <div className="grid items-start gap-5 lg:grid-cols-[1.3fr_1fr]"><article className="rounded-lg border border-sand bg-white p-6 md:p-8"><span className="text-xs font-bold text-terracotta">{ar ? "أقرأ وأفهم" : en ? "READ AND UNDERSTAND" : "JE LIS ET JE COMPRENDS"}</span><h2 className="mb-6 mt-3 text-2xl font-bold leading-relaxed">{lesson.input.title}</h2><p className="whitespace-pre-line text-base leading-9 text-ink" dir="auto">{reading.text}</p><h3 className="mb-3 mt-8 font-bold">{ar ? "مفردات تساعدني" : en ? "Helpful vocabulary" : "Les mots pour m’aider"}</h3><div className="space-y-2">{reading.glossary.map(g => <details key={g.term} className="rounded-lg border border-sand p-3"><summary className="cursor-pointer text-sm font-bold">{g.term}</summary><p className="mt-3 text-sm leading-7 text-ink">{g.definition}</p></details>)}</div></article>
-    <section className="rounded-lg border border-sand bg-white p-6"><h2 className="text-xl font-bold">{ar ? "أتدرب على الفهم" : en ? "Practice comprehension" : "Je m’entraîne"}</h2><p className="mt-3 text-xs leading-6 text-ink">{ar ? "استشهد بالنص وعلل إجابتك. هذا تدريب ذاتي دون تصحيح آلي." : en ? "Support your answers with the text. This self-study activity is not graded automatically." : "Appuyez-vous sur le texte et justifiez vos réponses. Cet entraînement ne comporte pas de correction automatique."}</p><div className="mt-5 space-y-5">{reading.questions.map((question, i) => <label key={`${key}:${i}`} className="block text-sm font-semibold">{i + 1}. {question}<textarea dir="auto" rows={3} maxLength={4000} className="mt-2 block w-full rounded-lg border border-sand p-3 font-normal text-ink" value={current.answers[i]} onChange={e => { setPractice(prev => ({ ...prev, [key]: { completed: false, answers: current.answers.map((a, j) => j === i ? e.target.value : a) } })); setFeedback(null); }} /></label>)}</div><div className="mt-5 flex flex-wrap gap-2"><button className="rounded-lg border border-sand px-4 py-3 text-sm font-bold" onClick={() => save(false)}>{ar ? "حفظ إجاباتي" : en ? "Save my answers" : "Enregistrer mes réponses"}</button><button className="rounded-lg bg-cypress px-4 py-3 text-sm font-bold text-white" onClick={() => save(true)}>{ar ? "أنهيت التدريب" : en ? "I have finished" : "J’ai terminé"}</button></div>{current.completed && <p className="mt-4 flex items-center gap-2 text-sm"><CheckCircle2 size={18} />{ar ? "تم إنجاز التدريب" : en ? "Activity completed" : "Entraînement terminé"}</p>}{feedback && <p role="status" className="mt-4 rounded-lg bg-terracotta-soft p-3 text-sm">{feedback === "saved" ? (ar ? "تم حفظ إجاباتك على هذا الجهاز." : en ? "Answers saved on this device." : "Réponses enregistrées sur cet appareil.") : feedback === "required" ? (ar ? "أجب عن الأسئلة الثلاثة أولا." : en ? "Answer all three questions first." : "Répondez d’abord aux trois questions.") : (ar ? "تعذر استعمال التخزين المحلي. تبقى إجاباتك في الذاكرة خلال هذه الزيارة." : en ? "Browser storage is unavailable or invalid. Your answers remain in memory during this visit." : "Stockage local indisponible ou invalide. Vos réponses restent en mémoire pendant cette visite.")}</p>}</section></div>
+    <section data-tour="student-practice" className="rounded-lg border border-sand bg-white p-6"><h2 className="text-xl font-bold">{ar ? "أتدرب على الفهم" : en ? "Practice comprehension" : "Je m’entraîne"}</h2><p className="mt-3 text-xs leading-6 text-ink">{ar ? "استشهد بالنص وعلل إجابتك. هذا تدريب ذاتي دون تصحيح آلي." : en ? "Support your answers with the text. This self-study activity is not graded automatically." : "Appuyez-vous sur le texte et justifiez vos réponses. Cet entraînement ne comporte pas de correction automatique."}</p><div className="mt-5 space-y-5">{reading.questions.map((question, i) => <label key={`${key}:${i}`} className="block text-sm font-semibold">{i + 1}. {question}<textarea dir="auto" rows={3} maxLength={4000} disabled={!storageReady || !storageValid} className="mt-2 block w-full rounded-lg border border-sand p-3 font-normal text-ink" value={current.answers[i]} onChange={e => { setPractice(prev => ({ ...prev, [key]: { completed: false, answers: current.answers.map((a, j) => j === i ? e.target.value : a) } })); setFeedback(null); }} /></label>)}</div><div className="mt-5 flex flex-wrap gap-2"><button disabled={!storageReady || !storageValid} className="rounded-lg border border-sand px-4 py-3 text-sm font-bold disabled:opacity-50" onClick={() => save(false)}>{ar ? "حفظ إجاباتي" : en ? "Save my answers" : "Enregistrer mes réponses"}</button><button disabled={!storageReady || !storageValid} className="rounded-lg bg-cypress px-4 py-3 text-sm font-bold text-white disabled:opacity-50" onClick={() => save(true)}>{ar ? "أنهيت التدريب" : en ? "I have finished" : "J’ai terminé"}</button></div>{current.completed && <p className="mt-4 flex items-center gap-2 text-sm"><CheckCircle2 size={18} />{ar ? "تم إنجاز التدريب" : en ? "Activity completed" : "Entraînement terminé"}</p>}{feedback && <p role="status" className="mt-4 rounded-lg bg-terracotta-soft p-3 text-sm">{feedback === "saved" ? (accountId ? (ar ? "تم حفظ إجاباتك في حسابك." : en ? "Answers saved to your account." : "Réponses enregistrées dans votre compte.") : (ar ? "تم حفظ إجاباتك على هذا الجهاز." : en ? "Answers saved on this device." : "Réponses enregistrées sur cet appareil.")) : feedback === "required" ? (ar ? "أجب عن الأسئلة الثلاثة أولا." : en ? "Answer all three questions first." : "Répondez d’abord aux trois questions.") : (accountId ? (ar ? "تعذر مزامنة إجاباتك مع حسابك. أعد المحاولة." : en ? "Could not sync your answers to your account. Try again." : "Impossible de synchroniser vos réponses avec votre compte. Réessayez.") : (ar ? "تعذر استعمال التخزين المحلي. تبقى إجاباتك في الذاكرة خلال هذه الزيارة." : en ? "Browser storage is unavailable or invalid. Your answers remain in memory during this visit." : "Stockage local indisponible ou invalide. Vos réponses restent en mémoire pendant cette visite."))}</p>}</section></div>
   </main>;
 }

@@ -67,8 +67,8 @@ const copy = {
   },
 } as const;
 
-export default function StudentSvtLibrary({ language }: { language: Language }) {
-  const [gradeId, setGradeId] = useState("3AC");
+export default function StudentSvtLibrary({ language, initialGradeId }: { language: Language; initialGradeId?: string }) {
+  const [gradeId, setGradeId] = useState(initialGradeId ?? "3AC");
   const [semester, setSemester] = useState<Semester>("all");
   const [query, setQuery] = useState("");
   const grade = svtCurriculumWithVideos.find(item => item.gradeId === gradeId) ?? svtCurriculumWithVideos[0];
@@ -88,7 +88,7 @@ export default function StudentSvtLibrary({ language }: { language: Language }) 
   const videoCount = chapters.filter(chapter => chapter.video).length;
 
   return <section aria-labelledby="student-svt-title" className="student-svt-library mt-8 rounded-lg border-2 border-black bg-white p-5 md:p-7">
-    <div className="flex flex-wrap items-start justify-between gap-4 border-b border-black pb-5">
+    <div data-tour="student-library" className="flex flex-wrap items-start justify-between gap-4 border-b border-black pb-5">
       <div className="max-w-2xl">
         <p className="flex items-center gap-2 text-xs font-bold text-[#B9552F]"><BookOpen size={18} aria-hidden="true" />{t.eyebrow}</p>
         <h2 id="student-svt-title" className="mt-2 text-2xl font-bold md:text-3xl">{t.title}</h2>
