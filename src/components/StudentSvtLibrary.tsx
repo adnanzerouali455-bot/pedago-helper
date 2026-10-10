@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { BookOpen, ExternalLink, Play, Search } from "lucide-react";
 import { svtCurriculumWithVideos } from "../data/svtCurriculumWithVideos";
+import NeuroTermExtractor from "./student/NeuroTermExtractor";
 
 type Language = "fr" | "ar" | "en";
 type Semester = "all" | 1 | 2;
@@ -67,7 +68,7 @@ const copy = {
   },
 } as const;
 
-export default function StudentSvtLibrary({ language, initialGradeId }: { language: Language; initialGradeId?: string }) {
+export default function StudentSvtLibrary({ language, initialGradeId, accountId }: { language: Language; initialGradeId?: string; accountId?: string }) {
   const [gradeId, setGradeId] = useState(initialGradeId ?? "3AC");
   const [semester, setSemester] = useState<Semester>("all");
   const [query, setQuery] = useState("");
@@ -119,6 +120,7 @@ export default function StudentSvtLibrary({ language, initialGradeId }: { langua
           <h4 className="mt-3 text-base font-bold leading-7" lang={ar ? "ar" : "fr"}>{ar ? chapter.titleAr : chapter.titleFr}</h4>
           <p className="mt-1 text-sm leading-6" lang={ar ? "fr" : "ar"} dir={ar ? "ltr" : "rtl"}>{ar ? chapter.titleFr : chapter.titleAr}</p>
           <div className="mt-4"><p className="text-xs font-bold">{t.keywords}</p><ul className="mt-2 flex flex-wrap gap-1.5" lang="fr">{chapter.keywords.map(keyword => <li key={keyword} className="rounded border border-black px-2 py-1 text-xs">{keyword}</li>)}</ul></div>
+          <NeuroTermExtractor courseTitle={chapter.titleFr} grade={grade.labelFr} courseSummaryOrText={`Notions clés du cours : ${chapter.keywords.join(", ")}.`} language={language} accountId={accountId} />
           {videoUrl && chapter.video && <div className="mt-auto border-t border-black pt-4"><p className="mt-4 flex items-center gap-2 text-xs"><Play size={16} aria-hidden="true" /><span lang="fr">{chapter.video.title} · {chapter.video.channel}</span></p><a href={videoUrl} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-lg border border-[#B9552F] bg-[#B9552F] px-4 py-2 text-sm font-bold text-white hover:bg-[#D9704F] hover:text-black">{t.video}<ExternalLink size={16} aria-hidden="true" /></a></div>}
         </li>;
       })}</ul>
