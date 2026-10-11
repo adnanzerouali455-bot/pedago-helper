@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, CheckCircle2, GraduationCap, ShieldCheck, Users } from "lucide-react";
-import { createLocalLesson, initialInput, type Language, type Subject } from "./LessonPlanStudio";
+import type { Language } from "./LessonPlanStudio";
 import { createDemoSchedule, isScheduleData, localizeSchedule } from "./TeacherScheduleCalendar";
 import CurriculumNavigation from "./CurriculumNavigation";
 import StudentSvtLibrary from "./StudentSvtLibrary";
@@ -9,17 +9,17 @@ import InteractiveCognitiveGuide from "./InteractiveCognitiveGuide";
 import ForgettingCurveSVG from "./ForgettingCurveSVG";
 import CourseToPathwayFlow from "./CourseToPathwayFlow";
 import StudioButton from "./StudioButton";
-import { accountDocumentEvent, readAccountDocument, writeAccountDocument, type AccountDocumentChange } from "../utils/supabase/documents";
+import { accountDocumentEvent, readAccountDocument, type AccountDocumentChange } from "../utils/supabase/documents";
 
 export type DemoProfile = "teacher" | "student";
 export function ProfilePicker({ language, onSelect }: { language: Language; onSelect: (profile: DemoProfile) => void }) {
   const ar = language === "ar"; const en = language === "en";
   const t = ar ? {
-    badge: "منصة بيداغوجية وديداكتيكية", title: "فضاء واحد لتحضير الدروس والتعلم.", subtitle: "اختر حسابا تجريبيا لاكتشاف المنصة دون تسجيل أو كلمة مرور.", demo: "حساب تجريبي", teacher: "أنا أستاذ", teacherName: "أمين · أستاذ علوم الحياة والأرض", teacherDescription: "نظم أقسامك وجدولك، وأعد جذاذاتك وفق مراحل غي بروسو الأربع مع توزيع زمن الحصة.", student: "أنا تلميذ", studentName: "سلمى · السنة الثالثة إعدادي", studentDescription: "اقرأ نصوصا بمستويات مختلفة، واكتشف المفردات العلمية وتدرب على الفهم.", enterTeacher: "الدخول إلى فضاء الأستاذ", enterStudent: "الدخول إلى فضاء التلميذ", disclaimer: "شخصيات وبيانات تجريبية. لا توجد حسابات مدرسية حقيقية أو مصادقة.",
+    badge: "منصة بيداغوجية وديداكتيكية", title: "فضاء واحد لتحضير الدروس والتعلم.", subtitle: "اختر حسابا تجريبيا لاكتشاف المنصة دون تسجيل أو كلمة مرور.", demo: "حساب تجريبي", teacher: "أنا أستاذ", teacherName: "أمين · أستاذ علوم الحياة والأرض", teacherDescription: "نظم أقسامك وجدولك، وأعد جذاذاتك وفق مراحل غي بروسو الأربع مع توزيع زمن الحصة.", student: "أنا تلميذ", studentName: "سلمى · السنة الثالثة إعدادي", studentDescription: "استكشف دروس العلوم وفيديوهاتها، وافهم المصطلحات العلمية بمساعدة Neuro-IA.", enterTeacher: "الدخول إلى فضاء الأستاذ", enterStudent: "الدخول إلى فضاء التلميذ", disclaimer: "شخصيات وبيانات تجريبية. لا توجد حسابات مدرسية حقيقية أو مصادقة.",
   } : en ? {
-    badge: "Teaching and learning platform", title: "One place to plan lessons and learn.", subtitle: "Choose a demo account to explore the app without signing up or entering a password.", demo: "DEMO ACCOUNT", teacher: "I’m a teacher", teacherName: "Amine · Life and Earth Sciences teacher", teacherDescription: "Organize classes and your timetable, then prepare lesson plans with Brousseau’s four phases and a clear time budget.", student: "I’m a student", studentName: "Salma · 3rd year of middle school", studentDescription: "Read texts at different levels, explore scientific vocabulary and practice comprehension.", enterTeacher: "Enter teacher space", enterStudent: "Enter student space", disclaimer: "Fictional profiles and sample data. No real school accounts or authentication.",
+    badge: "Teaching and learning platform", title: "One place to plan lessons and learn.", subtitle: "Choose a demo account to explore the app without signing up or entering a password.", demo: "DEMO ACCOUNT", teacher: "I’m a teacher", teacherName: "Amine · Life and Earth Sciences teacher", teacherDescription: "Explore science lessons and videos, and understand complex terms with Neuro-AI.", enterTeacher: "Enter teacher space", enterStudent: "Enter student space", disclaimer: "Fictional profiles and sample data. No real school accounts or authentication.",
   } : {
-    badge: "Plateforme pédagogique et didactique", title: "Un seul espace pour préparer vos cours et apprendre.", subtitle: "Choisissez un compte de démonstration pour explorer l’application sans inscription ni mot de passe.", demo: "COMPTE DÉMO", teacher: "Je suis enseignant", teacherName: "Amine · Professeur de SVT", teacherDescription: "Organisez vos classes et votre emploi du temps, puis préparez vos fiches selon les quatre phases de Brousseau avec un temps maîtrisé.", student: "Je suis élève", studentName: "Salma · 3ème année collégiale", studentDescription: "Lisez à votre rythme, explorez le vocabulaire scientifique et entraînez votre compréhension.", enterTeacher: "Entrer dans l’espace enseignant", enterStudent: "Entrer dans l’espace élève", disclaimer: "Profils fictifs et données de démonstration. Aucun compte scolaire réel ni authentification.",
+    badge: "Plateforme pédagogique et didactique", title: "Un seul espace pour préparer vos cours et apprendre.", subtitle: "Choisissez un compte de démonstration pour explorer l’application sans inscription ni mot de passe.", demo: "COMPTE DÉMO", teacher: "Je suis enseignant", teacherName: "Amine · Professeur de SVT", teacherDescription: "Organisez vos classes et votre emploi du temps, puis préparez vos fiches selon les quatre phases de Brousseau avec un temps maîtrisé.", student: "Je suis élève", studentName: "Salma · 3ème année collégiale", studentDescription: "Explorez les cours et vidéos de SVT, puis comprenez les termes complexes avec Neuro-IA.", enterTeacher: "Entrer dans l’espace enseignant", enterStudent: "Entrer dans l’espace élève", disclaimer: "Profils fictifs et données de démonstration. Aucun compte scolaire réel ni authentification.",
   };
   const hero = ar ? { line: "دروس العلوم،", accent: "بكل وضوح.", subtitle: "جدول الأقسام، جذاذات بيداغوجية ونصوص ملائمة بالفرنسية والعربية والإنجليزية.", start: "ابدأ الآن", explore: "اكتشف طريقة التعلم", choose: "اختر فضاءك", science: "نفهم لنتذكر أكثر", scienceIntro: "رسوم توضيحية عن ترسيخ التعلم وتحويل الدروس إلى خطوات واضحة." }
     : en ? { line: "Science lessons,", accent: "made clearer.", subtitle: "Class timetables, lesson plans and adapted texts in French, Arabic and English.", start: "Get started", explore: "Explore the learning approach", choose: "Choose your space", science: "Understand more, remember longer", scienceIntro: "Illustrations of memory, revision and a clear route from material to lesson plan." }
@@ -97,62 +97,17 @@ export function TeacherDashboard({ language, storageKey, onNavigate, accountName
   </main>;
 }
 
-type Practice = Record<string, { answers: string[]; completed: boolean }>;
-function isPractice(value: unknown): value is Practice {
-  return !!value && typeof value === "object" && !Array.isArray(value) && Object.entries(value).every(([key, entry]) => {
-    if (!/^(svt|pc|math|arabic|french):(fr|ar|en):[123]$/.test(key) || !entry || typeof entry !== "object" || Array.isArray(entry)) return false;
-    const item = entry as { answers?: unknown; completed?: unknown };
-    return Array.isArray(item.answers) && item.answers.length === 3 && item.answers.every(answer => typeof answer === "string" && answer.length <= 4000) && typeof item.completed === "boolean";
-  });
-}
-export function StudentDashboard({ language, accountName, storageKey = "pedago-helper:demo-student:v1", accountId, accountGrade, accountBranch }: { language: Language; accountName?: string; storageKey?: string; accountId?: string; accountGrade?: string | null; accountBranch?: string | null }) {
-  const ar = language === "ar"; const en = language === "en";
-  const [subject, setSubject] = useState<Subject>("svt");
-  const [level, setLevel] = useState<1 | 2 | 3>(1);
-  const [practice, setPractice] = useState<Practice>({});
-  const [feedback, setFeedback] = useState<"saved" | "error" | "required" | null>(null);
-  const [storageValid, setStorageValid] = useState(true);
-  const [storageReady, setStorageReady] = useState(!accountId);
-  const practiceWrite = useRef<Promise<void>>(Promise.resolve());
-  const key = `${subject}:${language}:${level}`;
-  const current = practice[key] ?? { answers: ["", "", ""], completed: false };
-  const lesson = createLocalLesson(initialInput(language, subject));
-  const reading = lesson.readings[level];
-  useEffect(() => {
-    setStorageReady(false);
-    if (accountId) {
-      let active = true;
-      void readAccountDocument(accountId, storageKey, isPractice, storageKey)
-        .then(value => { if (active) { setPractice(value ?? {}); setStorageValid(true); setStorageReady(true); } })
-        .catch(() => { if (active) { setFeedback("error"); setStorageValid(false); setStorageReady(true); } });
-      return () => { active = false; };
-    }
-    try { const raw = localStorage.getItem(storageKey); if (raw) { const value: unknown = JSON.parse(raw); if (!isPractice(value)) throw new Error("Invalid practice"); setPractice(value); } } catch { setFeedback("error"); setStorageValid(false); }
-    setStorageReady(true);
-  }, [storageKey, accountId]);
-  function save(completed: boolean) {
-    if (!storageReady || !storageValid) { setFeedback("error"); return; }
-    if (completed && current.answers.some(a => !a.trim())) { setFeedback("required"); return; }
-    const next = { ...practice, [key]: { ...current, completed } };
-    setPractice(next);
-    if (accountId) {
-      practiceWrite.current = practiceWrite.current.catch(() => {}).then(() => writeAccountDocument(accountId, storageKey, next));
-      void practiceWrite.current.then(() => setFeedback("saved")).catch(() => setFeedback("error"));
-      return;
-    }
-    try { localStorage.setItem(storageKey, JSON.stringify(next)); setFeedback("saved"); } catch { setFeedback("error"); }
-  }
+export function StudentDashboard({ language, accountName, accountId, accountGrade, accountBranch }: { language: Language; accountName?: string; accountId?: string; accountGrade?: string | null; accountBranch?: string | null }) {
+  const ar = language === "ar";
+  const en = language === "en";
   return <main className="ph-student-dashboard mx-auto max-w-6xl px-5 py-9 md:py-12">
     <div data-tour="student-welcome" className="ph-dashboard-intro">
-    <p className="text-sm font-semibold text-terracotta">{accountName ? (ar ? "فضاء الطالب" : en ? "STUDENT SPACE" : "ESPACE ÉTUDIANT") : ar ? "فضاء الطالب · حساب تجريبي" : en ? "STUDENT SPACE · DEMO ACCOUNT" : "ESPACE ÉTUDIANT · COMPTE DÉMO"}</p>
-    <h1 className="mt-3 text-3xl font-bold">{accountName ? (ar ? `مرحبا ${accountName}، ماذا سنتعلم اليوم؟` : en ? `Hello ${accountName}, what will you learn today?` : `Bonjour ${accountName}, que va-t-on apprendre aujourd’hui ?`) : ar ? "مرحبا سلمى، ماذا سنتعلم اليوم؟" : en ? "Hello Salma, what will you learn today?" : "Bonjour Salma, que va-t-on apprendre aujourd’hui ?"}</h1>
-    {accountId && (accountGrade || accountBranch) && <p className="mt-2 text-xs font-semibold text-ink">{[accountGrade, accountBranch].filter(Boolean).join(" · ")}</p>}
-    <p className="mt-3 text-sm text-ink">{accountId ? (ar ? "إجاباتك محفوظة في حسابك ويمكنك استعادتها من أي جهاز." : en ? "Your answers are saved to your account and available across devices." : "Vos réponses sont enregistrées dans votre compte et accessibles sur vos appareils.") : ar ? "تدريبات نموذجية مستقلة. إجاباتك محفوظة على هذا المتصفح فقط ولا ترسل إلى أستاذ." : en ? "Independent sample exercises. Your answers stay in this browser and are not sent to a teacher." : "Des entraînements d’exemple en autonomie. Vos réponses restent dans ce navigateur et ne sont pas envoyées à un enseignant."}</p>
+      <p className="text-sm font-semibold text-terracotta">{accountName ? (ar ? "فضاء الطالب" : en ? "STUDENT SPACE" : "ESPACE ÉTUDIANT") : ar ? "فضاء الطالب · حساب تجريبي" : en ? "STUDENT SPACE · DEMO ACCOUNT" : "ESPACE ÉTUDIANT · COMPTE DÉMO"}</p>
+      <h1 className="mt-3 text-3xl font-bold">{accountName ? (ar ? `مرحبا ${accountName}، ماذا سنتعلم اليوم؟` : en ? `Hello ${accountName}, what will you learn today?` : `Bonjour ${accountName}, que va-t-on apprendre aujourd’hui ?`) : ar ? "مرحبا سلمى، ماذا سنتعلم اليوم؟" : en ? "Hello Salma, what will you learn today?" : "Bonjour Salma, que va-t-on apprendre aujourd’hui ?"}</h1>
+      {accountId && (accountGrade || accountBranch) && <p className="mt-2 text-xs font-semibold text-ink">{[accountGrade, accountBranch].filter(Boolean).join(" · ")}</p>}
+      <p className="mt-3 text-sm text-ink">{ar ? "استكشف دروس العلوم حسب مستواك، وشاهد الفيديوهات، واستخدم Neuro-IA لفهم المصطلحات الصعبة." : en ? "Explore science lessons for your grade, watch videos and use Neuro-AI to understand complex terms." : "Explorez les cours de SVT de votre niveau, regardez les vidéos et utilisez Neuro-IA pour comprendre les termes complexes."}</p>
     </div>
     <StudentSvtLibrary language={language} initialGradeId={accountGrade ?? undefined} initialBranch={accountBranch ?? undefined} accountId={accountId} />
     <details className="mt-7 rounded-lg border border-sand bg-white p-4"><summary className="cursor-pointer text-sm font-bold text-cypress">{ar ? "استكشف برنامج علوم الحياة والأرض حسب المستوى" : en ? "Explore Life and Earth Sciences by grade" : "Explorer le programme de SVT par niveau"}</summary><div className="mt-4"><CurriculumNavigation language={language} /></div></details>
-    <div data-tour="student-reading" className="my-7 flex flex-wrap items-end gap-5 rounded-lg border border-sand bg-white p-5"><label className="flex-1 text-sm font-bold">{ar ? "المادة" : en ? "Subject" : "Matière"}<select className="mt-2 block w-full rounded-lg border border-sand p-3" value={subject} onChange={e => { setSubject(e.target.value as Subject); setFeedback(null); }}>{[["svt", ar ? "علوم الحياة والأرض" : en ? "Life and Earth Sciences" : "SVT"], ["math", ar ? "الرياضيات" : en ? "Mathematics" : "Mathématiques"], ["arabic", ar ? "اللغة العربية" : en ? "Arabic" : "Arabe"], ["french", ar ? "اللغة الفرنسية" : en ? "French" : "Français"]].map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label><fieldset><legend className="mb-2 text-sm font-bold">{ar ? "مستوى القراءة" : en ? "Reading level" : "Niveau de lecture"}</legend><div className="flex gap-2">{([1, 2, 3] as const).map((l, i) => <button key={l} aria-pressed={level === l} className={`rounded-lg border border-sand px-3 py-3 text-sm ${level === l ? "bg-cypress text-white" : "bg-white"}`} onClick={() => { setLevel(l); setFeedback(null); }}>{(ar ? ["مبتدئ", "متوسط", "متقدم"] : en ? ["Beginner", "Intermediate", "Advanced"] : ["Débutant", "Intermédiaire", "Avancé"])[i]}</button>)}</div></fieldset></div>
-    <div className="grid items-start gap-5 lg:grid-cols-[1.3fr_1fr]"><article className="rounded-lg border border-sand bg-white p-6 md:p-8"><span className="text-xs font-bold text-terracotta">{ar ? "أقرأ وأفهم" : en ? "READ AND UNDERSTAND" : "JE LIS ET JE COMPRENDS"}</span><h2 className="mb-6 mt-3 text-2xl font-bold leading-relaxed">{lesson.input.title}</h2><p className="whitespace-pre-line text-base leading-9 text-ink" dir="auto">{reading.text}</p><h3 className="mb-3 mt-8 font-bold">{ar ? "مفردات تساعدني" : en ? "Helpful vocabulary" : "Les mots pour m’aider"}</h3><div className="space-y-2">{reading.glossary.map(g => <details key={g.term} className="rounded-lg border border-sand p-3"><summary className="cursor-pointer text-sm font-bold">{g.term}</summary><p className="mt-3 text-sm leading-7 text-ink">{g.definition}</p></details>)}</div></article>
-    <section data-tour="student-practice" className="rounded-lg border border-sand bg-white p-6"><h2 className="text-xl font-bold">{ar ? "أتدرب على الفهم" : en ? "Practice comprehension" : "Je m’entraîne"}</h2><p className="mt-3 text-xs leading-6 text-ink">{ar ? "استشهد بالنص وعلل إجابتك. هذا تدريب ذاتي دون تصحيح آلي." : en ? "Support your answers with the text. This self-study activity is not graded automatically." : "Appuyez-vous sur le texte et justifiez vos réponses. Cet entraînement ne comporte pas de correction automatique."}</p><div className="mt-5 space-y-5">{reading.questions.map((question, i) => <label key={`${key}:${i}`} className="block text-sm font-semibold">{i + 1}. {question}<textarea dir="auto" rows={3} maxLength={4000} disabled={!storageReady || !storageValid} className="mt-2 block w-full rounded-lg border border-sand p-3 font-normal text-ink" value={current.answers[i]} onChange={e => { setPractice(prev => ({ ...prev, [key]: { completed: false, answers: current.answers.map((a, j) => j === i ? e.target.value : a) } })); setFeedback(null); }} /></label>)}</div><div className="mt-5 flex flex-wrap gap-2"><button disabled={!storageReady || !storageValid} className="rounded-lg border border-sand px-4 py-3 text-sm font-bold disabled:opacity-50" onClick={() => save(false)}>{ar ? "حفظ إجاباتي" : en ? "Save my answers" : "Enregistrer mes réponses"}</button><button disabled={!storageReady || !storageValid} className="rounded-lg bg-cypress px-4 py-3 text-sm font-bold text-white disabled:opacity-50" onClick={() => save(true)}>{ar ? "أنهيت التدريب" : en ? "I have finished" : "J’ai terminé"}</button></div>{current.completed && <p className="mt-4 flex items-center gap-2 text-sm"><CheckCircle2 size={18} />{ar ? "تم إنجاز التدريب" : en ? "Activity completed" : "Entraînement terminé"}</p>}{feedback && <p role="status" className="mt-4 rounded-lg bg-terracotta-soft p-3 text-sm">{feedback === "saved" ? (accountId ? (ar ? "تم حفظ إجاباتك في حسابك." : en ? "Answers saved to your account." : "Réponses enregistrées dans votre compte.") : (ar ? "تم حفظ إجاباتك على هذا الجهاز." : en ? "Answers saved on this device." : "Réponses enregistrées sur cet appareil.")) : feedback === "required" ? (ar ? "أجب عن الأسئلة الثلاثة أولا." : en ? "Answer all three questions first." : "Répondez d’abord aux trois questions.") : (accountId ? (ar ? "تعذر مزامنة إجاباتك مع حسابك. أعد المحاولة." : en ? "Could not sync your answers to your account. Try again." : "Impossible de synchroniser vos réponses avec votre compte. Réessayez.") : (ar ? "تعذر استعمال التخزين المحلي. تبقى إجاباتك في الذاكرة خلال هذه الزيارة." : en ? "Browser storage is unavailable or invalid. Your answers remain in memory during this visit." : "Stockage local indisponible ou invalide. Vos réponses restent en mémoire pendant cette visite."))}</p>}</section></div>
   </main>;
 }

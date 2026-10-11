@@ -45,22 +45,16 @@ function copyFor(role: TourRole, language: Language): TourCopy {
       { view: "planner", target: "workspace-account", title: "Profil et préférences", body: "Changez la langue ou le thème en haut, et relancez cette visite depuis Aide." },
     ]
     : language === "ar" ? [
-      { view: "home", target: "student-welcome", title: "فضاء التعلم الخاص بك", body: "ابدأ من هنا واستكشف دروس مستواك وتدريبات الفهم." },
+      { view: "home", target: "student-welcome", title: "فضاء التعلم الخاص بك", body: "ابدأ من هنا واستكشف دروس العلوم حسب مستواك." },
       { view: "home", target: "student-library", title: "دروس علوم الحياة والأرض", body: "تصفح الدروس حسب مستواك، وابحث عن فصل ثم افتح موارده المتاحة." },
-      { view: "home", target: "student-reading", title: "اقرأ وفق إيقاعك", body: "اختر المادة ومستوى القراءة المناسب لك. يتغير النص والأسئلة حسب اختيارك." },
-      { view: "home", target: "student-practice", title: "تدرب واحفظ إجاباتك", body: "أجب عن أسئلة الفهم، ثم احفظ تقدمك للعودة إليه لاحقا." },
       { view: "home", target: "workspace-account", title: "الملف الشخصي والمساعدة", body: "يمكنك تغيير اللغة أو المظهر في الأعلى. زر المساعدة يعيد تشغيل هذه الجولة متى شئت." },
     ] : language === "en" ? [
-      { view: "home", target: "student-welcome", title: "Your learning space", body: "Start here to explore lessons for your grade and comprehension practice." },
+      { view: "home", target: "student-welcome", title: "Your learning space", body: "Start here to explore science lessons for your grade." },
       { view: "home", target: "student-library", title: "Science lessons", body: "Browse lessons for your grade, find a chapter, and explore its available resources." },
-      { view: "home", target: "student-reading", title: "Read at your pace", body: "Choose a subject and reading level. The text and questions adapt to your selection." },
-      { view: "home", target: "student-practice", title: "Practice and save", body: "Answer the comprehension questions and save your work for later." },
       { view: "home", target: "workspace-account", title: "Profile and help", body: "Change language or theme in the header. Help lets you replay this tour whenever you like." },
     ] : [
-      { view: "home", target: "student-welcome", title: "Votre espace d’apprentissage", body: "Commencez ici pour explorer les cours de votre niveau et les entraînements." },
+      { view: "home", target: "student-welcome", title: "Votre espace d’apprentissage", body: "Commencez ici pour explorer les cours de SVT de votre niveau." },
       { view: "home", target: "student-library", title: "Cours de SVT", body: "Parcourez les cours de votre niveau, trouvez un chapitre et explorez ses ressources disponibles." },
-      { view: "home", target: "student-reading", title: "Lire à votre rythme", body: "Choisissez une matière et un niveau de lecture. Le texte et les questions s’adaptent à votre choix." },
-      { view: "home", target: "student-practice", title: "S’entraîner et enregistrer", body: "Répondez aux questions de compréhension et sauvegardez votre travail." },
       { view: "home", target: "workspace-account", title: "Profil et aide", body: "Changez la langue ou le thème en haut. Le bouton Aide permet de revoir cette visite à tout moment." },
     ];
   return { ...common, steps };
