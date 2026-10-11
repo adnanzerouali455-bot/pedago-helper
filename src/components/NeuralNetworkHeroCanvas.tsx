@@ -27,7 +27,7 @@ const copy = {
   },
 } as const;
 
-export default function NeuralNetworkHeroCanvas({ language = "fr", className = "" }: NeuralNetworkHeroCanvasProps) {
+export default function NeuralNetworkHeroCanvas({ language = "en", className = "" }: NeuralNetworkHeroCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const t = copy[language];
 

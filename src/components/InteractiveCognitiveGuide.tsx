@@ -113,7 +113,7 @@ function useReducedMotion() {
   return reduced;
 }
 
-export default function InteractiveCognitiveGuide({ language = "fr", className = "" }: InteractiveCognitiveGuideProps) {
+export default function InteractiveCognitiveGuide({ language = "en", className = "" }: InteractiveCognitiveGuideProps) {
   const [step, setStep] = useState<Step>(0);
   const [modelPlaying, setModelPlaying] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);

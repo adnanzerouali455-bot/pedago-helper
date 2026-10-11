@@ -396,7 +396,7 @@ const STYLE = `
 @media(prefers-reduced-motion:reduce){.ph-studio *{animation:none!important;transition:none!important}}
 `;
 
-export default function LessonPlanStudio({ embedded = false, active = true, uiLanguage, onLanguageChange, initialLanguage = "fr", initialLesson, initialDocument, storageKey = "pedago-helper:lesson-studio:v1", accountId, generateLesson }: LessonPlanStudioProps) {
+export default function LessonPlanStudio({ embedded = false, active = true, uiLanguage, onLanguageChange, initialLanguage = "en", initialLesson, initialDocument, storageKey = "pedago-helper:lesson-studio:v1", accountId, generateLesson }: LessonPlanStudioProps) {
   const [form, setForm] = useState<LessonInput>(() => initialDocument && isLessonDocument(initialDocument) ? initialDocument.input : { ...initialInput(initialLanguage, initialLesson?.subject), ...initialLesson, language: initialLanguage });
   const [lesson, setLesson] = useState<LessonDocument>(() => initialDocument && isLessonDocument(initialDocument) ? initialDocument : createLocalLesson(form));
   const [readingLevel, setReadingLevel] = useState<ReadingLevel>(2);

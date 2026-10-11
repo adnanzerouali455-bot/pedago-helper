@@ -47,7 +47,7 @@ function StepIcon({ step }: { step: number }) {
   </svg>;
 }
 
-export default function CourseToPathwayFlow({ language = "fr", className = "" }: CourseToPathwayFlowProps) {
+export default function CourseToPathwayFlow({ language = "en", className = "" }: CourseToPathwayFlowProps) {
   const [activeStep, setActiveStep] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [visible, setVisible] = useState(false);

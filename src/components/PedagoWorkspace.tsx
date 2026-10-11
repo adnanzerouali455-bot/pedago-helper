@@ -42,7 +42,7 @@ export default function PedagoWorkspace({ initialProfile, account, logoSrc, sche
     generalLessonStorageKey = `pedago-helper:account:${account.id}:lesson-studio:v1`;
   }
   const [view, setView] = useState<View>("home");
-  const [language, setLanguage] = useState<Language>(() => { if (account) return "fr"; try { return (["fr", "ar", "en"] as Language[]).includes(localStorage.getItem("pedago-helper:language") as Language) ? localStorage.getItem("pedago-helper:language") as Language : "fr"; } catch { return "fr"; } });
+  const [language, setLanguage] = useState<Language>(() => { if (account) return "en"; try { return (["fr", "ar", "en"] as Language[]).includes(localStorage.getItem("pedago-helper:language") as Language) ? localStorage.getItem("pedago-helper:language") as Language : "en"; } catch { return "en"; } });
   const [theme, setTheme] = useState<"light" | "dark">(() => { if (account) return "light"; try { const saved = localStorage.getItem("pedago-helper:theme"); return saved === "dark" ? "dark" : saved === "light" ? "light" : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; } catch { return "light"; } });
   const [manualTheme, setManualTheme] = useState(() => { if (account) return false; try { return localStorage.getItem("pedago-helper:theme") !== null; } catch { return false; } });
   const [preferencesReady, setPreferencesReady] = useState(!account);
@@ -164,7 +164,7 @@ export default function PedagoWorkspace({ initialProfile, account, logoSrc, sche
         const initialLesson: Partial<LessonInput> | undefined = context ? { subject: context.subject, schoolLevel: context.schoolLevel, title: context.title, duration: context.duration, className: context.className, room: context.room, scheduledDate: context.date, startTime: context.start, endTime: context.end, ...(context.competency ? { competency: context.competency } : {}) } : account ? { subject: teacherSubject(account.subject), schoolLevel: teacherLevel(account.teaching_cycle) } : undefined;
         return <div key={editor.id} hidden={editor.id !== editorId}>
           {context && (context.notes || context.resources.length > 0) && <details className="border-b border-[var(--color-sand-border)] bg-[var(--color-terracotta-light)] px-8 py-3 text-sm text-[var(--color-ink-muted)]"><summary className="cursor-pointer font-semibold">{t.notes}</summary><p className="my-3 whitespace-pre-wrap">{localizeText(context.notes, language)}</p><ul className="space-y-2">{context.resources.map(resource => <li key={resource.id}><a className="underline" href={resource.url} target="_blank" rel="noopener noreferrer">{localizeText(resource.title, language)}</a></li>)}</ul></details>}
-          <LessonPlanStudio embedded active={isActive} uiLanguage={language} onLanguageChange={setLanguage} initialLanguage={editor.saved?.input.language ?? context?.language ?? "fr"} initialLesson={initialLesson} initialDocument={editor.saved} storageKey={context ? `${lessonStoragePrefix}:${context.sessionId}:v1` : generalLessonStorageKey} accountId={account?.id} />
+          <LessonPlanStudio embedded active={isActive} uiLanguage={language} onLanguageChange={setLanguage} initialLanguage={editor.saved?.input.language ?? context?.language ?? language} initialLesson={initialLesson} initialDocument={editor.saved} storageKey={context ? `${lessonStoragePrefix}:${context.sessionId}:v1` : generalLessonStorageKey} accountId={account?.id} />
         </div>;
       })}
     </div>

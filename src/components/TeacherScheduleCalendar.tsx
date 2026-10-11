@@ -114,7 +114,7 @@ export function isScheduleData(value: unknown): value is ScheduleData {
   const ordered = [...value.sessions].sort((a, b) => String(a.date).localeCompare(String(b.date)) || timeMinutes(a.start) - timeMinutes(b.start));
   return ordered.every((s, i) => i === 0 || s.date !== ordered[i - 1].date || timeMinutes(s.start) >= timeMinutes(ordered[i - 1].end));
 }
-export function createDemoSchedule(week = mondayOf(todayISO()), language: ScheduleLanguage = "fr"): ScheduleData {
+export function createDemoSchedule(week = mondayOf(todayISO()), language: ScheduleLanguage = "en"): ScheduleData {
   const classes: TeacherClass[] = [
     { id: "3ac-1", name: "3ème AC · Groupe 1", room: "Salle 14", subject: "svt", schoolLevel: "middle", color: PALETTE[0] },
     { id: "3ac-2", name: "3ème AC · Groupe 2", room: "Salle 12", subject: "svt", schoolLevel: "middle", color: PALETTE[1] },
@@ -171,7 +171,7 @@ const CSS = `
 @media(prefers-reduced-motion:reduce){.sc-root *,.sc-dialog *{scroll-behavior:auto!important;transition:none!important}}
 `;
 
-export default function TeacherScheduleCalendar({ embedded = false, active = true, uiLanguage, initialLanguage = "fr", storageKey = "pedago-helper:schedule:v1", accountId, defaultSubject = "svt", defaultSchoolLevel = "middle", initialData, initialWeek, onOpenLessonPlan, lessonPlannerUrl = "/lesson-planner" }: TeacherScheduleCalendarProps) {
+export default function TeacherScheduleCalendar({ embedded = false, active = true, uiLanguage, initialLanguage = "en", storageKey = "pedago-helper:schedule:v1", accountId, defaultSubject = "svt", defaultSchoolLevel = "middle", initialData, initialWeek, onOpenLessonPlan, lessonPlannerUrl = "/lesson-planner" }: TeacherScheduleCalendarProps) {
   const [language, setLanguage] = useState<ScheduleLanguage>(uiLanguage ?? initialLanguage);
   useEffect(() => { if (uiLanguage) setLanguage(uiLanguage); }, [uiLanguage]);
   const [week, setWeek] = useState(() => mondayOf(initialWeek && isISODate(initialWeek) ? initialWeek : todayISO()));

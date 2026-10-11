@@ -8,7 +8,7 @@ import type { Chapter, Grade } from "../types/curriculum";
 
 type Language = "fr" | "ar" | "en";
 
-export default function CurriculumNavigation({ language = "fr", onSelectChapter }: {
+export default function CurriculumNavigation({ language = "en", onSelectChapter }: {
   language?: Language;
   onSelectChapter?: (chapter: Chapter, grade: Grade) => void;
 }) {

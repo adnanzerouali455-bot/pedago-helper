@@ -13,14 +13,14 @@ const arabicFont = Cairo({ subsets: ["arabic", "latin"], variable: "--font-landi
 export const metadata: Metadata = {
   metadataBase: new URL("https://pedago-helper.vercel.app"),
   title: "Pedago Helper | المساعد البيداغوجي",
-  description: "Pedago Helper aide les enseignants marocains à préparer leurs جذاذات et les élèves à explorer les SVT. منصة لإعداد الدروس وتعلّم علوم الحياة والأرض.",
+  description: "Pedago Helper helps Moroccan teachers prepare lesson plans and students explore Life and Earth Sciences in English, French and Arabic.",
   openGraph: {
     title: "Pedago Helper | المساعد البيداغوجي",
-    description: "Deux espaces complémentaires pour préparer les leçons et apprendre les SVT au Maroc. فضاء للأستاذ وفضاء للتلميذ.",
+    description: "Lesson planning and Life and Earth Sciences learning for teachers and students in Morocco.",
     url: "https://pedago-helper.vercel.app/",
     siteName: "Pedago Helper",
-    locale: "fr_MA",
-    alternateLocale: ["ar_MA", "en_US"],
+    locale: "en_US",
+    alternateLocale: ["fr_MA", "ar_MA"],
     type: "website",
   },
 };
@@ -28,5 +28,5 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  return <html lang="fr" className={`${headingFont.variable} ${bodyFont.variable} ${arabicFont.variable}`}><head><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" /><link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" /></head><body>{children}</body></html>;
+  return <html lang="en" className={`${headingFont.variable} ${bodyFont.variable} ${arabicFont.variable}`}><head><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" /><link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" /></head><body>{children}</body></html>;
 }

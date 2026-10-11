@@ -56,7 +56,7 @@ const copy = {
   },
 } as const;
 
-export default function ForgettingCurveSVG({ language = "fr", className = "" }: ForgettingCurveSVGProps) {
+export default function ForgettingCurveSVG({ language = "en", className = "" }: ForgettingCurveSVGProps) {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [replay, setReplay] = useState(0);
   const [activeRecall, setActiveRecall] = useState<number | null>(null);

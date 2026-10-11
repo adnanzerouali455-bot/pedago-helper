@@ -148,7 +148,7 @@ function errorFor(code: unknown, language: Language): string {
   return t.error;
 }
 
-export default function NeuroTermExtractor({ courseTitle, displayTitle, grade, displayGrade, courseSummaryOrText, language = "fr", accountId }: NeuroTermExtractorProps) {
+export default function NeuroTermExtractor({ courseTitle, displayTitle, grade, displayGrade, courseSummaryOrText, language = "en", accountId }: NeuroTermExtractorProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<NeuroExtractionResponse | null>(null);

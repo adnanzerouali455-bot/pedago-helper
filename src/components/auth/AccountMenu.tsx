@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "../../utils/supabase/client";
 import type { Profile } from "../../utils/supabase/types";
 
-export default function AccountMenu({ profile, language = "fr" }: { profile: Profile; language?: "fr" | "ar" | "en" }) {
+export default function AccountMenu({ profile, language = "en" }: { profile: Profile; language?: "fr" | "ar" | "en" }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);

@@ -123,7 +123,7 @@ function json(body: unknown, status: number): Response {
 }
 
 export async function POST(request: Request): Promise<Response> {
-  let language: "fr" | "ar" | "en" = "fr";
+  let language: "fr" | "ar" | "en" = "en";
   try {
     const raw = await readPayload(request);
     if (raw && typeof raw === "object" && "language" in raw && (raw.language === "ar" || raw.language === "en")) language = raw.language;

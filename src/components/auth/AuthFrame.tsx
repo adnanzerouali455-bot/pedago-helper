@@ -7,7 +7,7 @@ import BrandMark from "../BrandMark";
 export type AuthLanguage = "fr" | "ar" | "en";
 
 export function useAuthLanguage() {
-  const [language, setLanguage] = useState<AuthLanguage>("fr");
+  const [language, setLanguage] = useState<AuthLanguage>("en");
   useEffect(() => {
     try {
       const saved = window.localStorage.getItem("pedago-helper:language");

@@ -9,7 +9,7 @@ import { readAccountDocument, writeAccountDocument } from "../../utils/supabase/
 type Language = "fr" | "ar" | "en";
 
 export default function SchoolDashboard({ profile }: { profile: Profile }) {
-  const [language, changeLanguage] = useState<Language>("fr");
+  const [language, changeLanguage] = useState<Language>("en");
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [ready, setReady] = useState(false);
   const [preferenceError, setPreferenceError] = useState(false);

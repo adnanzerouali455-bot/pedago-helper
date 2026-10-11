@@ -5,7 +5,7 @@ import type { LandingLanguage } from "../../messages/types";
 import LandingPage from "./LandingPage";
 
 export default function LandingHomeClient() {
-  const [language, setLanguage] = useState<LandingLanguage>("fr");
+  const [language, setLanguage] = useState<LandingLanguage>("en");
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [manualTheme, setManualTheme] = useState(false);
   const [ready, setReady] = useState(false);
