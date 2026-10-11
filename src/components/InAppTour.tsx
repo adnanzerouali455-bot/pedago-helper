@@ -47,14 +47,17 @@ function copyFor(role: TourRole, language: Language): TourCopy {
     : language === "ar" ? [
       { view: "home", target: "student-welcome", title: "فضاء التعلم الخاص بك", body: "ابدأ من هنا واستكشف دروس العلوم حسب مستواك." },
       { view: "home", target: "student-library", title: "دروس علوم الحياة والأرض", body: "تصفح الدروس حسب مستواك، وابحث عن فصل ثم افتح موارده المتاحة." },
+      { view: "home", target: "student-reading", title: "اقرأ وفق إيقاعك", body: "اختر المادة ومستوى القراءة المناسب لك، ثم اقرأ النص وتعرف على مفرداته." },
       { view: "home", target: "workspace-account", title: "الملف الشخصي والمساعدة", body: "يمكنك تغيير اللغة أو المظهر في الأعلى. زر المساعدة يعيد تشغيل هذه الجولة متى شئت." },
     ] : language === "en" ? [
       { view: "home", target: "student-welcome", title: "Your learning space", body: "Start here to explore science lessons for your grade." },
       { view: "home", target: "student-library", title: "Science lessons", body: "Browse lessons for your grade, find a chapter, and explore its available resources." },
+      { view: "home", target: "student-reading", title: "Read at your pace", body: "Choose a subject and reading level, then read the text and explore its vocabulary." },
       { view: "home", target: "workspace-account", title: "Profile and help", body: "Change language or theme in the header. Help lets you replay this tour whenever you like." },
     ] : [
       { view: "home", target: "student-welcome", title: "Votre espace d’apprentissage", body: "Commencez ici pour explorer les cours de SVT de votre niveau." },
       { view: "home", target: "student-library", title: "Cours de SVT", body: "Parcourez les cours de votre niveau, trouvez un chapitre et explorez ses ressources disponibles." },
+      { view: "home", target: "student-reading", title: "Lire à votre rythme", body: "Choisissez la matière et le niveau de lecture, puis découvrez le texte et son vocabulaire." },
       { view: "home", target: "workspace-account", title: "Profil et aide", body: "Changez la langue ou le thème en haut. Le bouton Aide permet de revoir cette visite à tout moment." },
     ];
   return { ...common, steps };

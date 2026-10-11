@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, CheckCircle2, GraduationCap, ShieldCheck, Users } from "lucide-react";
-import type { Language } from "./LessonPlanStudio";
+import { createLocalLesson, initialInput, type Language, type Subject } from "./LessonPlanStudio";
 import { createDemoSchedule, isScheduleData, localizeSchedule } from "./TeacherScheduleCalendar";
 import CurriculumNavigation from "./CurriculumNavigation";
 import StudentSvtLibrary from "./StudentSvtLibrary";
@@ -15,11 +15,11 @@ export type DemoProfile = "teacher" | "student";
 export function ProfilePicker({ language, onSelect }: { language: Language; onSelect: (profile: DemoProfile) => void }) {
   const ar = language === "ar"; const en = language === "en";
   const t = ar ? {
-    badge: "منصة بيداغوجية وديداكتيكية", title: "فضاء واحد لتحضير الدروس والتعلم.", subtitle: "اختر حسابا تجريبيا لاكتشاف المنصة دون تسجيل أو كلمة مرور.", demo: "حساب تجريبي", teacher: "أنا أستاذ", teacherName: "أمين · أستاذ علوم الحياة والأرض", teacherDescription: "نظم أقسامك وجدولك، وأعد جذاذاتك وفق مراحل غي بروسو الأربع مع توزيع زمن الحصة.", student: "أنا تلميذ", studentName: "سلمى · السنة الثالثة إعدادي", studentDescription: "استكشف دروس العلوم وفيديوهاتها، وافهم المصطلحات العلمية بمساعدة Neuro-IA.", enterTeacher: "الدخول إلى فضاء الأستاذ", enterStudent: "الدخول إلى فضاء التلميذ", disclaimer: "شخصيات وبيانات تجريبية. لا توجد حسابات مدرسية حقيقية أو مصادقة.",
+    badge: "منصة بيداغوجية وديداكتيكية", title: "فضاء واحد لتحضير الدروس والتعلم.", subtitle: "اختر حسابا تجريبيا لاكتشاف المنصة دون تسجيل أو كلمة مرور.", demo: "حساب تجريبي", teacher: "أنا أستاذ", teacherName: "أمين · أستاذ علوم الحياة والأرض", teacherDescription: "نظم أقسامك وجدولك، وأعد جذاذاتك وفق مراحل غي بروسو الأربع مع توزيع زمن الحصة.", student: "أنا تلميذ", studentName: "سلمى · السنة الثالثة إعدادي", studentDescription: "اقرأ نصوصا بمستويات مختلفة، واستكشف دروس العلوم وفيديوهاتها ومفرداتها.", enterTeacher: "الدخول إلى فضاء الأستاذ", enterStudent: "الدخول إلى فضاء التلميذ", disclaimer: "شخصيات وبيانات تجريبية. لا توجد حسابات مدرسية حقيقية أو مصادقة.",
   } : en ? {
-    badge: "Teaching and learning platform", title: "One place to plan lessons and learn.", subtitle: "Choose a demo account to explore the app without signing up or entering a password.", demo: "DEMO ACCOUNT", teacher: "I’m a teacher", teacherName: "Amine · Life and Earth Sciences teacher", teacherDescription: "Explore science lessons and videos, and understand complex terms with Neuro-AI.", enterTeacher: "Enter teacher space", enterStudent: "Enter student space", disclaimer: "Fictional profiles and sample data. No real school accounts or authentication.",
+    badge: "Teaching and learning platform", title: "One place to plan lessons and learn.", subtitle: "Choose a demo account to explore the app without signing up or entering a password.", demo: "DEMO ACCOUNT", teacher: "I’m a teacher", teacherName: "Amine · Life and Earth Sciences teacher", teacherDescription: "Organize classes and your timetable, then prepare lesson plans with Brousseau’s four phases and a clear time budget.", student: "I’m a student", studentName: "Salma · 3rd year of middle school", studentDescription: "Read at different levels and explore science lessons, videos and vocabulary.", enterTeacher: "Enter teacher space", enterStudent: "Enter student space", disclaimer: "Fictional profiles and sample data. No real school accounts or authentication.",
   } : {
-    badge: "Plateforme pédagogique et didactique", title: "Un seul espace pour préparer vos cours et apprendre.", subtitle: "Choisissez un compte de démonstration pour explorer l’application sans inscription ni mot de passe.", demo: "COMPTE DÉMO", teacher: "Je suis enseignant", teacherName: "Amine · Professeur de SVT", teacherDescription: "Organisez vos classes et votre emploi du temps, puis préparez vos fiches selon les quatre phases de Brousseau avec un temps maîtrisé.", student: "Je suis élève", studentName: "Salma · 3ème année collégiale", studentDescription: "Explorez les cours et vidéos de SVT, puis comprenez les termes complexes avec Neuro-IA.", enterTeacher: "Entrer dans l’espace enseignant", enterStudent: "Entrer dans l’espace élève", disclaimer: "Profils fictifs et données de démonstration. Aucun compte scolaire réel ni authentification.",
+    badge: "Plateforme pédagogique et didactique", title: "Un seul espace pour préparer vos cours et apprendre.", subtitle: "Choisissez un compte de démonstration pour explorer l’application sans inscription ni mot de passe.", demo: "COMPTE DÉMO", teacher: "Je suis enseignant", teacherName: "Amine · Professeur de SVT", teacherDescription: "Organisez vos classes et votre emploi du temps, puis préparez vos fiches selon les quatre phases de Brousseau avec un temps maîtrisé.", student: "Je suis élève", studentName: "Salma · 3ème année collégiale", studentDescription: "Lisez à votre rythme et explorez les cours, vidéos et mots scientifiques de SVT.", enterTeacher: "Entrer dans l’espace enseignant", enterStudent: "Entrer dans l’espace élève", disclaimer: "Profils fictifs et données de démonstration. Aucun compte scolaire réel ni authentification.",
   };
   const hero = ar ? { line: "دروس العلوم،", accent: "بكل وضوح.", subtitle: "جدول الأقسام، جذاذات بيداغوجية ونصوص ملائمة بالفرنسية والعربية والإنجليزية.", start: "ابدأ الآن", explore: "اكتشف طريقة التعلم", choose: "اختر فضاءك", science: "نفهم لنتذكر أكثر", scienceIntro: "رسوم توضيحية عن ترسيخ التعلم وتحويل الدروس إلى خطوات واضحة." }
     : en ? { line: "Science lessons,", accent: "made clearer.", subtitle: "Class timetables, lesson plans and adapted texts in French, Arabic and English.", start: "Get started", explore: "Explore the learning approach", choose: "Choose your space", science: "Understand more, remember longer", scienceIntro: "Illustrations of memory, revision and a clear route from material to lesson plan." }
@@ -100,14 +100,36 @@ export function TeacherDashboard({ language, storageKey, onNavigate, accountName
 export function StudentDashboard({ language, accountName, accountId, accountGrade, accountBranch }: { language: Language; accountName?: string; accountId?: string; accountGrade?: string | null; accountBranch?: string | null }) {
   const ar = language === "ar";
   const en = language === "en";
+  const [subject, setSubject] = useState<Subject>("svt");
+  const [level, setLevel] = useState<1 | 2 | 3>(1);
+  const lesson = createLocalLesson(initialInput(language, subject));
+  const reading = lesson.readings[level];
+
   return <main className="ph-student-dashboard mx-auto max-w-6xl px-5 py-9 md:py-12">
     <div data-tour="student-welcome" className="ph-dashboard-intro">
       <p className="text-sm font-semibold text-terracotta">{accountName ? (ar ? "فضاء الطالب" : en ? "STUDENT SPACE" : "ESPACE ÉTUDIANT") : ar ? "فضاء الطالب · حساب تجريبي" : en ? "STUDENT SPACE · DEMO ACCOUNT" : "ESPACE ÉTUDIANT · COMPTE DÉMO"}</p>
       <h1 className="mt-3 text-3xl font-bold">{accountName ? (ar ? `مرحبا ${accountName}، ماذا سنتعلم اليوم؟` : en ? `Hello ${accountName}, what will you learn today?` : `Bonjour ${accountName}, que va-t-on apprendre aujourd’hui ?`) : ar ? "مرحبا سلمى، ماذا سنتعلم اليوم؟" : en ? "Hello Salma, what will you learn today?" : "Bonjour Salma, que va-t-on apprendre aujourd’hui ?"}</h1>
       {accountId && (accountGrade || accountBranch) && <p className="mt-2 text-xs font-semibold text-ink">{[accountGrade, accountBranch].filter(Boolean).join(" · ")}</p>}
-      <p className="mt-3 text-sm text-ink">{ar ? "استكشف دروس العلوم حسب مستواك، وشاهد الفيديوهات، واستخدم Neuro-IA لفهم المصطلحات الصعبة." : en ? "Explore science lessons for your grade, watch videos and use Neuro-AI to understand complex terms." : "Explorez les cours de SVT de votre niveau, regardez les vidéos et utilisez Neuro-IA pour comprendre les termes complexes."}</p>
+      <p className="mt-3 text-sm text-ink">{ar ? "اقرأ نصا مناسبا لمستواك، واستكشف دروس العلوم وفيديوهاتها، واستخدم Neuro-IA لفهم المصطلحات الصعبة." : en ? "Read at your level, explore science lessons and videos, and use Neuro-AI to understand complex terms." : "Lisez à votre niveau, explorez les cours et vidéos de SVT, puis utilisez Neuro-IA pour comprendre les termes complexes."}</p>
     </div>
     <StudentSvtLibrary language={language} initialGradeId={accountGrade ?? undefined} initialBranch={accountBranch ?? undefined} accountId={accountId} />
     <details className="mt-7 rounded-lg border border-sand bg-white p-4"><summary className="cursor-pointer text-sm font-bold text-cypress">{ar ? "استكشف برنامج علوم الحياة والأرض حسب المستوى" : en ? "Explore Life and Earth Sciences by grade" : "Explorer le programme de SVT par niveau"}</summary><div className="mt-4"><CurriculumNavigation language={language} /></div></details>
+    <div data-tour="student-reading" className="my-7 flex flex-wrap items-end gap-5 rounded-lg border border-sand bg-white p-5">
+      <label className="flex-1 text-sm font-bold">{ar ? "المادة" : en ? "Subject" : "Matière"}
+        <select className="mt-2 block w-full rounded-lg border border-sand p-3" value={subject} onChange={event => setSubject(event.target.value as Subject)}>
+          {[["svt", ar ? "علوم الحياة والأرض" : en ? "Life and Earth Sciences" : "SVT"], ["math", ar ? "الرياضيات" : en ? "Mathematics" : "Mathématiques"], ["arabic", ar ? "اللغة العربية" : en ? "Arabic" : "Arabe"], ["french", ar ? "اللغة الفرنسية" : en ? "French" : "Français"]].map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+        </select>
+      </label>
+      <fieldset><legend className="mb-2 text-sm font-bold">{ar ? "مستوى القراءة" : en ? "Reading level" : "Niveau de lecture"}</legend>
+        <div className="flex gap-2">{([1, 2, 3] as const).map((value, index) => <button key={value} type="button" aria-pressed={level === value} className={`rounded-lg border border-sand px-3 py-3 text-sm ${level === value ? "bg-cypress text-white" : "bg-white"}`} onClick={() => setLevel(value)}>{(ar ? ["مبتدئ", "متوسط", "متقدم"] : en ? ["Beginner", "Intermediate", "Advanced"] : ["Débutant", "Intermédiaire", "Avancé"])[index]}</button>)}</div>
+      </fieldset>
+    </div>
+    <article className="rounded-lg border border-sand bg-white p-6 md:p-8">
+      <span className="text-xs font-bold text-terracotta">{ar ? "أقرأ وأفهم" : en ? "READ AND UNDERSTAND" : "JE LIS ET JE COMPRENDS"}</span>
+      <h2 className="mb-6 mt-3 text-2xl font-bold leading-relaxed">{lesson.input.title}</h2>
+      <p className="whitespace-pre-line text-base leading-9 text-ink" dir="auto">{reading.text}</p>
+      <h3 className="mb-3 mt-8 font-bold">{ar ? "مفردات تساعدني" : en ? "Helpful vocabulary" : "Les mots pour m’aider"}</h3>
+      <div className="space-y-2">{reading.glossary.map(entry => <details key={entry.term} className="rounded-lg border border-sand p-3"><summary className="cursor-pointer text-sm font-bold">{entry.term}</summary><p className="mt-3 text-sm leading-7 text-ink">{entry.definition}</p></details>)}</div>
+    </article>
   </main>;
 }
